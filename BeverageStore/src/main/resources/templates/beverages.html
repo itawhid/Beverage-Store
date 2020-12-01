@@ -2,7 +2,103 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/fragments.html :: headerfiles"></head>
-<body>
-<div th:replace="fragments/fragments.html :: nav-bar">...</div>
-</body>
+    <body>
+        <div th:replace="fragments/fragments.html :: nav-bar"></div>
+
+        <div class="container">
+            <br>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="#bottles" class="nav-link active" data-toggle="tab">Bottles</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#crates" class="nav-link" data-toggle="tab">Crates</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!--bottles-->
+                <div id="bottles" class="tab-pane active">
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Volume</th>
+                                <th scope="col">Volume Percent</th>
+                                <th scope="col">Is Alcoholic</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Supplier</th>
+                                <th scope="col">In Stock</th>
+                                <th scope="col">Action(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="bottle : ${bottles}">
+                                <td>
+                                    <img width="120" th:src="${bottle.bottlePic}">
+                                </td>
+                                <td th:text="${bottle.name}"></td>
+                                <td th:text="${bottle.volume}"></td>
+                                <td th:text="${bottle.volumePercent} + '%'"></td>
+                                <td th:text="${bottle.volumePercent > 0} ? 'Yes' : 'No'"></td>
+                                <td th:text="${bottle.price} + '€'"></td>
+                                <td th:text="${bottle.supplier}"></td>
+                                <td th:text="${bottle.inStock}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-add-bottle" th:attr="data-id=${bottle.id}">Add To Cart</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--crates-->
+                <div id="crates" class="tab-pane">
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">No. of Bottles</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">In Stock</th>
+                                <th scope="col">Action(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="crate : ${crates}">
+                                <td>
+                                    <img width="120" th:src="${crate.cratePic}">
+                                </td>
+                                <td th:text="${crate.name}"></td>
+                                <td th:text="${crate.noOfBottles}"></td>
+                                <td th:text="${crate.price} + '€'"></td>
+                                <td th:text="${crate.inStock}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-add-crate" th:attr="data-id=${crate.id}">Add To Cart</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        $('.btn-add-bottle').click(function () {
+            addItemToCart(parseInt($(this).data('id')), true);
+        });
+
+        $('.btn-add-crate').click(function () {
+            addItemToCart(parseInt($(this).data('id')), false);
+        });
+
+        function addItemToCart(beverageId, isBottle) {
+            
+        }
+    </script>
 </html>

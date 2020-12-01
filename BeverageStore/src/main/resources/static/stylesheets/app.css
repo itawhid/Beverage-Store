@@ -13,3 +13,7 @@
 #link-logout {
     text-decoration: none;
 }
+
+.nav-tabs .nav-item .nav-link {
+    font-size: 30px;
+}
