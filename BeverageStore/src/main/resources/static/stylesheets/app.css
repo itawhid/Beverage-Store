@@ -17,3 +17,13 @@
 .nav-tabs .nav-item .nav-link {
     font-size: 30px;
 }
+
+footer {
+    text-align: center;
+    font-weight: bold;
+}
+
+footer a {
+    color: black;
+    text-decoration: none;
+}

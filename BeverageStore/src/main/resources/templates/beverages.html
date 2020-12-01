@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/fragments.html :: headerfiles"></head>
+<head th:replace="fragments/fragments :: headerfiles"></head>
     <body>
-        <div th:replace="fragments/fragments.html :: nav-bar"></div>
+        <div th:replace="fragments/fragments :: nav-bar"></div>
 
         <div class="container">
             <br>
@@ -86,9 +86,17 @@
                 </div>
             </div>
         </div>
+
+        <div th:replace="fragments/fragments :: footer"></div>
     </body>
 
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+            let cartItemCount = /*[[${cartItemCount}]]*/ '0';
+
+            updateCartItemCount(cartItemCount);
+        /*]]>*/
+
         $('.btn-add-bottle').click(function () {
             addItemToCart(parseInt($(this).data('id')), true);
         });
@@ -98,7 +106,7 @@
         });
 
         function addItemToCart(beverageId, isBottle) {
-            
+
         }
     </script>
 </html>

@@ -37,6 +37,7 @@
                         <a class="nav-link" th:href="@{/orders}">Orders</a>
                     </li>
                     <li id="cart" class="nav-item">
+                        <span id="badge-cart-item-count" class="badge badge-pill badge-primary" style="float:right;margin-bottom:-10px;">0</span> <!-- your badge -->
                         <a class="nav-link" th:href="@{/cart}">Cart</a>
                     </li>
                 </ul>
@@ -45,5 +46,9 @@
                 </form>
             </div>
         </nav>
+
+        <footer class="fixed-bottom" th:fragment="footer">
+            <a th:href="@{/}" th:text="'© ' + ${#dates.year(#dates.createNow())} + ' Beverage Store'"></a>
+        </footer>
     </body>
 </html>

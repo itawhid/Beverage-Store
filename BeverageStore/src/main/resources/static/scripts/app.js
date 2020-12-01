@@ -11,3 +11,7 @@ $(document).ready(function () {
         $('.navbar-nav #cart').addClass('active');
     }
 });
+
+function updateCartItemCount(cartItemCount) {
+    $('#badge-cart-item-count').text(cartItemCount);
+}

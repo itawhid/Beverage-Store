@@ -28,4 +28,8 @@ public class CartService {
     public List<BeverageCartItem> getCartItems() {
         return cartItems;
     }
+
+    public int getCartItemCount() {
+        return cartItems.size();
+    }
 }

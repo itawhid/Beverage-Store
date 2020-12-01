@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/fragments.html :: headerfiles"></head>
-<body>
-<div th:replace="fragments/fragments.html :: nav-bar">...</div>
-</body>
+    <head th:replace="fragments/fragments :: headerfiles"></head>
+    <body>
+        <div th:replace="fragments/fragments :: nav-bar"></div>
+
+        <div th:replace="fragments/fragments :: footer"></div>
+    </body>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+            let cartItemCount = /*[[${cartItemCount}]]*/ '0';
+
+            updateCartItemCount(cartItemCount);
+        /*]]>*/
+    </script>
 </html>
