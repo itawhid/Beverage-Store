@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/fragments.html :: headerfiles"></head>
+    <body>
+        <div class="container">
+            <div class="d-flex justify-content-center">
+                <form id="login-form" method="POST" th:action="@{/login}">
+                    <h2 class="text-center">Beverage Store</h2>
+                    <br>
+                    <br>
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <div>
+                        <h2 class="text-center"> Sign In </h2>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="username" placeholder="Username" required="required">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password" placeholder="Password" required="required">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block"> Sign In </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
