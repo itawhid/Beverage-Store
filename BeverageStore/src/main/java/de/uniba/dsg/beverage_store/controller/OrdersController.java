@@ -17,8 +17,6 @@ public class OrdersController {
 
     @GetMapping
     public String getOrders(Model model) {
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
-
         return "orders";
     }
 }

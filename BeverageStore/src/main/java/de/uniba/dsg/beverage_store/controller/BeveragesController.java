@@ -37,7 +37,6 @@ public class BeveragesController {
 
         model.addAttribute("bottles", bottles);
         model.addAttribute("crates", crates);
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
 
         return "beverages";
     }

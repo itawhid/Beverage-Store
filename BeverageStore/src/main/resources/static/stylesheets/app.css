@@ -21,9 +21,27 @@
 footer {
     text-align: center;
     font-weight: bold;
+    background: white;
 }
 
-footer a {
+footer a, footer a:hover {
     color: black;
     text-decoration: none;
+}
+
+#tbl-cart-details {
+    width: 100%;
+    font-size: 15px;
+}
+
+.cnt-tbl-beverages {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 750px;
+}
+
+#cnt-tbl-cart {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 750px;
 }

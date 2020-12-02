@@ -9,13 +9,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
         <script src="/scripts/app.js"></script>
 
         <!-- Style-sheets -->
-        <link rel="stylesheet" href="/stylesheets/app.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+
+        <link rel="stylesheet" href="/stylesheets/app.css">
 
         <title>Beverage Store</title>
     </head>
@@ -48,7 +52,7 @@
         </nav>
 
         <footer class="fixed-bottom" th:fragment="footer">
-            <a th:href="@{/}" th:text="'© ' + ${#dates.year(#dates.createNow())} + ' Beverage Store'"></a>
+            <h4><a th:href="@{/}" th:text="'© ' + ${#dates.year(#dates.createNow())} + ' Beverage Store'"></a></h4>
         </footer>
     </body>
 </html>

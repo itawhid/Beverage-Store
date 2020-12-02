@@ -17,8 +17,6 @@ public class HomeController {
 
     @GetMapping
     public String getHome(Model model) {
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
-
         return "home";
     }
 }

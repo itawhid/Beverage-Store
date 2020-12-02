@@ -1,9 +1,13 @@
 package de.uniba.dsg.beverage_store.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class BeverageCartItem {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CartItem {
     private int cartItemId;
     private BeverageType beverageType;
     private long beverageId;
@@ -11,4 +15,8 @@ public class BeverageCartItem {
     private String picUrl;
     private double price;
     private int inStock;
+    private double volume;
+    private double volumePercent;
+    private String supplier;
+    private int noOfBottle;
 }
