@@ -1,6 +1,7 @@
 package de.uniba.dsg.beverage_store.controller;
 
 import de.uniba.dsg.beverage_store.dto.CheckoutDTO;
+import de.uniba.dsg.beverage_store.dto.SubmitOrderDTO;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.service.CartService;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -57,5 +59,10 @@ public class CartController {
         }
 
         return "redirect:/cart/checkout";
+    }
+
+    @PostMapping(value = "/submit")
+    public String submit(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Principal principal) {
+        return "redirect:/orders/ORD201200001";
     }
 }
