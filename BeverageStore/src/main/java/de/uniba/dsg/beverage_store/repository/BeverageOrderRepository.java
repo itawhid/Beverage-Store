@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface BeverageOrderRepository extends JpaRepository<BeverageOrder, Long> {
     @EntityGraph(value = "BeverageOrder.beverageOrders")
-    List<BeverageOrder> findAllByUserUsername(String userName);
+    List<BeverageOrder> findAllByUserUsernameOrderByOrderNumber(String userName);
 
     @EntityGraph(value = "BeverageOrder.beverageOrders")
     Optional<BeverageOrder> findBeverageOrderByOrderNumber(String orderNumber);

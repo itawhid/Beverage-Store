@@ -36,6 +36,16 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p id="txt-deliveryAddress"></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p id="txt-billingAddress"></p>
+                                </div>
+                            </div>
                         </fieldset>
                     </div>
 
@@ -67,4 +77,40 @@
 
         <div th:replace="fragments/fragments :: footer"></div>
     </body>
+
+    <script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+        let addresses = [[${addresses}]];
+
+        $(document).ready(() => {
+            updateDeliveryAddress();
+            updateBillingAddress();
+        });
+
+        $('select[name="deliveryAddressId"]').change(updateDeliveryAddress);
+        $('select[name="billingAddressId"]').change(updateBillingAddress);
+
+        function updateDeliveryAddress() {
+            $('#txt-deliveryAddress').text(getAddressText($('select[name="deliveryAddressId"]').val()));
+        }
+
+        function updateBillingAddress() {
+            $('#txt-billingAddress').text(getAddressText($('select[name="billingAddressId"]').val()));
+        }
+
+        function getAddressText(selectedAddressId) {
+            selectedAddressId = parseInt(selectedAddressId);
+
+            if (isNaN(selectedAddressId) || parseInt(selectedAddressId) < 1) {
+                return "No address is selected.";
+            }
+
+            let address = addresses.filter((a) => {
+                return a.id === selectedAddressId;
+            })[0];
+
+            return (address.street + ' ' + address.houseNumber + ', ' + address.postalCode);
+        }
+    /*]]>*/
+    </script>
 </html>

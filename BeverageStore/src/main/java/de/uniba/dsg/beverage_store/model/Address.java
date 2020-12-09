@@ -1,7 +1,6 @@
 package de.uniba.dsg.beverage_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,7 +38,7 @@ public class Address {
 
     // Entity Relations
     @ManyToOne
-    @JsonIgnoreProperties({"addresses", "beverageOrders"})
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "deliveryAddress")
