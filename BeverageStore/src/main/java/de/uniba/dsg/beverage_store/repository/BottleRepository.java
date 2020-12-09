@@ -1,7 +1,10 @@
 package de.uniba.dsg.beverage_store.repository;
 
 import de.uniba.dsg.beverage_store.model.Bottle;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BottleRepository extends CrudRepository<Bottle, Long> {
+import java.util.List;
+
+public interface BottleRepository extends JpaRepository<Bottle, Long> {
+    List<Bottle> findByOrderByNameAsc();
 }

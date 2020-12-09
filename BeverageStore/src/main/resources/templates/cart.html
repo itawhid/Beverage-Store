@@ -32,36 +32,42 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="item : ${cartItems}" th:attr="data-id=${item.cartItemId}">
-                                    <td>
-                                        <img width="120" th:src="${item.picUrl}">
-                                    </td>
-                                    <td th:text="${item.name}"></td>
-                                    <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
-                            ? 'Bottle'
-                            : 'Crate'"></td>
-                                    <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
-                            ? ${#numbers.formatDecimal(item.volume, 1, 'DEFAULT', 2, 'DEFAULT')}
-                            : '--'"></td>
-                                    <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
-                            ? (${#numbers.formatDecimal(item.volumePercent, 1, 'DEFAULT', 2, 'DEFAULT')} + '%')
-                            : '--'"></td>
-                                    <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
-                            ? (${item.volumePercent > 0}
-                                ? 'Yes'
-                                : 'No')
-                            : '--'"></td>
-                                    <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).CRATE}
-                            ? ${item.noOfBottle}
-                            : '--'"></td>
-                                    <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
-                            ? ${item.supplier}
-                            : '--'"></td>
-                                    <td th:text="${#numbers.formatDecimal(item.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary btn-remove-cart-item" th:attr="data-id=${item.cartItemId}">Remove</button>
-                                    </td>
-                                </tr>
+                                    <tr th:each="item : ${cartItems}" th:attr="data-id=${item.cartItemId}">
+                                        <td>
+                                            <img width="120" th:src="${item.picUrl}">
+                                        </td>
+                                        <td th:text="${item.name}"></td>
+                                        <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
+                                            ? 'Bottle'
+                                            : 'Crate'">
+                                        </td>
+                                        <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
+                                            ? ${#numbers.formatDecimal(item.volume, 1, 'DEFAULT', 2, 'DEFAULT')}
+                                            : '--'">
+                                        </td>
+                                        <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
+                                            ? (${#numbers.formatDecimal(item.volumePercent, 1, 'DEFAULT', 2, 'DEFAULT')} + '%')
+                                            : '--'">
+                                        </td>
+                                        <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
+                                            ? (${item.volumePercent > 0}
+                                                ? 'Yes'
+                                                : 'No')
+                                            : '--'">
+                                        </td>
+                                        <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).CRATE}
+                                            ? ${item.noOfBottle}
+                                            : '--'">
+                                        </td>
+                                        <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
+                                            ? ${item.supplier}
+                                            : '--'">
+                                        </td>
+                                        <td th:text="${#numbers.formatDecimal(item.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-remove-cart-item" th:attr="data-id=${item.cartItemId}">Remove</button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -72,7 +78,7 @@
                     <fieldset class="border p-2">
                         <legend class="w-auto">Cart Details</legend>
 
-                        <table id="tbl-cart-details">
+                        <table class="tbl-details">
                             <tbody>
                                 <tr>
                                     <td>Total Item(s):</td>
@@ -87,7 +93,7 @@
 
                         <br>
 
-                        <form method="POST" th:action="@{/cart/checkout}">
+                        <form method="POST" th:action="@{/cart/checkout/process}">
                             <input type="hidden" name="cartItemCount">
                             <button type="submit" class="btn btn-primary btn-block">Checkout</button>
                         </form>
