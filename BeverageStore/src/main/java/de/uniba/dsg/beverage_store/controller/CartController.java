@@ -2,8 +2,14 @@ package de.uniba.dsg.beverage_store.controller;
 
 import de.uniba.dsg.beverage_store.dto.CheckoutDTO;
 import de.uniba.dsg.beverage_store.dto.SubmitOrderDTO;
+import de.uniba.dsg.beverage_store.model.Address;
+import de.uniba.dsg.beverage_store.model.BeverageOrder;
 import de.uniba.dsg.beverage_store.model.CartItem;
+import de.uniba.dsg.beverage_store.model.User;
+import de.uniba.dsg.beverage_store.repository.AddressRepository;
+import de.uniba.dsg.beverage_store.repository.UserRepository;
 import de.uniba.dsg.beverage_store.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -19,10 +25,17 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
@@ -45,13 +58,8 @@ public class CartController {
         return "cart";
     }
 
-    @GetMapping(value = "/checkout")
-    public String getCheckout(Model model) {
-        return "checkout";
-    }
-
-    @PostMapping(value = "/checkout")
-    public String checkout(@Valid CheckoutDTO checkoutDTO, Errors errors, RedirectAttributes redirectAttributes) {
+    @PostMapping(value = "/checkout/process")
+    public String processCheckout(@Valid CheckoutDTO checkoutDTO, Errors errors, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             redirectAttributes.addFlashAttribute("hasCheckoutError", true);
 
@@ -61,8 +69,38 @@ public class CartController {
         return "redirect:/cart/checkout";
     }
 
+    @GetMapping(value = "/checkout")
+    public String getCheckout(Model model, Principal principal) {
+        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("cartTotal", cartService.getCartTotal());
+
+        model.addAttribute("submitOrderDTO", new SubmitOrderDTO());
+
+        return "checkout";
+    }
+
     @PostMapping(value = "/submit")
-    public String submit(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Principal principal) {
-        return "redirect:/orders/ORD201200001";
+    public String submit(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Model model, Principal principal) {
+        if (errors.hasErrors()) {
+            model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
+            model.addAttribute("cartItemCount", cartService.getCartItemCount());
+            model.addAttribute("cartTotal", cartService.getCartTotal());
+
+            return "checkout";
+        }
+
+        Optional<User> optionalUser = userRepository.findUserByUsername(principal.getName());
+
+        Optional<Address> optionalDeliveryAddress = addressRepository.findById(submitOrderDTO.getDeliveryAddressId());
+        Optional<Address> optionalBillingAddress = addressRepository.findById(submitOrderDTO.getBillingAddressId());
+
+        BeverageOrder beverageOrder = cartService.submitOrder(optionalUser.get(), optionalDeliveryAddress.get(), optionalBillingAddress.get());
+
+        return "redirect:/orders/" + beverageOrder.getOrderNumber();
+    }
+
+    private List<Address> getAddressesByUsername(String username) {
+        return addressRepository.findAllByUserUsername(username);
     }
 }

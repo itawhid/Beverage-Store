@@ -5,6 +5,66 @@
     <body>
         <div th:replace="fragments/fragments :: nav-bar"></div>
 
+        <div class="container">
+            <form method="POST" th:action="@{/cart/submit}" th:object="${submitOrderDTO}">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <div class="row">
+                    <div class="col-md-7">
+                        <fieldset class="border p-2">
+                            <legend class="w-auto">Addresses</legend>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="deliveryAddressId">Delivery Address</label>
+                                        <select th:field="*{deliveryAddressId}" id="deliveryAddressId" name="deliveryAddressId" class="form-control">
+                                            <option value="0" disabled selected>Select Delivery Address</option>
+                                            <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address.name}"></option>
+                                        </select>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('deliveryAddressId')}" th:errors="*{deliveryAddressId}"></small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="billingAddressId">Billing Address</label>
+                                        <select th:field="*{billingAddressId}" id="billingAddressId" name="billingAddressId" class="form-control">
+                                            <option value="0" disabled selected>Select Billing Address</option>
+                                            <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address.name}"></option>
+                                        </select>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('billingAddressId')}" th:errors="*{billingAddressId}"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="col-md-3">
+                        <fieldset class="border p-2">
+                            <legend class="w-auto">Details</legend>
+
+                            <table class="tbl-details">
+                                <tbody>
+                                    <tr>
+                                        <td>Total Item(s):</td>
+                                        <td th:text="${cartItemCount}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Price:</td>
+                                        <td th:text="${#numbers.formatDecimal(cartTotal, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button id="btn-submit-order" type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div th:replace="fragments/fragments :: footer"></div>
     </body>
 </html>

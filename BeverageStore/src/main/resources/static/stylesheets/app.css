@@ -32,7 +32,7 @@ footer a:hover {
     text-decoration: none;
 }
 
-#tbl-cart-details {
+.tbl-details {
     width: 100%;
     font-size: 15px;
 }
@@ -57,4 +57,14 @@ footer a:hover {
 
 .al-order:hover {
     text-decoration: none;
+}
+
+#cnt-tbl-order-items {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 730px;
+}
+
+#btn-submit-order {
+    margin-top: 18px;
 }

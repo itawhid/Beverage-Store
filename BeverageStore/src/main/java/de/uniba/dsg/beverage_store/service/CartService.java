@@ -69,7 +69,7 @@ public class CartService {
                 .filter(x -> x.getCartItemId() == cartItemId)
                 .findAny();
 
-        if (!optionalCartItem.isPresent()) {
+        if (optionalCartItem.isEmpty()) {
             throw new NotFoundException();
         }
 
@@ -86,24 +86,22 @@ public class CartService {
 
     public double getCartTotal() {
         return cartItems.stream()
-                .mapToDouble(x -> x.getPrice())
+                .mapToDouble(CartItem::getPrice)
                 .sum();
     }
 
-    public BeverageOrder createOrder(User user, Address deliveryAddress, Address billingAddress) {
+    public BeverageOrder submitOrder(User user, Address deliveryAddress, Address billingAddress) {
         BeverageOrder beverageOrder = new BeverageOrder(null, null, LocalDate.now(), getCartTotal(), user, deliveryAddress, billingAddress, null);
         beverageOrderRepository.save(beverageOrder);
 
-        beverageOrder.setOrderNumber(Helper.generateOrderNumber(beverageOrder.getId()));
-        beverageOrderRepository.save(beverageOrder);
-
         List<BeverageOrderItem> beverageOrderItems = new ArrayList<>();
-
-        for (CartItem cartItem: cartItems) {
-            beverageOrderItems.add(buildBeverageOrderItem(beverageOrder, cartItem.getBeverageType(), cartItem.getBeverageId()));
+        for (CartItem cartItem: cartItems) {beverageOrderItems.add(buildBeverageOrderItem(beverageOrder, cartItem.getBeverageType(), cartItem.getBeverageId()));
         }
 
         beverageOrderItemRepository.saveAll(beverageOrderItems);
+
+        beverageOrder.setOrderNumber(Helper.generateOrderNumber(beverageOrder.getId()));
+        beverageOrderRepository.save(beverageOrder);
 
         clearCart();
 
@@ -147,14 +145,17 @@ public class CartService {
     }
 
     private BeverageOrderItem buildBeverageOrderItem(BeverageOrder beverageOrder, BeverageType beverageType, Long beverageId) {
+        Optional<Bottle> optionalBottle = bottleRepository.findById(beverageId);
+        Optional<Crate> optionalCrate = crateRepository.findById(beverageId);
+
         return new BeverageOrderItem(
                 null,
                 beverageType,
                 beverageType == BeverageType.BOTTLE
-                        ? bottleRepository.findById(beverageId).get()
+                        ? optionalBottle.orElse(null)
                         : null,
-                beverageType == BeverageType.BOTTLE
-                        ? crateRepository.findById(beverageId).get()
+                beverageType == BeverageType.CRATE
+                        ? optionalCrate.orElse(null)
                         : null,
                 beverageOrder
         );

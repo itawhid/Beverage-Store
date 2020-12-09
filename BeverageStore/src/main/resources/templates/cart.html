@@ -78,7 +78,7 @@
                     <fieldset class="border p-2">
                         <legend class="w-auto">Cart Details</legend>
 
-                        <table id="tbl-cart-details">
+                        <table class="tbl-details">
                             <tbody>
                                 <tr>
                                     <td>Total Item(s):</td>
@@ -93,7 +93,7 @@
 
                         <br>
 
-                        <form method="POST" th:action="@{/cart/checkout}">
+                        <form method="POST" th:action="@{/cart/checkout/process}">
                             <input type="hidden" name="cartItemCount">
                             <button type="submit" class="btn btn-primary btn-block">Checkout</button>
                         </form>

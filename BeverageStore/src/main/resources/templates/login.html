@@ -9,6 +9,7 @@
                     <h2 class="text-center">Beverage Store</h2>
                     <br>
                     <br>
+                    <p th:if="${param.error}" class="text-center text-danger">Wrong Username or Password</p>
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                     <div>
                         <h2 class="text-center"> Sign In </h2>
