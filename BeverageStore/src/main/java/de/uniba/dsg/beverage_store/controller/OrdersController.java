@@ -8,8 +8,6 @@ import de.uniba.dsg.beverage_store.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +35,7 @@ public class OrdersController {
 
     @GetMapping
     public String getOrders(Model model, Principal principal) {
-        List<BeverageOrder> orders = beverageOrderRepository.findAllByUserUsername(principal.getName());
+        List<BeverageOrder> orders = beverageOrderRepository.findAllByUserUsernameOrderByOrderNumber(principal.getName());
 
         model.addAttribute("orders", orders);
 

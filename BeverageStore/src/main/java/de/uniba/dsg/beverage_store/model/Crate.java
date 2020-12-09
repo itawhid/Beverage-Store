@@ -13,7 +13,12 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity@NamedEntityGraph(
+        name = "Crate.crates",
+        attributeNodes = {
+                @NamedAttributeNode(value = "bottle")
+        }
+)
 public class Crate {
     @Id
     private Long id;
