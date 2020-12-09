@@ -1,11 +1,12 @@
 package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
+import de.uniba.dsg.beverage_store.helper.Helper;
 import de.uniba.dsg.beverage_store.model.*;
-import de.uniba.dsg.beverage_store.repository.BottleRepository;
-import de.uniba.dsg.beverage_store.repository.CrateRepository;
+import de.uniba.dsg.beverage_store.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +14,19 @@ import java.util.Optional;
 public class CartService {
 
     @Autowired
-    private BottleRepository bottleRepository;
+    AddressRepository addressRepository;
 
     @Autowired
     private CrateRepository crateRepository;
+
+    @Autowired
+    private BottleRepository bottleRepository;
+
+    @Autowired
+    BeverageOrderRepository beverageOrderRepository;
+
+    @Autowired
+    BeverageOrderItemRepository beverageOrderItemRepository;
 
     private int cartItemId;
 
@@ -59,15 +69,11 @@ public class CartService {
                 .filter(x -> x.getCartItemId() == cartItemId)
                 .findAny();
 
-        if (!optionalCartItem.isPresent()) {
+        if (optionalCartItem.isEmpty()) {
             throw new NotFoundException();
         }
 
         cartItems.remove(optionalCartItem.get());
-    }
-
-    public void clearCart() {
-        cartItems.clear();
     }
 
     public List<CartItem> getCartItems() {
@@ -80,8 +86,30 @@ public class CartService {
 
     public double getCartTotal() {
         return cartItems.stream()
-                .mapToDouble(x -> x.getPrice())
+                .mapToDouble(CartItem::getPrice)
                 .sum();
+    }
+
+    public BeverageOrder submitOrder(User user, Address deliveryAddress, Address billingAddress) {
+        BeverageOrder beverageOrder = new BeverageOrder(null, null, LocalDate.now(), getCartTotal(), user, deliveryAddress, billingAddress, null);
+        beverageOrderRepository.save(beverageOrder);
+
+        List<BeverageOrderItem> beverageOrderItems = new ArrayList<>();
+        for (CartItem cartItem: cartItems) {beverageOrderItems.add(buildBeverageOrderItem(beverageOrder, cartItem.getBeverageType(), cartItem.getBeverageId()));
+        }
+
+        beverageOrderItemRepository.saveAll(beverageOrderItems);
+
+        beverageOrder.setOrderNumber(Helper.generateOrderNumber(beverageOrder.getId()));
+        beverageOrderRepository.save(beverageOrder);
+
+        clearCart();
+
+        return beverageOrder;
+    }
+
+    private void clearCart() {
+        cartItems.clear();
     }
 
     private CartItem buildBottleCartItem(Bottle bottle) {
@@ -114,5 +142,22 @@ public class CartService {
         cartItem.setNoOfBottle(crate.getNoOfBottles());
 
         return cartItem;
+    }
+
+    private BeverageOrderItem buildBeverageOrderItem(BeverageOrder beverageOrder, BeverageType beverageType, Long beverageId) {
+        Optional<Bottle> optionalBottle = bottleRepository.findById(beverageId);
+        Optional<Crate> optionalCrate = crateRepository.findById(beverageId);
+
+        return new BeverageOrderItem(
+                null,
+                beverageType,
+                beverageType == BeverageType.BOTTLE
+                        ? optionalBottle.orElse(null)
+                        : null,
+                beverageType == BeverageType.CRATE
+                        ? optionalCrate.orElse(null)
+                        : null,
+                beverageOrder
+        );
     }
 }

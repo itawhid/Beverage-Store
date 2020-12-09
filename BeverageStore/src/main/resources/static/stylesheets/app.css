@@ -24,12 +24,15 @@ footer {
     background: white;
 }
 
-footer a, footer a:hover {
+footer a {
     color: black;
+}
+
+footer a:hover {
     text-decoration: none;
 }
 
-#tbl-cart-details {
+.tbl-details {
     width: 100%;
     font-size: 15px;
 }
@@ -44,4 +47,24 @@ footer a, footer a:hover {
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 750px;
+}
+
+#cnt-tbl-orders {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 730px;
+}
+
+.al-order:hover {
+    text-decoration: none;
+}
+
+#cnt-tbl-order-items {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 730px;
+}
+
+#btn-submit-order {
+    margin-top: 18px;
 }
