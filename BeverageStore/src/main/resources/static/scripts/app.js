@@ -8,9 +8,9 @@ function updateNavbarActiveLink() {
 
     if (window.location.pathname === '/' || window.location.href.endsWith('/home')) {
         $('.navbar-nav #home').addClass('active');
-    } else if (window.location.href.endsWith('/bottles') || window.location.href.endsWith('/crates')) {
+    } else if (window.location.href.endsWith('/bottle') || window.location.href.endsWith('/crate')) {
         $('.navbar-nav #beverages').addClass('active');
-    } else if (window.location.href.endsWith('/orders')) {
+    } else if (window.location.href.endsWith('/order')) {
         $('.navbar-nav #orders').addClass('active');
     } else if (window.location.href.endsWith('/cart')) {
         $('.navbar-nav #cart').addClass('active');

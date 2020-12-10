@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/bottles")
-public class BottlesController {
+@RequestMapping(value = "/bottle")
+public class BottleController {
 
     private final BottleRepository bottleRepository;
 
     @Autowired
-    public BottlesController(BottleRepository bottleRepository) {
+    public BottleController(BottleRepository bottleRepository) {
         this.bottleRepository = bottleRepository;
     }
 

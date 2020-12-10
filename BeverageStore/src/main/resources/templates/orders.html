@@ -22,7 +22,7 @@
                     <tbody>
                         <tr th:each="order : ${orders}">
                             <td>
-                                <a class="al-order" th:text="${order.orderNumber}" th:href="@{'/orders/' + ${order.orderNumber}}"></a>
+                                <a class="al-order" th:text="${order.orderNumber}" th:href="@{'/order/' + ${order.orderNumber}}"></a>
                             </td>
                             <td th:text="${#numbers.formatDecimal(order.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
                             <td th:text="${#temporals.format(order.date, 'dd MMM yyyy')}"></td>

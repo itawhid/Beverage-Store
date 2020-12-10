@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/crates")
-public class CratesController {
+@RequestMapping(value = "/crate")
+public class CrateController {
 
     private final CrateRepository crateRepository;
 
     @Autowired
-    public CratesController(CrateRepository crateRepository) {
+    public CrateController(CrateRepository crateRepository) {
         this.crateRepository = crateRepository;
     }
 

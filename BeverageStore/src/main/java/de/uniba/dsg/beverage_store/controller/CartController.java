@@ -97,7 +97,7 @@ public class CartController {
 
         BeverageOrder beverageOrder = cartService.submitOrder(optionalUser.get(), optionalDeliveryAddress.get(), optionalBillingAddress.get());
 
-        return "redirect:/orders/" + beverageOrder.getOrderNumber();
+        return "redirect:/order/" + beverageOrder.getOrderNumber();
     }
 
     private List<Address> getAddressesByUsername(String username) {
