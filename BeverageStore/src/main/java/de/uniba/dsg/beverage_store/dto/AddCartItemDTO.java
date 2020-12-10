@@ -13,4 +13,7 @@ public class AddCartItemDTO {
 
     @NotNull(message = "Beverage Type is required.")
     private BeverageType beverageType;
+
+    @Min(value = 1, message = "Quantity must be at least one.")
+    private int quantity;
 }

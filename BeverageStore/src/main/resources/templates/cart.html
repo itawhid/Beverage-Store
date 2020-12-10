@@ -27,7 +27,9 @@
                                     <th scope="col">Is Alcoholic</th>
                                     <th scope="col">No. of Bottles</th>
                                     <th scope="col">Supplier</th>
+                                    <th scope="col">Quantity</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Total</th>
                                     <th scope="col">Action(s)</th>
                                 </tr>
                                 </thead>
@@ -63,7 +65,9 @@
                                             ? ${item.supplier}
                                             : '--'">
                                         </td>
+                                        <td th:text="${item.quantity}"></td>
                                         <td th:text="${#numbers.formatDecimal(item.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
+                                        <td th:text="${#numbers.formatDecimal((item.quantity * item.price), 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
                                         <td>
                                             <button type="button" class="btn btn-primary btn-remove-cart-item" th:attr="data-id=${item.cartItemId}">Remove</button>
                                         </td>

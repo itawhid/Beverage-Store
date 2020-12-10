@@ -37,20 +37,29 @@ public class CartService {
         cartItems = new ArrayList<>();
     }
 
-    public CartItem addCartItem(BeverageType beverageType, Long beverageId) throws NotFoundException {
+    public CartItem addCartItem(BeverageType beverageType, Long beverageId, int quantity) throws NotFoundException {
         CartItem cartItem = null;
+
+        Optional<CartItem> cartItemOptional = getCartBeverage(beverageId, beverageType);
+
+        if (cartItemOptional.isPresent()) {
+            cartItem = cartItemOptional.get();
+            cartItem.addQuantity(quantity);
+
+            return cartItem;
+        }
 
         if (beverageType == BeverageType.BOTTLE) {
             Optional<Bottle> optionalBottle = bottleRepository.findById(beverageId);
 
             if (optionalBottle.isPresent()) {
-                cartItem = buildBottleCartItem(optionalBottle.get());
+                cartItem = buildBottleCartItem(optionalBottle.get(), quantity);
             }
         } else if (beverageType == BeverageType.CRATE) {
             Optional<Crate> optionalCrate = crateRepository.findById(beverageId);
 
             if (optionalCrate.isPresent()) {
-                cartItem = buildCrateCartItem(optionalCrate.get());
+                cartItem = buildCrateCartItem(optionalCrate.get(), quantity);
             }
         }
 
@@ -81,12 +90,14 @@ public class CartService {
     }
 
     public int getCartItemCount() {
-        return cartItems.size();
+        return cartItems.stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
     }
 
     public double getCartTotal() {
         return cartItems.stream()
-                .mapToDouble(CartItem::getPrice)
+                .mapToDouble(x -> (x.getQuantity() * x.getPrice()))
                 .sum();
     }
 
@@ -95,7 +106,7 @@ public class CartService {
         beverageOrderRepository.save(beverageOrder);
 
         List<BeverageOrderItem> beverageOrderItems = new ArrayList<>();
-        for (CartItem cartItem: cartItems) {beverageOrderItems.add(buildBeverageOrderItem(beverageOrder, cartItem.getBeverageType(), cartItem.getBeverageId()));
+        for (CartItem cartItem: cartItems) {beverageOrderItems.add(buildBeverageOrderItem(beverageOrder, cartItem.getBeverageType(), cartItem.getBeverageId(), cartItem.getQuantity()));
         }
 
         beverageOrderItemRepository.saveAll(beverageOrderItems);
@@ -112,12 +123,13 @@ public class CartService {
         cartItems.clear();
     }
 
-    private CartItem buildBottleCartItem(Bottle bottle) {
+    private CartItem buildBottleCartItem(Bottle bottle, int quantity) {
         CartItem cartItem = new CartItem();
 
         cartItem.setCartItemId(0);
         cartItem.setBeverageType(BeverageType.BOTTLE);
         cartItem.setBeverageId(bottle.getId());
+        cartItem.setQuantity(quantity);
         cartItem.setName(bottle.getName());
         cartItem.setPicUrl(bottle.getBottlePic());
         cartItem.setPrice(bottle.getPrice());
@@ -129,12 +141,13 @@ public class CartService {
         return cartItem;
     }
 
-    private CartItem buildCrateCartItem(Crate crate) {
+    private CartItem buildCrateCartItem(Crate crate, int quantity) {
         CartItem cartItem = new CartItem();
 
         cartItem.setCartItemId(0);
         cartItem.setBeverageType(BeverageType.CRATE);
         cartItem.setBeverageId(crate.getId());
+        cartItem.setQuantity(quantity);
         cartItem.setName(crate.getName());
         cartItem.setPicUrl(crate.getCratePic());
         cartItem.setPrice(crate.getPrice());
@@ -144,13 +157,14 @@ public class CartService {
         return cartItem;
     }
 
-    private BeverageOrderItem buildBeverageOrderItem(BeverageOrder beverageOrder, BeverageType beverageType, Long beverageId) {
+    private BeverageOrderItem buildBeverageOrderItem(BeverageOrder beverageOrder, BeverageType beverageType, Long beverageId, int quantity) {
         Optional<Bottle> optionalBottle = bottleRepository.findById(beverageId);
         Optional<Crate> optionalCrate = crateRepository.findById(beverageId);
 
         return new BeverageOrderItem(
                 null,
                 beverageType,
+                quantity,
                 beverageType == BeverageType.BOTTLE
                         ? optionalBottle.orElse(null)
                         : null,
@@ -159,5 +173,11 @@ public class CartService {
                         : null,
                 beverageOrder
         );
+    }
+
+    private Optional<CartItem> getCartBeverage(long beverageId, BeverageType beverageType) {
+        return cartItems.stream()
+                .filter(x -> x.getBeverageId() == beverageId && x.getBeverageType() == beverageType)
+                .findAny();
     }
 }

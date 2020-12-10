@@ -6,7 +6,7 @@
         <div th:replace="fragments/fragments :: nav-bar"></div>
 
         <div th:if="${orderNotFound == true}" class="alert alert-danger" role="alert">
-            No order found with this order number.
+            No order found with this Order Number.
         </div>
 
         <div th:unless="${orderNotFound == true}" class="container-fluid">
@@ -28,7 +28,9 @@
                                         <th scope="col">Is Alcoholic</th>
                                         <th scope="col">No. of Bottles</th>
                                         <th scope="col">Supplier</th>
+                                        <th scope="col">Quantity</th>
                                         <th scope="col">Price</th>
+                                        <th scope="col">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,9 +70,14 @@
                                             ? ${item.bottle.supplier}
                                             : '--'">
                                         </td>
+                                        <td th:text="${item.quantity}"></td>
                                         <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
                                             ? ${#numbers.formatDecimal(item.bottle.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'
                                             : ${#numbers.formatDecimal(item.crate.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'">
+                                        </td>
+                                        <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
+                                            ? ${#numbers.formatDecimal((item.quantity * item.bottle.price), 1, 'DEFAULT', 2, 'DEFAULT')} + '€'
+                                            : ${#numbers.formatDecimal((item.quantity * item.crate.price), 1, 'DEFAULT', 2, 'DEFAULT')} + '€'">
                                         </td>
                                     </tr>
                                 </tbody>

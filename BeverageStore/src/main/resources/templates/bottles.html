@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/fragments :: headerfiles"></head>
+    <body>
+        <div th:replace="fragments/fragments :: nav-bar"></div>
+
+        <div class="container">
+            <br>
+            <div class="cnt-tbl-beverages">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Volume</th>
+                            <th scope="col">Volume Percent</th>
+                            <th scope="col">Is Alcoholic</th>
+                            <th scope="col">Supplier</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">In Stock</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Action(s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="bottle : ${bottles}">
+                            <td>
+                                <img width="120" th:src="${bottle.bottlePic}">
+                            </td>
+                            <td th:text="${bottle.name}"></td>
+                            <td th:text="${#numbers.formatDecimal(bottle.volume, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td th:text="${#numbers.formatDecimal(bottle.volumePercent, 1, 'DEFAULT', 2, 'DEFAULT')} + '%'"></td>
+                            <td th:text="${bottle.volumePercent > 0}
+                                            ? 'Yes'
+                                            : 'No'"></td>
+                            <td th:text="${bottle.supplier}"></td>
+                            <td th:text="${#numbers.formatDecimal(bottle.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
+                            <td th:text="${bottle.inStock}"></td>
+                            <td>
+                                <select name="bottleQuantity" class="form-control">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-add-bottle" th:attr="data-id=${bottle.id}">Add To Cart</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:replace="fragments/fragments :: footer"></div>
+    </body>
+
+    <script>
+        $('.btn-add-bottle').click(function () {
+            let id = parseInt($(this).data('id'));
+            let quantity = parseInt($(this).closest('tr').find('select[name="bottleQuantity"]').val());
+
+            addItemToCart(id, quantity, true);
+        });
+    </script>
+</html>

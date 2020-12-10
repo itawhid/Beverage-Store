@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -28,6 +29,9 @@ public class BeverageOrderItem {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Beverage Type is required.")
     private BeverageType beverageType;
+
+    @Min(value = 1, message = "Quantity must be at least one.")
+    private int quantity;
 
     //Entity Relations
     @ManyToOne

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/fragments :: headerfiles"></head>
+    <body>
+        <div th:replace="fragments/fragments :: nav-bar"></div>
+
+        <div class="container">
+            <br>
+            <div class="cnt-tbl-beverages">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">No. of Bottles</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">In Stock</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Action(s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="crate : ${crates}">
+                            <td>
+                                <img width="120" th:src="${crate.cratePic}">
+                            </td>
+                            <td th:text="${crate.name}"></td>
+                            <td th:text="${crate.noOfBottles}"></td>
+                            <td th:text="${#numbers.formatDecimal(crate.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
+                            <td th:text="${crate.inStock}"></td>
+                            <td>
+                                <select name="crateQuantity" class="form-control">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-add-crate" th:attr="data-id=${crate.id}">Add To Cart</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:replace="fragments/fragments :: footer"></div>
+    </body>
+
+    <script>
+        $('.btn-add-crate').click(function () {
+            let id = parseInt($(this).data('id'));
+            let quantity = parseInt($(this).closest('tr').find('select[name="crateQuantity"]').val());
+
+            addItemToCart(id, quantity, false);
+        });
+    </script>
+</html>
