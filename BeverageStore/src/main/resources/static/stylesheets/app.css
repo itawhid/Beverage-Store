@@ -68,3 +68,16 @@ footer a:hover {
 #btn-submit-order {
     margin-top: 18px;
 }
+
+.alert-danger {
+    text-align: center;
+}
+
+a {
+    cursor: pointer;
+}
+
+.txt-page-center {
+    text-align: center;
+    margin-top: 400px;
+}

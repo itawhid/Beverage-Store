@@ -46,7 +46,8 @@ public class CartItemController {
         }
 
         try {
-            CartItem newCartItem = cartService.addCartItem(addCartItemDTO.getBeverageType(), addCartItemDTO.getBeverageId());
+            CartItem newCartItem = cartService.addCartItem(addCartItemDTO.getBeverageType(), addCartItemDTO.getBeverageId(), addCartItemDTO.getQuantity());
+            System.out.println(newCartItem.getName() + '_' + newCartItem.getQuantity());
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(newCartItem);
@@ -61,8 +62,8 @@ public class CartItemController {
         try {
             cartService.removeCartItem(cartItemId);
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Cart Item successfully deleted");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .build();
         } catch (NotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No Cart Item found with ID: " + cartItemId);

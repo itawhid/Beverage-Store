@@ -8,7 +8,7 @@ function updateNavbarActiveLink() {
 
     if (window.location.pathname === '/' || window.location.href.endsWith('/home')) {
         $('.navbar-nav #home').addClass('active');
-    } else if (window.location.href.endsWith('/beverages')) {
+    } else if (window.location.href.endsWith('/bottles') || window.location.href.endsWith('/crates')) {
         $('.navbar-nav #beverages').addClass('active');
     } else if (window.location.href.endsWith('/orders')) {
         $('.navbar-nav #orders').addClass('active');
@@ -46,13 +46,14 @@ function updateCartTotal() {
     });
 }
 
-function addItemToCart(beverageId, isBottle) {
+function addItemToCart(beverageId, quantity, isBottle) {
     $.ajax({
         url: '/api/cart-items',
         type: 'POST',
         data: JSON.stringify({
             beverageId: beverageId,
-            beverageType: isBottle ? 'BOTTLE' : 'CRATE'
+            beverageType: isBottle ? 'BOTTLE' : 'CRATE',
+            quantity: quantity
         }),
         contentType: 'application/json',
         success: (data) => {
