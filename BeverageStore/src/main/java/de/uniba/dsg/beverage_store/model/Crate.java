@@ -28,7 +28,7 @@ public class Crate {
     private String name;
 
     @NotNull(message = "Crate Picture is required")
-    @Pattern(regexp = "(https:\\/\\/).*\\.(?:jpg|gif|png)", message = "Crate Pic Must be a valid URL to a picture.")
+    @Pattern(regexp = "(https://).*\\.(?:jpg|gif|png)", message = "Crate Pic Must be a valid URL to a picture.")
     private String cratePic;
 
     @Min(value = 0, message = "No of Bottles must be more then or equal to zero.")

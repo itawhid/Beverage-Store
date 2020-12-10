@@ -9,7 +9,6 @@ import de.uniba.dsg.beverage_store.model.User;
 import de.uniba.dsg.beverage_store.repository.AddressRepository;
 import de.uniba.dsg.beverage_store.repository.UserRepository;
 import de.uniba.dsg.beverage_store.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -31,14 +30,16 @@ import java.util.Optional;
 @RequestMapping(value = "/cart")
 public class CartController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
+    private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
+
+    public CartController(UserRepository userRepository, AddressRepository addressRepository) {
+        this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
+    }
 
     @GetMapping
     public String getCart(Model model, HttpServletRequest request) {
@@ -80,24 +81,36 @@ public class CartController {
         return "checkout";
     }
 
-    @PostMapping(value = "/submit")
-    public String submit(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Model model, Principal principal) {
-        if (errors.hasErrors()) {
-            model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-            model.addAttribute("cartItemCount", cartService.getCartItemCount());
-            model.addAttribute("cartTotal", cartService.getCartTotal());
+    @PostMapping(value = "/checkout")
+    public String checkout(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Model model, Principal principal) {
+        boolean hasModelError = false, hasServerError = false;
 
-            return "checkout";
+        if (errors.hasErrors()) {
+            hasModelError = true;
         }
 
-        Optional<User> optionalUser = userRepository.findUserByUsername(principal.getName());
+        if (!hasModelError) {
+            Optional<User> optionalUser = userRepository.findUserByUsername(principal.getName());
 
-        Optional<Address> optionalDeliveryAddress = addressRepository.findById(submitOrderDTO.getDeliveryAddressId());
-        Optional<Address> optionalBillingAddress = addressRepository.findById(submitOrderDTO.getBillingAddressId());
+            Optional<Address> optionalDeliveryAddress = addressRepository.findById(submitOrderDTO.getDeliveryAddressId());
+            Optional<Address> optionalBillingAddress = addressRepository.findById(submitOrderDTO.getBillingAddressId());
 
-        BeverageOrder beverageOrder = cartService.submitOrder(optionalUser.get(), optionalDeliveryAddress.get(), optionalBillingAddress.get());
+            try {
+                BeverageOrder beverageOrder = cartService.submitOrder(optionalUser.get(), optionalDeliveryAddress.get(), optionalBillingAddress.get());
 
-        return "redirect:/order/" + beverageOrder.getOrderNumber();
+                return "redirect:/order/" + beverageOrder.getOrderNumber();
+            } catch (Exception ex) {
+                hasServerError = true;
+            }
+        }
+
+        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("cartTotal", cartService.getCartTotal());
+
+        model.addAttribute("hasServerError", hasServerError);
+
+        return "checkout";
     }
 
     private List<Address> getAddressesByUsername(String username) {
