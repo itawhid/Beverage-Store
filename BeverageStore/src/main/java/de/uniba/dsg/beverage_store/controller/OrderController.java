@@ -5,11 +5,13 @@ import de.uniba.dsg.beverage_store.model.BeverageOrder;
 import de.uniba.dsg.beverage_store.model.BeverageOrderItem;
 import de.uniba.dsg.beverage_store.service.BeverageOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
@@ -26,10 +28,12 @@ public class OrderController {
     }
 
     @GetMapping
-    public String getOrders(Model model, Principal principal) {
-        List<BeverageOrder> orders = beverageOrderService.getBeverageOrdersByUsername(principal.getName());
+    public String getOrders(@RequestParam(defaultValue = "1") int page, Model model, Principal principal) {
+        Page<BeverageOrder> beverageOrderPage = beverageOrderService.getPagedBeverageOrdersByUsername(principal.getName(), page);
 
-        model.addAttribute("orders", orders);
+        model.addAttribute("orders", beverageOrderPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("numberOfPages", beverageOrderPage.getTotalPages());
 
         return "orders";
     }

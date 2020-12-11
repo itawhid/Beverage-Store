@@ -1,11 +1,14 @@
 package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
+import de.uniba.dsg.beverage_store.helper.Constants;
 import de.uniba.dsg.beverage_store.helper.Helper;
 import de.uniba.dsg.beverage_store.model.*;
 import de.uniba.dsg.beverage_store.repository.BeverageOrderItemRepository;
 import de.uniba.dsg.beverage_store.repository.BeverageOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,8 +44,8 @@ public class BeverageOrderService {
         return beverageOrderOptional.get();
     }
 
-    public List<BeverageOrder> getBeverageOrdersByUsername(String username) {
-        return beverageOrderRepository.findAllByUserUsernameOrderByOrderNumber(username);
+    public Page<BeverageOrder> getPagedBeverageOrdersByUsername(String username, int page) {
+        return beverageOrderRepository.findAllByUserUsernameOrderByOrderNumber(username, PageRequest.of(page - 1, Constants.PAGE_SIZE_BEVERAGE_ORDER));
     }
 
     public List<BeverageOrderItem> getBeverageOrderItemsByOrderNumber(String orderNumber) {

@@ -1,14 +1,16 @@
 package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
+import de.uniba.dsg.beverage_store.helper.Constants;
 import de.uniba.dsg.beverage_store.model.Bottle;
 import de.uniba.dsg.beverage_store.model.Crate;
 import de.uniba.dsg.beverage_store.repository.BottleRepository;
 import de.uniba.dsg.beverage_store.repository.CrateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,12 +35,12 @@ public class BeverageService {
         return bottleOptional.get();
     }
 
-    public List<Bottle> getAllBottles() {
-        return bottleRepository.findByOrderByNameAsc();
+    public Page<Bottle> getPagedBottles(int page) {
+        return bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, Constants.PAGE_SIZE_BOTTLE));
     }
 
-    public List<Crate> getAllCrates() {
-        return crateRepository.findByOrderByNameAsc();
+    public Page<Crate> getPagedCrates(int page) {
+        return crateRepository.findByOrderByNameAsc(PageRequest.of(page - 1, Constants.PAGE_SIZE_CRATE));
     }
 
     public Crate getCrateById(Long id) throws NotFoundException {
