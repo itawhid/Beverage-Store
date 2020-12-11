@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/fragments :: headerfiles"></head>
+    <head th:replace="fragments/header :: header"></head>
     <body>
-        <div th:replace="fragments/fragments :: nav-bar"></div>
+        <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
         <div class="container">
             <br>
             <h2>Order List</h2>
             <br>
 
-            <div th:replace="fragments/fragments :: paginationControls(url = @{/order}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
+            <div th:replace="fragments/pagination-control :: pagination-control(url = @{/order}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
 
             <div id="cnt-tbl-orders">
                 <table class="table table-bordered">
@@ -34,6 +34,6 @@
             </div>
         </div>
 
-        <div th:replace="fragments/fragments :: footer"></div>
+        <div th:replace="fragments/footer :: footer"></div>
     </body>
 </html>

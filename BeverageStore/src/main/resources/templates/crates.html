@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/fragments :: headerfiles"></head>
+    <head th:replace="fragments/header :: header"></head>
     <body>
-        <div th:replace="fragments/fragments :: nav-bar"></div>
+        <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
         <div class="container">
             <br>
             <h2>Crates</h2>
             <br>
 
-            <div th:replace="fragments/fragments :: paginationControls(url = @{/crate}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
+            <div th:replace="fragments/pagination-control :: pagination-control(url = @{/crate}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
 
             <div class="cnt-tbl-beverages">
                 <table class="table table-bordered">
@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div th:replace="fragments/fragments :: footer"></div>
+        <div th:replace="fragments/footer :: footer"></div>
     </body>
 
     <script>

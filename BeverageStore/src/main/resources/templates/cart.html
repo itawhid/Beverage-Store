@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/fragments :: headerfiles"></head>
+    <head th:replace="fragments/header :: header"></head>
     <body>
-        <div th:replace="fragments/fragments :: nav-bar"></div>
+        <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
         <div th:if="${hasCheckoutError == true}" class="alert alert-danger" role="alert">
             At least one Cart Item is required for checkout.
@@ -107,7 +107,7 @@
             </div>
         </div>
 
-        <div th:replace="fragments/fragments :: footer"></div>
+        <div th:replace="fragments/footer :: footer"></div>
     </body>
 
     <script>
