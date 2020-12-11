@@ -4,7 +4,6 @@ import de.uniba.dsg.beverage_store.model.BeverageOrder;
 import de.uniba.dsg.beverage_store.model.BeverageOrderItem;
 import de.uniba.dsg.beverage_store.repository.BeverageOrderItemRepository;
 import de.uniba.dsg.beverage_store.repository.BeverageOrderRepository;
-import de.uniba.dsg.beverage_store.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,23 +11,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "/orders")
-public class OrdersController {
-
-    @Resource(name = "sessionScopedCartService")
-    private CartService cartService;
+@RequestMapping(value = "/order")
+public class OrderController {
 
     private final BeverageOrderRepository beverageOrderRepository;
     private final BeverageOrderItemRepository beverageOrderItemRepository;
 
     @Autowired
-    public OrdersController(BeverageOrderRepository beverageOrderRepository, BeverageOrderItemRepository beverageOrderItemRepository) {
+    public OrderController(BeverageOrderRepository beverageOrderRepository, BeverageOrderItemRepository beverageOrderItemRepository) {
         this.beverageOrderRepository = beverageOrderRepository;
         this.beverageOrderItemRepository = beverageOrderItemRepository;
     }

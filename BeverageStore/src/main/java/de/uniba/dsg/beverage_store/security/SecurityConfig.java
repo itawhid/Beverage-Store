@@ -1,7 +1,6 @@
 package de.uniba.dsg.beverage_store.security;
 
 import de.uniba.dsg.beverage_store.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,8 +16,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public SecurityConfig(UserService userService) {
+        this.userService = userService;
+    }
 
     @Bean
     public PasswordEncoder createEncoder() {
@@ -36,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/scripts/**", "/stylesheets/**").permitAll()
-                .antMatchers("/", "/home", "/bottles", "/crates", "/cart", "/orders/**", "/api/**", "/h2-console/**").authenticated()
+                .antMatchers("/", "/home", "/bottle", "/crate", "/cart", "/order/**", "/api/**", "/h2-console/**").authenticated()
                 .and()
                 .formLogin().loginPage("/login").defaultSuccessUrl("/home")
                 .and()

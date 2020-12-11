@@ -5,8 +5,12 @@
     <body>
         <div th:replace="fragments/fragments :: nav-bar"></div>
 
+        <div th:if="${hasServerError == true}" class="alert alert-danger" role="alert">
+            Unexpected error in creating the order.
+        </div>
+
         <div class="container">
-            <form method="POST" th:action="@{/cart/submit}" th:object="${submitOrderDTO}">
+            <form method="POST" th:action="@{/cart/checkout}" th:object="${submitOrderDTO}">
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                 <div class="row">
                     <div class="col-md-7">

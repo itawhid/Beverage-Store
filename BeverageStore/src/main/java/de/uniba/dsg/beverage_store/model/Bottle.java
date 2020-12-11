@@ -28,7 +28,7 @@ public class Bottle {
     private String name;
 
     @NotNull(message = "Bottle Picture is required")
-    @Pattern(regexp = "(https:\\/\\/).*\\.(?:jpg|gif|png)", message = "Bottle Pic Must be a valid URL to a picture.")
+    @Pattern(regexp = "(https://).*\\.(?:jpg|gif|png)", message = "Bottle Pic Must be a valid URL to a picture.")
     private String bottlePic;
 
     @MoreThanZero(message = "Volume must be more than zero.")

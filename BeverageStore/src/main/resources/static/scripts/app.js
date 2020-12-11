@@ -8,9 +8,9 @@ function updateNavbarActiveLink() {
 
     if (window.location.pathname === '/' || window.location.href.endsWith('/home')) {
         $('.navbar-nav #home').addClass('active');
-    } else if (window.location.href.endsWith('/bottles') || window.location.href.endsWith('/crates')) {
+    } else if (window.location.href.endsWith('/bottle') || window.location.href.endsWith('/crate')) {
         $('.navbar-nav #beverages').addClass('active');
-    } else if (window.location.href.endsWith('/orders')) {
+    } else if (window.location.href.endsWith('/order')) {
         $('.navbar-nav #orders').addClass('active');
     } else if (window.location.href.endsWith('/cart')) {
         $('.navbar-nav #cart').addClass('active');
@@ -27,7 +27,7 @@ function updateCartItemCount() {
 
             $('input[name ="cartItemCount"]').val(data);
         },
-        error: (request, status) => {
+        error: () => {
             $('#badge-cart-item-count').text(0);
             $('#txt-cart-item-count').text(0);
 
@@ -56,11 +56,11 @@ function addItemToCart(beverageId, quantity, isBottle) {
             quantity: quantity
         }),
         contentType: 'application/json',
-        success: (data) => {
+        success: () => {
             updateCartItemCount();
             alertify.success("Item successfully added to the cart.");
         },
-        error: (request, status) => {
+        error: () => {
             alertify.error("Error in adding item to the cart.");
         }
     });
@@ -70,13 +70,13 @@ function removeItemFromCart(cartItemId, successCallback) {
     $.ajax({
         url: '/api/cart-items/' + cartItemId,
         type: 'DELETE',
-        success: (data) => {
+        success: () => {
             successCallback();
             updateCartTotal();
             updateCartItemCount();
             alertify.success('Item successfully removed from the cart');
         },
-        error: (request, status) => {
+        error: () => {
             alertify.error("Error in removing item from the cart.");
         }
     });

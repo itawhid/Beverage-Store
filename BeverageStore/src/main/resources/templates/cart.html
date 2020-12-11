@@ -98,6 +98,7 @@
                         <br>
 
                         <form method="POST" th:action="@{/cart/checkout/process}">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                             <input type="hidden" name="cartItemCount">
                             <button type="submit" class="btn btn-primary btn-block">Checkout</button>
                         </form>

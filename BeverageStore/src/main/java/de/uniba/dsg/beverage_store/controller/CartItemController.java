@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -39,10 +40,10 @@ public class CartItemController {
     public ResponseEntity<?> addCartItem(@RequestBody @Valid AddCartItemDTO addCartItemDTO, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(String.join(", ", errors.getAllErrors()
+                    .body(errors.getAllErrors()
                             .stream()
-                            .map(x -> x.getDefaultMessage())
-                            .collect(Collectors.toList())));
+                            .map(ObjectError::getDefaultMessage)
+                            .collect(Collectors.joining(", ")));
         }
 
         try {
