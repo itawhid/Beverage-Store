@@ -56,6 +56,33 @@
             </div>
         </nav>
 
+        <div th:fragment="paginationControls">
+            <div id="cnt-pagination-controls">
+                <a class="btn btn-primary pagination-controls" th:href="${url + '?page=1'}">
+                    <i class="fas fa-fast-backward"></i>
+                </a>
+
+                <a class="btn btn-primary pagination-controls" th:classappend="${currentPage <= 1} ? 'disabled' : ''" th:href="${currentPage > 1}
+                    ? ${url + '?page=' + (currentPage - 1)}
+                    : ${url + '?page=1'}">
+                    <i class="fas fa-backward"></i>
+                </a>
+
+                <p id="txt-page-number" th:text="${#numbers.formatInteger(currentPage, 2)}"></p>
+
+                <a class="btn btn-primary pagination-controls" th:classappend="${currentPage >= numberOfPages} ? 'disabled' : ''" th:href="${currentPage < numberOfPages}
+                    ? ${url + '?page=' + (currentPage + 1)}
+                    : ${url + '?page=' + numberOfPages}">
+                    <i class="fas fa-forward"></i>
+                </a>
+
+                <a class="btn btn-primary pagination-controls" th:href="${url + '?page=' + numberOfPages}">
+                    <i class="fas fa-fast-forward"></i>
+                </a>
+            </div>
+            <br>
+        </div>
+
         <footer class="fixed-bottom" th:fragment="footer">
             <h4><a th:href="@{/}" th:text="'© ' + ${#dates.year(#dates.createNow())} + ' Beverage Store'"></a></h4>
         </footer>

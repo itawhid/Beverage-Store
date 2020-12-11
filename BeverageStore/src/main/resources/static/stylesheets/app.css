@@ -81,3 +81,19 @@ a {
     text-align: center;
     margin-top: 400px;
 }
+
+#cnt-pagination-controls {
+    width: 25%;
+    margin: auto;
+}
+
+.pagination-controls {
+    width: 40px;
+    margin: 5px;
+    color: white!important;
+}
+
+#cnt-pagination-controls #txt-page-number {
+    margin: 5px;
+    display: inline;
+}

@@ -7,6 +7,11 @@
 
         <div class="container">
             <br>
+            <h2>Crates</h2>
+            <br>
+
+            <div th:replace="fragments/fragments :: paginationControls(url = @{/crate}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
+
             <div class="cnt-tbl-beverages">
                 <table class="table table-bordered">
                     <thead>
