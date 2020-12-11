@@ -1,9 +1,9 @@
 package de.uniba.dsg.beverage_store.controller;
 
+import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.BeverageOrder;
 import de.uniba.dsg.beverage_store.model.BeverageOrderItem;
-import de.uniba.dsg.beverage_store.repository.BeverageOrderItemRepository;
-import de.uniba.dsg.beverage_store.repository.BeverageOrderRepository;
+import de.uniba.dsg.beverage_store.service.BeverageOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,24 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/order")
 public class OrderController {
 
-    private final BeverageOrderRepository beverageOrderRepository;
-    private final BeverageOrderItemRepository beverageOrderItemRepository;
+    private final BeverageOrderService beverageOrderService;
 
     @Autowired
-    public OrderController(BeverageOrderRepository beverageOrderRepository, BeverageOrderItemRepository beverageOrderItemRepository) {
-        this.beverageOrderRepository = beverageOrderRepository;
-        this.beverageOrderItemRepository = beverageOrderItemRepository;
+    public OrderController(BeverageOrderService beverageOrderService) {
+        this.beverageOrderService = beverageOrderService;
     }
 
     @GetMapping
     public String getOrders(Model model, Principal principal) {
-        List<BeverageOrder> orders = beverageOrderRepository.findAllByUserUsernameOrderByOrderNumber(principal.getName());
+        List<BeverageOrder> orders = beverageOrderService.getBeverageOrdersByUsername(principal.getName());
 
         model.addAttribute("orders", orders);
 
@@ -39,17 +36,14 @@ public class OrderController {
 
     @GetMapping(value = "/{orderNumber}")
     public String getOrder(@PathVariable("orderNumber") String orderNumber, Model model) {
-        Optional<BeverageOrder> orderOptional = beverageOrderRepository.findBeverageOrderByOrderNumber(orderNumber);
-
-        if (orderOptional.isPresent()) {
-            BeverageOrder order = orderOptional.get();
-
-            List<BeverageOrderItem> orderItems = beverageOrderItemRepository.findAllByBeverageOrderOrderNumber(order.getOrderNumber());
+        try {
+            BeverageOrder order = beverageOrderService.getBeverageOrderByOrderNumber(orderNumber);
+            List<BeverageOrderItem> orderItems = beverageOrderService.getBeverageOrderItemsByOrderNumber(orderNumber);
 
             model.addAttribute("order", order);
             model.addAttribute("orderItems", orderItems);
             model.addAttribute("orderNotFound", false);
-        } else {
+        } catch (NotFoundException ex) {
             model.addAttribute("orderNotFound", true);
         }
 

@@ -6,9 +6,10 @@ import de.uniba.dsg.beverage_store.model.Address;
 import de.uniba.dsg.beverage_store.model.BeverageOrder;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.model.User;
-import de.uniba.dsg.beverage_store.repository.AddressRepository;
-import de.uniba.dsg.beverage_store.repository.UserRepository;
+import de.uniba.dsg.beverage_store.service.AddressService;
+import de.uniba.dsg.beverage_store.service.BeverageOrderService;
 import de.uniba.dsg.beverage_store.service.CartService;
+import de.uniba.dsg.beverage_store.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -24,21 +25,22 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
 
-    private final UserRepository userRepository;
-    private final AddressRepository addressRepository;
+    private final UserService userService;
+    private final AddressService addressService;
+    private final BeverageOrderService beverageOrderService;
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
 
-    public CartController(UserRepository userRepository, AddressRepository addressRepository) {
-        this.userRepository = userRepository;
-        this.addressRepository = addressRepository;
+    public CartController(UserService userService, AddressService addressService, BeverageOrderService beverageOrderService) {
+        this.userService = userService;
+        this.addressService = addressService;
+        this.beverageOrderService = beverageOrderService;
     }
 
     @GetMapping
@@ -90,13 +92,12 @@ public class CartController {
         }
 
         if (!hasModelError) {
-            Optional<User> optionalUser = userRepository.findUserByUsername(principal.getName());
-
-            Optional<Address> optionalDeliveryAddress = addressRepository.findById(submitOrderDTO.getDeliveryAddressId());
-            Optional<Address> optionalBillingAddress = addressRepository.findById(submitOrderDTO.getBillingAddressId());
-
             try {
-                BeverageOrder beverageOrder = cartService.submitOrder(optionalUser.get(), optionalDeliveryAddress.get(), optionalBillingAddress.get());
+                User user = userService.getUserByUserName(principal.getName());
+                Address deliveryAddress = addressService.getAddressById(submitOrderDTO.getDeliveryAddressId());
+                Address billingAddress = addressService.getAddressById(submitOrderDTO.getBillingAddressId());
+
+                BeverageOrder beverageOrder = beverageOrderService.createOrder(user, deliveryAddress, billingAddress);
 
                 return "redirect:/order/" + beverageOrder.getOrderNumber();
             } catch (Exception ex) {
@@ -114,6 +115,6 @@ public class CartController {
     }
 
     private List<Address> getAddressesByUsername(String username) {
-        return addressRepository.findAllByUserUsername(username);
+        return addressService.getAllByUsername(username);
     }
 }
