@@ -1,7 +1,7 @@
 package de.uniba.dsg.beverage_store.controller;
 
 import de.uniba.dsg.beverage_store.model.Crate;
-import de.uniba.dsg.beverage_store.repository.CrateRepository;
+import de.uniba.dsg.beverage_store.service.BeverageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +14,16 @@ import java.util.List;
 @RequestMapping(value = "/crate")
 public class CrateController {
 
-    private final CrateRepository crateRepository;
+    private final BeverageService beverageService;
 
     @Autowired
-    public CrateController(CrateRepository crateRepository) {
-        this.crateRepository = crateRepository;
+    public CrateController(BeverageService beverageService) {
+        this.beverageService = beverageService;
     }
 
     @GetMapping
     public String getBeverages(Model model) {
-        List<Crate> crates = crateRepository.findByOrderByNameAsc();
+        List<Crate> crates = beverageService.getAllCrates();
 
         model.addAttribute("crates", crates);
 

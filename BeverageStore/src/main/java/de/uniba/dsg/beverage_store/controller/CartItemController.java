@@ -48,13 +48,12 @@ public class CartItemController {
 
         try {
             CartItem newCartItem = cartService.addCartItem(addCartItemDTO.getBeverageType(), addCartItemDTO.getBeverageId(), addCartItemDTO.getQuantity());
-            System.out.println(newCartItem.getName() + '_' + newCartItem.getQuantity());
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(newCartItem);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No " + addCartItemDTO.getBeverageType().name() + " found with ID: " + addCartItemDTO.getBeverageId());
+                    .body(e.getMessage());
         }
     }
 
