@@ -5,11 +5,9 @@ import de.uniba.dsg.beverage_store.dto.SubmitOrderDTO;
 import de.uniba.dsg.beverage_store.model.Address;
 import de.uniba.dsg.beverage_store.model.BeverageOrder;
 import de.uniba.dsg.beverage_store.model.CartItem;
-import de.uniba.dsg.beverage_store.model.User;
 import de.uniba.dsg.beverage_store.service.AddressService;
 import de.uniba.dsg.beverage_store.service.BeverageOrderService;
 import de.uniba.dsg.beverage_store.service.CartService;
-import de.uniba.dsg.beverage_store.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -30,15 +28,13 @@ import java.util.Map;
 @RequestMapping(value = "/cart")
 public class CartController {
 
-    private final UserService userService;
     private final AddressService addressService;
     private final BeverageOrderService beverageOrderService;
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
 
-    public CartController(UserService userService, AddressService addressService, BeverageOrderService beverageOrderService) {
-        this.userService = userService;
+    public CartController(AddressService addressService, BeverageOrderService beverageOrderService) {
         this.addressService = addressService;
         this.beverageOrderService = beverageOrderService;
     }
@@ -93,11 +89,7 @@ public class CartController {
 
         if (!hasModelError) {
             try {
-                User user = userService.getUserByUserName(principal.getName());
-                Address deliveryAddress = addressService.getAddressById(submitOrderDTO.getDeliveryAddressId());
-                Address billingAddress = addressService.getAddressById(submitOrderDTO.getBillingAddressId());
-
-                BeverageOrder beverageOrder = beverageOrderService.createOrder(user, deliveryAddress, billingAddress);
+                BeverageOrder beverageOrder = beverageOrderService.createOrder(principal.getName(), submitOrderDTO.getDeliveryAddressId(), submitOrderDTO.getBillingAddressId());
 
                 return "redirect:/order/" + beverageOrder.getOrderNumber();
             } catch (Exception ex) {
@@ -111,7 +103,7 @@ public class CartController {
 
         model.addAttribute("hasServerError", hasServerError);
 
-        return "checkout";
+        return "cart/checkout";
     }
 
     private List<Address> getAddressesByUsername(String username) {

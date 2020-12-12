@@ -4,8 +4,10 @@ import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.helper.Constants;
 import de.uniba.dsg.beverage_store.helper.Helper;
 import de.uniba.dsg.beverage_store.model.*;
+import de.uniba.dsg.beverage_store.repository.AddressRepository;
 import de.uniba.dsg.beverage_store.repository.BeverageOrderItemRepository;
 import de.uniba.dsg.beverage_store.repository.BeverageOrderRepository;
+import de.uniba.dsg.beverage_store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +22,10 @@ import java.util.Optional;
 @Service
 public class BeverageOrderService {
 
+    private final UserService userService;
+    private final AddressService addressService;
     private final BeverageService beverageService;
+
     private final BeverageOrderRepository beverageOrderRepository;
     private final BeverageOrderItemRepository beverageOrderItemRepository;
 
@@ -28,8 +33,11 @@ public class BeverageOrderService {
     private CartService cartService;
 
     @Autowired
-    public BeverageOrderService(BeverageService beverageService, BeverageOrderRepository beverageOrderRepository, BeverageOrderItemRepository beverageOrderItemRepository) {
+    public BeverageOrderService(UserService userService, AddressService addressService, BeverageService beverageService, BeverageOrderRepository beverageOrderRepository, BeverageOrderItemRepository beverageOrderItemRepository) {
+        this.userService = userService;
+        this.addressService = addressService;
         this.beverageService = beverageService;
+
         this.beverageOrderRepository = beverageOrderRepository;
         this.beverageOrderItemRepository = beverageOrderItemRepository;
     }
@@ -52,7 +60,11 @@ public class BeverageOrderService {
         return beverageOrderItemRepository.findAllByBeverageOrderOrderNumber(orderNumber);
     }
 
-    public BeverageOrder createOrder(User user, Address deliveryAddress, Address billingAddress) throws NotFoundException {
+    public BeverageOrder createOrder(String userName, Long deliveryAddressId, Long billingAddressId) throws NotFoundException {
+        User user = userService.getUserByUserName(userName);
+        Address deliveryAddress = addressService.getAddressById(deliveryAddressId);
+        Address billingAddress = addressService.getAddressById(billingAddressId);
+
         BeverageOrder beverageOrder = new BeverageOrder(null, null, LocalDate.now(), cartService.getCartTotal(), user, deliveryAddress, billingAddress, null);
         beverageOrderRepository.save(beverageOrder);
 

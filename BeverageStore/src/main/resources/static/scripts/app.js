@@ -1,6 +1,10 @@
 $(document).ready(function () {
     updateNavbarActiveLink();
     updateCartItemCount();
+
+    $('#lnk-logout').click(() => {
+        $('#form-logout').submit();
+    });
 });
 
 function updateNavbarActiveLink() {
