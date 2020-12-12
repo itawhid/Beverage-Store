@@ -53,7 +53,6 @@ public class DemoData {
         crateRepository.saveAll(Arrays.asList(cocaColaCrate, spriteCrate, pepsiCrate, sevenUpCrate));
 
         BeverageOrder beverageOrder = new BeverageOrder(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, adminUser, address1, address2, null);
-        beverageOrderRepository.save(beverageOrder);
 
         BeverageOrderItem beverageOrderItem1 = new BeverageOrderItem(1L, BeverageType.BOTTLE, 2, cocaCola, null, beverageOrder);
         BeverageOrderItem beverageOrderItem2 = new BeverageOrderItem(2L, BeverageType.CRATE, 1, null, pepsiCrate, beverageOrder);

@@ -47,16 +47,12 @@ public class CartController {
 
     @GetMapping(value = "/checkout")
     public String getCheckout(Model model, Principal principal) {
-        if (cartService.getCartItemCount() == 0) {
-            model.addAttribute("isEmptyCart", true);
-        } else {
-            model.addAttribute("isEmptyCart", false);
-            model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-            model.addAttribute("cartItemCount", cartService.getCartItemCount());
-            model.addAttribute("cartTotal", cartService.getCartTotal());
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
+        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("cartTotal", cartService.getCartTotal());
 
-            model.addAttribute("submitOrderDTO", new SubmitOrderDTO());
-        }
+        model.addAttribute("submitOrderDTO", new SubmitOrderDTO());
 
         return "cart/checkout";
     }
@@ -79,6 +75,7 @@ public class CartController {
             }
         }
 
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
         model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
         model.addAttribute("cartItemCount", cartService.getCartItemCount());
         model.addAttribute("cartTotal", cartService.getCartTotal());
