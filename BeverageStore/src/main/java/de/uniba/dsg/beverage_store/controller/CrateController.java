@@ -29,6 +29,6 @@ public class CrateController {
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", cratePage.getTotalPages());
 
-        return "crates";
+        return "beverages/crate-list";
     }
 }

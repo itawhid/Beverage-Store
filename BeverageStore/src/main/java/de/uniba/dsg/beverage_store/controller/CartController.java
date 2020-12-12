@@ -58,7 +58,7 @@ public class CartController {
             model.addAttribute("hasCheckoutError", false);
         }
 
-        return "cart";
+        return "cart/details";
     }
 
     @PostMapping(value = "/checkout/process")
@@ -80,7 +80,7 @@ public class CartController {
 
         model.addAttribute("submitOrderDTO", new SubmitOrderDTO());
 
-        return "checkout";
+        return "cart/checkout";
     }
 
     @PostMapping(value = "/checkout")

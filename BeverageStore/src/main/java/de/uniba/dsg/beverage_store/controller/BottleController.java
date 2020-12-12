@@ -29,6 +29,6 @@ public class BottleController {
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", bottlePage.getTotalPages());
 
-        return "bottles";
+        return "beverages/bottle-list";
     }
 }
