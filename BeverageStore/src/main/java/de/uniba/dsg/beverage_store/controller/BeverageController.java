@@ -30,7 +30,7 @@ public class BeverageController {
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", bottlePage.getTotalPages());
 
-        return "beverages/bottle/list";
+        return "beverage/bottle/list";
     }
 
     @GetMapping(value = "/crate")
@@ -41,6 +41,6 @@ public class BeverageController {
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", cratePage.getTotalPages());
 
-        return "beverages/crate/list";
+        return "beverage/crate/list";
     }
 }
