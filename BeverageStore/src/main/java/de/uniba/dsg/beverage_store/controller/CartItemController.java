@@ -1,6 +1,6 @@
 package de.uniba.dsg.beverage_store.controller;
 
-import de.uniba.dsg.beverage_store.dto.AddCartItemDTO;
+import de.uniba.dsg.beverage_store.dto.CartItemDTO;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.service.CartService;
@@ -37,7 +37,7 @@ public class CartItemController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addCartItem(@RequestBody @Valid AddCartItemDTO addCartItemDTO, Errors errors) {
+    public ResponseEntity<?> addCartItem(@RequestBody @Valid CartItemDTO cartItemDTO, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(errors.getAllErrors()
@@ -47,7 +47,7 @@ public class CartItemController {
         }
 
         try {
-            CartItem newCartItem = cartService.addCartItem(addCartItemDTO.getBeverageType(), addCartItemDTO.getBeverageId(), addCartItemDTO.getQuantity());
+            CartItem newCartItem = cartService.addCartItem(cartItemDTO.getBeverageType(), cartItemDTO.getBeverageId(), cartItemDTO.getQuantity());
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(newCartItem);

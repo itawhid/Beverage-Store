@@ -36,6 +36,7 @@
                     <li id="user" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" onclick="return false;" th:text="${'@' + #authentication.principal.username}"></a>
                         <div class="dropdown-menu">
+                            <a class="dropdown-item" th:href="@{/address}">Addresses</a>
                             <a id="lnk-logout" class="dropdown-item">Logout</a>
                         </div>
                         <form id="form-logout" method="POST" th:action="@{/logout}"></form>

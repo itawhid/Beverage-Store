@@ -11,7 +11,6 @@
 
         <div class="container">
             <form method="POST" th:action="@{/cart/checkout}" th:object="${submitOrderDTO}">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                 <div class="row">
                     <div class="col-md-7">
                         <fieldset class="border p-2">

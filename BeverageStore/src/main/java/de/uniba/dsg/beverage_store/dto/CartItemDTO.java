@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class AddCartItemDTO {
+public class CartItemDTO {
     @Min(value = 1, message = "Beverage Id must be greater than zero.")
     private Long beverageId;
 
