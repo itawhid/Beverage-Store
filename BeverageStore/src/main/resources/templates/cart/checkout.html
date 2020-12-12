@@ -9,9 +9,14 @@
             Unexpected error in creating the order.
         </div>
 
+        <div th:if="${isEmptyCart == true}" class="alert alert-danger" role="alert">
+            At least one Cart Item is required for checkout.
+        </div>
+
         <div class="container">
-            <form method="POST" th:action="@{/cart/checkout}" th:object="${submitOrderDTO}">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+            <br>
+
+            <form method="POST" th:if="${isEmptyCart == false}" th:action="@{/cart/checkout}" th:object="${submitOrderDTO}">
                 <div class="row">
                     <div class="col-md-7">
                         <fieldset class="border p-2">

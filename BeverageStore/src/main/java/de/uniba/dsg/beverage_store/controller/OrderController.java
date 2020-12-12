@@ -35,7 +35,7 @@ public class OrderController {
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", beverageOrderPage.getTotalPages());
 
-        return "orders";
+        return "order/list";
     }
 
     @GetMapping(value = "/{orderNumber}")
@@ -51,6 +51,6 @@ public class OrderController {
             model.addAttribute("orderNotFound", true);
         }
 
-        return "order-details";
+        return "order/details";
     }
 }

@@ -5,9 +5,6 @@
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
-        <div th:if="${hasCheckoutError == true}" class="alert alert-danger" role="alert">
-            At least one Cart Item is required for checkout.
-        </div>
         <div class="container-fluid">
             <br>
             <div class="row">
@@ -97,11 +94,7 @@
 
                         <br>
 
-                        <form method="POST" th:action="@{/cart/checkout/process}">
-                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                            <input type="hidden" name="cartItemCount">
-                            <button type="submit" class="btn btn-primary btn-block">Checkout</button>
-                        </form>
+                        <a th:href="@{/cart/checkout}" class="btn btn-primary btn-block">Checkout</a>
                     </fieldset>
                 </div>
             </div>
