@@ -1,9 +1,10 @@
 package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
-import de.uniba.dsg.beverage_store.helper.Constants;
 import de.uniba.dsg.beverage_store.model.Bottle;
 import de.uniba.dsg.beverage_store.model.Crate;
+import de.uniba.dsg.beverage_store.properties.BottleProperties;
+import de.uniba.dsg.beverage_store.properties.CrateProperties;
 import de.uniba.dsg.beverage_store.repository.BottleRepository;
 import de.uniba.dsg.beverage_store.repository.CrateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,19 @@ public class BeverageService {
     private final CrateRepository crateRepository;
     private final BottleRepository bottleRepository;
 
+    private final CrateProperties crateProperties;
+    private final BottleProperties bottleProperties;
+
     @Autowired
-    public BeverageService(CrateRepository crateRepository, BottleRepository bottleRepository) {
+    public BeverageService(CrateRepository crateRepository,
+                           BottleRepository bottleRepository,
+                           CrateProperties crateProperties,
+                           BottleProperties bottleProperties) {
         this.crateRepository = crateRepository;
         this.bottleRepository = bottleRepository;
+
+        this.crateProperties = crateProperties;
+        this.bottleProperties = bottleProperties;
     }
 
     public Bottle getBottleById(Long id) throws NotFoundException {
@@ -36,11 +46,7 @@ public class BeverageService {
     }
 
     public Page<Bottle> getPagedBottles(int page) {
-        return bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, Constants.PAGE_SIZE_BOTTLE));
-    }
-
-    public Page<Crate> getPagedCrates(int page) {
-        return crateRepository.findByOrderByNameAsc(PageRequest.of(page - 1, Constants.PAGE_SIZE_CRATE));
+        return bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, bottleProperties.getPageSize()));
     }
 
     public Crate getCrateById(Long id) throws NotFoundException {
@@ -51,5 +57,9 @@ public class BeverageService {
         }
 
         return crateOptional.get();
+    }
+
+    public Page<Crate> getPagedCrates(int page) {
+        return crateRepository.findByOrderByNameAsc(PageRequest.of(page - 1, crateProperties.getPageSize()));
     }
 }
