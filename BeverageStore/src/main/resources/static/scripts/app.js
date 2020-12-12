@@ -8,7 +8,7 @@ function updateNavbarActiveLink() {
 
     if (window.location.pathname === '/' || window.location.href.endsWith('/home')) {
         $('.navbar-nav #home').addClass('active');
-    } else if (window.location.href.endsWith('/bottle') || window.location.href.endsWith('/crate')) {
+    } else if (window.location.href.endsWith('/beverage/bottle') || window.location.href.endsWith('/beverage/crate')) {
         $('.navbar-nav #beverages').addClass('active');
     } else if (window.location.href.endsWith('/order')) {
         $('.navbar-nav #orders').addClass('active');
