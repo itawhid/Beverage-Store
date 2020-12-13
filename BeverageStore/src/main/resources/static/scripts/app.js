@@ -51,6 +51,8 @@ function updateCartTotal() {
 }
 
 function addItemToCart(beverageId, quantity, isBottle) {
+    blockScreen();
+
     $.ajax({
         url: '/api/cart-items',
         type: 'POST',
@@ -61,27 +63,41 @@ function addItemToCart(beverageId, quantity, isBottle) {
         }),
         contentType: 'application/json',
         success: () => {
+            unblockScreen();
             updateCartItemCount();
             alertify.success("Item successfully added to the cart.");
         },
         error: () => {
+            unblockScreen();
             alertify.error("Error in adding item to the cart.");
         }
     });
 }
 
 function removeItemFromCart(cartItemId, successCallback) {
+    blockScreen();
+
     $.ajax({
         url: '/api/cart-items/' + cartItemId,
         type: 'DELETE',
         success: () => {
+            unblockScreen();
             successCallback();
             updateCartTotal();
             updateCartItemCount();
             alertify.success('Item successfully removed from the cart');
         },
         error: () => {
+            unblockScreen();
             alertify.error("Error in removing item from the cart.");
         }
     });
+}
+
+function blockScreen() {
+    $('#screen-blocker').show();
+}
+
+function unblockScreen() {
+    $('#screen-blocker').hide();
 }

@@ -50,7 +50,7 @@ public class BeverageOrder {
     @JsonIgnoreProperties({"user", "deliveryAddressBeverageOrders", "billingAddressBeverageOrders"})
     private Address billingAddress;
 
-    @OneToMany(mappedBy = "beverageOrder")
+    @OneToMany(mappedBy = "beverageOrder", orphanRemoval = true)
     @JsonBackReference
     private Set<BeverageOrderItem> beverageOrderItems;
 }
