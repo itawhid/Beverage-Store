@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -55,4 +56,15 @@ public class Bottle {
     @OneToMany(mappedBy = "bottle")
     @JsonBackReference
     private Set<BeverageOrderItem> beverageOrderItems;
+
+    @Transient
+    private int allowedInStock;
+
+    public void setAllowedInStockToInStock() {
+        allowedInStock = inStock;
+    }
+
+    public void decreaseAllowedInStock(int quantity) {
+        allowedInStock -= quantity;
+    }
 }

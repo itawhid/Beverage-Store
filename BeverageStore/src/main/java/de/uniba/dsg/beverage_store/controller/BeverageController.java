@@ -24,7 +24,7 @@ public class BeverageController {
 
     @GetMapping(value = "/bottle")
     public String getBottles(@RequestParam(defaultValue = "1") int page, Model model) {
-        Page<Bottle> bottlePage = beverageService.getPagedBottles(page);
+        Page<Bottle> bottlePage = beverageService.getPagedBottlesWithAllowedStock(page);
 
         model.addAttribute("bottles", bottlePage.getContent());
         model.addAttribute("currentPage", page);
@@ -35,7 +35,7 @@ public class BeverageController {
 
     @GetMapping(value = "/crate")
     public String getCrates(@RequestParam(defaultValue = "1") int page, Model model) {
-        Page<Crate> cratePage = beverageService.getPagedCrates(page);
+        Page<Crate> cratePage = beverageService.getPagedCratesAllowedStock(page);
 
         model.addAttribute("crates", cratePage.getContent());
         model.addAttribute("currentPage", page);

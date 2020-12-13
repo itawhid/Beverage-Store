@@ -1,7 +1,9 @@
 package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
+import de.uniba.dsg.beverage_store.model.BeverageType;
 import de.uniba.dsg.beverage_store.model.Bottle;
+import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.model.Crate;
 import de.uniba.dsg.beverage_store.properties.BottleProperties;
 import de.uniba.dsg.beverage_store.properties.CrateProperties;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 @Service
@@ -22,6 +25,9 @@ public class BeverageService {
 
     private final CrateProperties crateProperties;
     private final BottleProperties bottleProperties;
+
+    @Resource(name = "sessionScopedCartService")
+    private CartService cartService;
 
     @Autowired
     public BeverageService(CrateRepository crateRepository,
@@ -45,8 +51,23 @@ public class BeverageService {
         return bottleOptional.get();
     }
 
-    public Page<Bottle> getPagedBottles(int page) {
-        return bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, bottleProperties.getPageSize()));
+    public Page<Bottle> getPagedBottlesWithAllowedStock(int page) {
+        Page<Bottle> bottlePage = bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, bottleProperties.getPageSize()));
+
+        for (Bottle bottle : bottlePage.getContent()) {
+            bottle.setAllowedInStockToInStock();
+
+            Optional<CartItem> cartItemOptional = cartService.getCartItems()
+                    .stream()
+                    .filter(x -> x.getBeverageType() == BeverageType.BOTTLE && x.getBeverageId() == bottle.getId())
+                    .findFirst();
+
+            if (cartItemOptional.isPresent()) {
+                bottle.decreaseAllowedInStock(cartItemOptional.get().getQuantity());
+            }
+        }
+
+        return bottlePage;
     }
 
     public Crate getCrateById(Long id) throws NotFoundException {
@@ -59,7 +80,22 @@ public class BeverageService {
         return crateOptional.get();
     }
 
-    public Page<Crate> getPagedCrates(int page) {
-        return crateRepository.findByOrderByNameAsc(PageRequest.of(page - 1, crateProperties.getPageSize()));
+    public Page<Crate> getPagedCratesAllowedStock(int page) {
+        Page<Crate> cratePage = crateRepository.findByOrderByNameAsc(PageRequest.of(page - 1, crateProperties.getPageSize()));
+
+        for (Crate crate : cratePage.getContent()) {
+            crate.setAllowedInStockToInStock();
+
+            Optional<CartItem> cartItemOptional = cartService.getCartItems()
+                    .stream()
+                    .filter(x -> x.getBeverageType() == BeverageType.CRATE && x.getBeverageId() == crate.getId())
+                    .findFirst();
+
+            if (cartItemOptional.isPresent()) {
+                crate.decreaseAllowedInStock(cartItemOptional.get().getQuantity());
+            }
+        }
+
+        return cratePage;
     }
 }

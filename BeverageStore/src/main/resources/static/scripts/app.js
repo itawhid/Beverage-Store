@@ -50,7 +50,7 @@ function updateCartTotal() {
     });
 }
 
-function addItemToCart(beverageId, quantity, isBottle) {
+function addItemToCart(beverageId, quantity, isBottle, successCallback) {
     blockScreen();
 
     $.ajax({
@@ -62,10 +62,12 @@ function addItemToCart(beverageId, quantity, isBottle) {
             quantity: quantity
         }),
         contentType: 'application/json',
-        success: () => {
+        success: (data) => {
             unblockScreen();
             updateCartItemCount();
             alertify.success("Item successfully added to the cart.");
+
+            successCallback(data);
         },
         error: () => {
             unblockScreen();
@@ -100,4 +102,19 @@ function blockScreen() {
 
 function unblockScreen() {
     $('#screen-blocker').hide();
+}
+
+function updateAllowedQuantity(allowedQuantity, selectQuantity, btnAddToCart) {
+    selectQuantity.html('');
+
+    if (allowedQuantity < 1) {
+        btnAddToCart.attr('disabled', true);
+        selectQuantity.attr('disabled', true);
+    } else {
+        for (let i = 1; i <= allowedQuantity; i++) {
+            let optionHtml = '<option value="' + i + '">' + i + '</option>';
+
+            selectQuantity.append(optionHtml);
+        }
+    }
 }

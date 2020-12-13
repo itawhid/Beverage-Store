@@ -41,6 +41,7 @@ public class CartController {
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("cartTotal", cartTotal);
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
 
         return "cart/details";
     }

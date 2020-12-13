@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.service;
 
+import de.uniba.dsg.beverage_store.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +23,30 @@ public class CartService {
         cartItems = new ArrayList<>();
     }
 
-    public CartItem addCartItem(BeverageType beverageType, Long beverageId, int quantity) throws NotFoundException {
-        CartItem cartItem = null;
+    public CartItem addCartItem(BeverageType beverageType, Long beverageId, int quantity) throws NotFoundException, InsufficientStockException {
+        CartItem cartItem;
 
         Optional<CartItem> cartItemOptional = getCartBeverage(beverageId, beverageType);
 
         if (cartItemOptional.isPresent()) {
             cartItem = cartItemOptional.get();
+
+            if ((cartItem.getQuantity() + quantity) > cartItem.getInStock()) {
+                throw new InsufficientStockException("Insufficient stock for " + beverageType.name() + " with ID: " + beverageId);
+            }
+
             cartItem.addQuantity(quantity);
 
             return cartItem;
         }
 
-        if (beverageType == BeverageType.BOTTLE) {
-            Bottle bottle = beverageService.getBottleById(beverageId);
-
-            cartItem = buildBottleCartItem(bottle, quantity);
-        } else if (beverageType == BeverageType.CRATE) {
-            Crate crate = beverageService.getCrateById(beverageId);
-
-            cartItem = buildCrateCartItem(crate, quantity);
-        }
-
+        cartItem = retrieveCartItem(beverageType, beverageId, quantity);
         if (cartItem == null) {
             throw new NotFoundException();
+        }
+
+        if (cartItem.getQuantity() > cartItem.getInStock()) {
+            throw new InsufficientStockException("Insufficient stock for " + beverageType.name() + " with ID: " + beverageId);
         }
 
         cartItem.setCartItemId(++cartItemId);
@@ -124,5 +125,19 @@ public class CartService {
         return cartItems.stream()
                 .filter(x -> x.getBeverageId() == beverageId && x.getBeverageType() == beverageType)
                 .findAny();
+    }
+
+    private CartItem retrieveCartItem(BeverageType beverageType, Long beverageId, int quantity) throws NotFoundException {
+        if (beverageType == BeverageType.BOTTLE) {
+            Bottle bottle = beverageService.getBottleById(beverageId);
+
+            return buildBottleCartItem(bottle, quantity);
+        } else if (beverageType == BeverageType.CRATE) {
+            Crate crate = beverageService.getCrateById(beverageId);
+
+            return buildCrateCartItem(crate, quantity);
+        }
+
+        return null;
     }
 }

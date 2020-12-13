@@ -1,6 +1,7 @@
 package de.uniba.dsg.beverage_store.controller;
 
 import de.uniba.dsg.beverage_store.dto.CartItemDTO;
+import de.uniba.dsg.beverage_store.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.service.CartService;
@@ -53,6 +54,9 @@ public class CartItemController {
                     .body(newCartItem);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        } catch (InsufficientStockException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
         }
     }

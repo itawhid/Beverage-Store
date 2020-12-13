@@ -47,4 +47,15 @@ public class Crate {
     @OneToMany(mappedBy = "crate")
     @JsonBackReference
     private Set<BeverageOrderItem> beverageOrderItems;
+
+    @Transient
+    private int allowedInStock;
+
+    public void setAllowedInStockToInStock() {
+        allowedInStock = inStock;
+    }
+
+    public void decreaseAllowedInStock(int quantity) {
+        this.allowedInStock -= quantity;
+    }
 }
