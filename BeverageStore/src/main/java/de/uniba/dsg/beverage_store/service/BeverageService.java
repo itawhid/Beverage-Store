@@ -62,9 +62,7 @@ public class BeverageService {
                     .filter(x -> x.getBeverageType() == BeverageType.BOTTLE && x.getBeverageId() == bottle.getId())
                     .findFirst();
 
-            if (cartItemOptional.isPresent()) {
-                bottle.decreaseAllowedInStock(cartItemOptional.get().getQuantity());
-            }
+            cartItemOptional.ifPresent(cartItem -> bottle.decreaseAllowedInStock(cartItem.getQuantity()));
         }
 
         return bottlePage;
@@ -91,9 +89,7 @@ public class BeverageService {
                     .filter(x -> x.getBeverageType() == BeverageType.CRATE && x.getBeverageId() == crate.getId())
                     .findFirst();
 
-            if (cartItemOptional.isPresent()) {
-                crate.decreaseAllowedInStock(cartItemOptional.get().getQuantity());
-            }
+            cartItemOptional.ifPresent(cartItem -> crate.decreaseAllowedInStock(cartItem.getQuantity()));
         }
 
         return cratePage;
