@@ -1,6 +1,7 @@
 package de.uniba.dsg.beverage_store.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.uniba.dsg.beverage_store.validation.annotation.LaterThanOrEqualTo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class User implements UserDetails {
 
     private String password;
 
+    @LaterThanOrEqualTo(year = "1990", month = "01", dayOfMonth = "01")
     private LocalDate birthday;
 
     // Entity Relations
