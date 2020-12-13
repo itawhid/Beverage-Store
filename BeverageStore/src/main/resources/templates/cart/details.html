@@ -5,6 +5,8 @@
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
+        <div th:replace="fragments/screen-blocker :: screen-blocker"></div>
+
         <div class="container-fluid">
             <br>
             <div class="row">
@@ -83,7 +85,7 @@
                             <tbody>
                                 <tr>
                                     <td>Total Item(s):</td>
-                                    <td id="txt-cart-item-count"></td>
+                                    <td id="txt-cart-item-count" th:text="${cartItemCount}"></td>
                                 </tr>
                                 <tr>
                                     <td>Total Price:</td>
@@ -94,7 +96,9 @@
 
                         <br>
 
-                        <a th:href="@{/cart/checkout}" class="btn btn-primary btn-block">Checkout</a>
+                        <a id="lnk-checkout" class="btn btn-primary btn-block"
+                           th:href="@{/cart/checkout}"
+                           th:classappend="${cartItemCount == 0} ? 'disabled' : ''">Checkout</a>
                     </fieldset>
                 </div>
             </div>
@@ -109,6 +113,10 @@
 
             removeItemFromCart(cartItemId, () => {
                $('#tbl-cart tbody').children('[data-id="' + cartItemId + '"]').remove();
+
+                if ($('#tbl-cart tbody tr').length == 0) {
+                    $('#lnk-checkout').addClass('disabled');
+                }
            });
         });
     </script>

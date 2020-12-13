@@ -5,6 +5,8 @@
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
+        <div th:replace="fragments/screen-blocker :: screen-blocker"></div>
+
         <div class="container">
             <br>
             <h2>Bottles</h2>
@@ -13,7 +15,7 @@
             <div th:replace="fragments/pagination-control :: pagination-control(url = @{/beverage/bottle}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
 
             <div class="cnt-tbl-beverages">
-                <table class="table table-bordered">
+                <table id="tbl-bottles" class="table table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">Image</th>
@@ -29,7 +31,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="bottle : ${bottles}">
+                        <tr th:each="bottle : ${bottles}"
+                            th:with="quantityAllowed = ${bottle.allowedInStock < 5 ? bottle.allowedInStock : 5}, isEmptyStock = ${bottle.allowedInStock == 0}"
+                            th:attr="data-id=${bottle.id}">
                             <td>
                                 <img width="120" th:src="${bottle.bottlePic}">
                             </td>
@@ -41,18 +45,19 @@
                                             : 'No'"></td>
                             <td th:text="${bottle.supplier}"></td>
                             <td th:text="${#numbers.formatDecimal(bottle.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
-                            <td th:text="${bottle.inStock}"></td>
+                            <td class="txt-in-stock" th:text="${bottle.allowedInStock}"></td>
                             <td>
-                                <select name="bottleQuantity" class="form-control">
-                                    <option value="1" selected>1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                <select class="form-control bottleQuantity" th:disabled="${isEmptyStock}">
+                                    <option th:if="${!isEmptyStock}"
+                                            th:each="i : ${#numbers.sequence(1, quantityAllowed)}"
+                                            th:value="${i}"
+                                            th:text="${i}"></option>
                                 </select>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-add-bottle" th:attr="data-id=${bottle.id}">Add To Cart</button>
+                                <button type="button" class="btn btn-primary btn-add-bottle"
+                                        th:disabled="${isEmptyStock}"
+                                        th:attr="data-id=${bottle.id}">Add To Cart</button>
                             </td>
                         </tr>
                     </tbody>
@@ -66,9 +71,19 @@
     <script>
         $('.btn-add-bottle').click(function () {
             let id = parseInt($(this).data('id'));
-            let quantity = parseInt($(this).closest('tr').find('select[name="bottleQuantity"]').val());
+            let quantity = parseInt($(this).closest('tr').find('.bottleQuantity').val());
 
-            addItemToCart(id, quantity, true);
+            addItemToCart(id, quantity, true, (addedItem) => {
+                let allowedQuantity = addedItem.inStock - addedItem.quantity;
+
+                let bottleTr = $('#tbl-bottles tr[data-id="' + addedItem.beverageId +'"]');
+                let btnAddToCart = bottleTr.find('.btn-add-bottle');
+                let selectQuantity = bottleTr.find('.bottleQuantity');
+
+                bottleTr.find('.txt-in-stock').text(allowedQuantity);
+
+                updateAllowedQuantity(allowedQuantity, selectQuantity, btnAddToCart);
+            });
         });
     </script>
 </html>

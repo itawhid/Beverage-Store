@@ -5,6 +5,8 @@
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
+        <div th:replace="fragments/screen-blocker :: screen-blocker"></div>
+
         <div class="container">
             <br>
             <h2>Crates</h2>
@@ -13,7 +15,7 @@
             <div th:replace="fragments/pagination-control :: pagination-control(url = @{/beverage/crate}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
 
             <div class="cnt-tbl-beverages">
-                <table class="table table-bordered">
+                <table id="tbl-crates" class="table table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">Image</th>
@@ -26,25 +28,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="crate : ${crates}">
+                        <tr th:each="crate : ${crates}"
+                            th:with="quantityAllowed = ${crate.allowedInStock < 5 ? crate.allowedInStock : 5}, isEmptyStock = ${crate.allowedInStock == 0}"
+                            th:attr="data-id=${crate.id}">
                             <td>
                                 <img width="120" th:src="${crate.cratePic}">
                             </td>
                             <td th:text="${crate.name}"></td>
                             <td th:text="${crate.noOfBottles}"></td>
                             <td th:text="${#numbers.formatDecimal(crate.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
-                            <td th:text="${crate.inStock}"></td>
+                            <td class="txt-in-stock" th:text="${crate.allowedInStock}"></td>
                             <td>
-                                <select name="crateQuantity" class="form-control">
-                                    <option value="1" selected>1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                <select class="form-control crateQuantity" th:disabled="${isEmptyStock}">
+                                    <option th:if="${!isEmptyStock}"
+                                            th:each="i : ${#numbers.sequence(1, quantityAllowed)}"
+                                            th:value="${i}"
+                                            th:text="${i}"></option>
                                 </select>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-add-crate" th:attr="data-id=${crate.id}">Add To Cart</button>
+                                <button type="button" class="btn btn-primary btn-add-crate"
+                                        th:disabled="${isEmptyStock}"
+                                        th:attr="data-id=${crate.id}">Add To Cart</button>
                             </td>
                         </tr>
                     </tbody>
@@ -58,9 +63,19 @@
     <script>
         $('.btn-add-crate').click(function () {
             let id = parseInt($(this).data('id'));
-            let quantity = parseInt($(this).closest('tr').find('select[name="crateQuantity"]').val());
+            let quantity = parseInt($(this).closest('tr').find('.crateQuantity').val());
 
-            addItemToCart(id, quantity, false);
+            addItemToCart(id, quantity, false, (addedItem) => {
+                let allowedQuantity = addedItem.inStock - addedItem.quantity;
+
+                let crateTr = $('#tbl-crates tr[data-id="' + addedItem.beverageId +'"]');
+                let btnAddToCart = crateTr.find('.btn-add-crate');
+                let selectQuantity = crateTr.find('.crateQuantity');
+
+                crateTr.find('.txt-in-stock').text(allowedQuantity);
+
+                updateAllowedQuantity(allowedQuantity, selectQuantity, btnAddToCart);
+            });
         });
     </script>
 </html>

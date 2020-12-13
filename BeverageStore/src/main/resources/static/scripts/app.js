@@ -50,7 +50,9 @@ function updateCartTotal() {
     });
 }
 
-function addItemToCart(beverageId, quantity, isBottle) {
+function addItemToCart(beverageId, quantity, isBottle, successCallback) {
+    blockScreen();
+
     $.ajax({
         url: '/api/cart-items',
         type: 'POST',
@@ -60,28 +62,59 @@ function addItemToCart(beverageId, quantity, isBottle) {
             quantity: quantity
         }),
         contentType: 'application/json',
-        success: () => {
+        success: (data) => {
+            unblockScreen();
             updateCartItemCount();
             alertify.success("Item successfully added to the cart.");
+
+            successCallback(data);
         },
         error: () => {
+            unblockScreen();
             alertify.error("Error in adding item to the cart.");
         }
     });
 }
 
 function removeItemFromCart(cartItemId, successCallback) {
+    blockScreen();
+
     $.ajax({
         url: '/api/cart-items/' + cartItemId,
         type: 'DELETE',
         success: () => {
+            unblockScreen();
             successCallback();
             updateCartTotal();
             updateCartItemCount();
             alertify.success('Item successfully removed from the cart');
         },
         error: () => {
+            unblockScreen();
             alertify.error("Error in removing item from the cart.");
         }
     });
+}
+
+function blockScreen() {
+    $('#screen-blocker').show();
+}
+
+function unblockScreen() {
+    $('#screen-blocker').hide();
+}
+
+function updateAllowedQuantity(allowedQuantity, selectQuantity, btnAddToCart) {
+    selectQuantity.html('');
+
+    if (allowedQuantity < 1) {
+        btnAddToCart.attr('disabled', true);
+        selectQuantity.attr('disabled', true);
+    } else {
+        for (let i = 1; i <= allowedQuantity; i++) {
+            let optionHtml = '<option value="' + i + '">' + i + '</option>';
+
+            selectQuantity.append(optionHtml);
+        }
+    }
 }
