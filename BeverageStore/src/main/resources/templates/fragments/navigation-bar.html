@@ -34,7 +34,8 @@
 
                 <ul class="navbar-nav ml-auto">
                     <li id="user" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" onclick="return false;" th:text="${'@' + #authentication.principal.username}"></a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" onclick="return false;"
+                           th:text="${'Hello, ' + #authentication.principal.firstName + ' ' + #authentication.principal.lastName}"></a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" th:href="@{/address}">Addresses</a>
                             <a id="lnk-logout" class="dropdown-item">Logout</a>

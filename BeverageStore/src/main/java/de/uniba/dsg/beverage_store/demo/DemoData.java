@@ -33,7 +33,7 @@ public class DemoData {
 
     @EventListener
     public void createDemoData(ApplicationReadyEvent event) {
-        User adminUser = new User(1L, "admin", "$2y$12$uGcYuZ0wt7Kj02tSmsJaBuQsBwdgoL4ZRp1al2fpIboGVHwru6He2" /* password actual value: admin */, LocalDate.of(1990, 1, 1), null, null);
+        User adminUser = new User(1L, "admin", "Admin", "User", "$2y$12$uGcYuZ0wt7Kj02tSmsJaBuQsBwdgoL4ZRp1al2fpIboGVHwru6He2" /* password actual value: admin */, LocalDate.of(1990, 1, 1), null, null);
         userRepository.save(adminUser);
 
         Address address1 = new Address(1L, "Address 1", "Pestalozzistraße", "9f", "96052", adminUser, null, null);

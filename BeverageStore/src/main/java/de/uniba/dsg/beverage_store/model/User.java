@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
@@ -22,12 +24,27 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull(message = "Username is required.")
+    @NotEmpty(message = "Username cannot be empty.")
     private String username;
 
+    @NotNull(message = "First Name is required.")
+    @NotEmpty(message = "First Name cannot be empty.")
+    private String firstName;
+
+    @NotNull(message = "Last Name is required.")
+    @NotEmpty(message = "Last Name cannot be empty.")
+    private String lastName;
+
+    @NotNull(message = "Password is required.")
+    @NotEmpty(message = "Password cannot be empty.")
     private String password;
 
+    @NotNull
     @LaterThanOrEqualTo(year = "1990", month = "01", dayOfMonth = "01")
     private LocalDate birthday;
+
+
 
     // Entity Relations
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

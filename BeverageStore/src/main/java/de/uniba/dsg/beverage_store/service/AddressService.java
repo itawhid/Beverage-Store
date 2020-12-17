@@ -40,7 +40,16 @@ public class AddressService {
     public Address addAddress(AddressDTO addressDTO, String username) throws NotFoundException {
         User user = userService.getUserByUserName(username);
 
-        Address address = new Address(null, addressDTO.getName(), addressDTO.getStreet(), addressDTO.getHouseNumber(), addressDTO.getPostalCode(), user, null, null);
+        Address address = new Address(
+                null,
+                addressDTO.getName().trim(),
+                addressDTO.getStreet().trim(),
+                addressDTO.getHouseNumber().trim(),
+                addressDTO.getPostalCode().trim(),
+                user,
+                null,
+                null
+        );
         addressRepository.save(address);
 
         return address;
@@ -49,10 +58,10 @@ public class AddressService {
     public void updateAddress(Long addressId, AddressDTO addressDTO) throws NotFoundException {
         Address address = getAddressById(addressId);
 
-        address.setName(addressDTO.getName());
-        address.setStreet(addressDTO.getStreet());
-        address.setHouseNumber(addressDTO.getHouseNumber());
-        address.setPostalCode(addressDTO.getPostalCode());
+        address.setName(addressDTO.getName().trim());
+        address.setStreet(addressDTO.getStreet().trim());
+        address.setHouseNumber(addressDTO.getHouseNumber().trim());
+        address.setPostalCode(addressDTO.getPostalCode().trim());
 
         addressRepository.save(address);
     }
