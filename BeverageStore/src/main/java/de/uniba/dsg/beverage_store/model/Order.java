@@ -16,15 +16,16 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "BEVERAGE_ORDER")
 @NamedEntityGraph(
-        name = "BeverageOrder.beverageOrders",
+        name = "Order.orders",
         attributeNodes = {
                 @NamedAttributeNode(value = "user"),
                 @NamedAttributeNode(value = "deliveryAddress"),
                 @NamedAttributeNode(value = "billingAddress")
         }
 )
-public class BeverageOrder {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,18 +40,18 @@ public class BeverageOrder {
 
     //Entity Relations
     @ManyToOne
-    @JsonIgnoreProperties({"addresses", "beverageOrders"})
+    @JsonIgnoreProperties({"addresses", "orders"})
     private User user;
 
     @ManyToOne
-    @JsonIgnoreProperties({"user", "deliveryAddressBeverageOrders", "billingAddressBeverageOrders"})
+    @JsonIgnoreProperties({"user", "deliveryAddressOrders", "billingAddressOrders"})
     private Address deliveryAddress;
 
     @ManyToOne
-    @JsonIgnoreProperties({"user", "deliveryAddressBeverageOrders", "billingAddressBeverageOrders"})
+    @JsonIgnoreProperties({"user", "deliveryAddressOrders", "billingAddressOrders"})
     private Address billingAddress;
 
-    @OneToMany(mappedBy = "beverageOrder", orphanRemoval = true)
+    @OneToMany(mappedBy = "order", orphanRemoval = true)
     @JsonBackReference
-    private Set<BeverageOrderItem> beverageOrderItems;
+    private Set<OrderItem> orderItems;
 }

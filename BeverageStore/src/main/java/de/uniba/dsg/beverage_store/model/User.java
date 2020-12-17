@@ -53,7 +53,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<BeverageOrder> beverageOrders;
+    private Set<Order> orders;
 
     // Authentication
     @Override

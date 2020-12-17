@@ -43,9 +43,9 @@ public class Address {
 
     @OneToMany(mappedBy = "deliveryAddress")
     @JsonIgnore
-    private Set<BeverageOrder> deliveryAddressBeverageOrders;
+    private Set<Order> deliveryAddressOrders;
 
     @OneToMany(mappedBy = "billingAddress")
     @JsonIgnore
-    private Set<BeverageOrder> billingAddressBeverageOrders;
+    private Set<Order> billingAddressOrders;
 }

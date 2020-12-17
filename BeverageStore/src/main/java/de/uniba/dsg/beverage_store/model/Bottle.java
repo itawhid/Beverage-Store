@@ -20,14 +20,14 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 public class Bottle extends Beverage {
-    public Bottle (Long id, String name, String picUrl, double volume, double volumePercent, double price, String supplier, int inStock, Set<Crate> crates, Set<BeverageOrderItem> beverageOrderItems) {
+    public Bottle (Long id, String name, String picUrl, double volume, double volumePercent, double price, String supplier, int inStock, Set<Crate> crates, Set<OrderItem> orderItems) {
         super(id, name, picUrl, price, inStock, inStock);
 
         this.volume = volume;
         this.volumePercent = volumePercent;
         this.supplier = supplier;
         this.crates = crates;
-        this.beverageOrderItems = beverageOrderItems;
+        this.orderItems = orderItems;
     }
 
     @MoreThanZero(message = "Volume must be more than zero.")
@@ -47,5 +47,5 @@ public class Bottle extends Beverage {
 
     @OneToMany(mappedBy = "bottle")
     @JsonBackReference
-    private Set<BeverageOrderItem> beverageOrderItems;
+    private Set<OrderItem> orderItems;
 }

@@ -22,12 +22,12 @@ import java.util.Set;
         }
 )
 public class Crate extends Beverage {
-    public Crate(Long id, String name, String picUrl, int noOfBottles, double price, int inStock, Bottle bottle, Set<BeverageOrderItem> beverageOrderItems) {
+    public Crate(Long id, String name, String picUrl, int noOfBottles, double price, int inStock, Bottle bottle, Set<OrderItem> orderItems) {
         super(id, name, picUrl, price, inStock, inStock);
 
         this.noOfBottles = noOfBottles;
         this.bottle = bottle;
-        this.beverageOrderItems = beverageOrderItems;
+        this.orderItems = orderItems;
     }
 
     @Min(value = 0, message = "No of Bottles must be more then or equal to zero.")
@@ -39,5 +39,5 @@ public class Crate extends Beverage {
 
     @OneToMany(mappedBy = "crate")
     @JsonBackReference
-    private Set<BeverageOrderItem> beverageOrderItems;
+    private Set<OrderItem> orderItems;
 }

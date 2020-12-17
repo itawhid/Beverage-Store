@@ -19,16 +19,16 @@ public class DemoData {
     private final UserRepository userRepository;
     private final CrateRepository crateRepository;
     private final AddressRepository addressRepository;
-    private final BeverageOrderRepository beverageOrderRepository;
-    private final BeverageOrderItemRepository beverageOrderItemRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Autowired
-    public DemoData(UserRepository userRepository, CrateRepository crateRepository, AddressRepository addressRepository, BeverageOrderRepository beverageOrderRepository, BeverageOrderItemRepository beverageOrderItemRepository) {
+    public DemoData(UserRepository userRepository, CrateRepository crateRepository, AddressRepository addressRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
         this.userRepository = userRepository;
         this.crateRepository = crateRepository;
         this.addressRepository = addressRepository;
-        this.beverageOrderRepository = beverageOrderRepository;
-        this.beverageOrderItemRepository = beverageOrderItemRepository;
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @EventListener
@@ -52,10 +52,10 @@ public class DemoData {
 
         crateRepository.saveAll(Arrays.asList(cocaColaCrate, spriteCrate, pepsiCrate, sevenUpCrate));
 
-        BeverageOrder beverageOrder = new BeverageOrder(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, adminUser, address1, address2, null);
+        Order order = new Order(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, adminUser, address1, address2, null);
 
-        BeverageOrderItem beverageOrderItem1 = new BeverageOrderItem(1L, BeverageType.BOTTLE, 2, cocaCola, null, beverageOrder);
-        BeverageOrderItem beverageOrderItem2 = new BeverageOrderItem(2L, BeverageType.CRATE, 1, null, pepsiCrate, beverageOrder);
-        beverageOrderItemRepository.saveAll(Arrays.asList(beverageOrderItem1, beverageOrderItem2));
+        OrderItem orderItem1 = new OrderItem(1L, BeverageType.BOTTLE, 2, cocaCola, null, order);
+        OrderItem orderItem2 = new OrderItem(2L, BeverageType.CRATE, 1, null, pepsiCrate, order);
+        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
     }
 }

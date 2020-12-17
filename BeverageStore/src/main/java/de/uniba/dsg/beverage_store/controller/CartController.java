@@ -2,10 +2,10 @@ package de.uniba.dsg.beverage_store.controller;
 
 import de.uniba.dsg.beverage_store.dto.SubmitOrderDTO;
 import de.uniba.dsg.beverage_store.model.Address;
-import de.uniba.dsg.beverage_store.model.BeverageOrder;
+import de.uniba.dsg.beverage_store.model.Order;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.service.AddressService;
-import de.uniba.dsg.beverage_store.service.BeverageOrderService;
+import de.uniba.dsg.beverage_store.service.OrderService;
 import de.uniba.dsg.beverage_store.service.CartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,14 +24,14 @@ import java.util.List;
 public class CartController {
 
     private final AddressService addressService;
-    private final BeverageOrderService beverageOrderService;
+    private final OrderService orderService;
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
 
-    public CartController(AddressService addressService, BeverageOrderService beverageOrderService) {
+    public CartController(AddressService addressService, OrderService orderService) {
         this.addressService = addressService;
-        this.beverageOrderService = beverageOrderService;
+        this.orderService = orderService;
     }
 
     @GetMapping
@@ -68,9 +68,9 @@ public class CartController {
 
         if (!hasModelError) {
             try {
-                BeverageOrder beverageOrder = beverageOrderService.createOrder(principal.getName(), submitOrderDTO.getDeliveryAddressId(), submitOrderDTO.getBillingAddressId());
+                Order order = orderService.createOrder(principal.getName(), submitOrderDTO.getDeliveryAddressId(), submitOrderDTO.getBillingAddressId());
 
-                return "redirect:/order/" + beverageOrder.getOrderNumber();
+                return "redirect:/order/" + order.getOrderNumber();
             } catch (Exception ex) {
                 hasServerError = true;
             }

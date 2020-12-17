@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "beverage-order")
-public class BeverageOrderProperties {
+@ConfigurationProperties(prefix = "order")
+public class OrderProperties {
     private Integer pageSize;
 }
