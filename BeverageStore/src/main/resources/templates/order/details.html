@@ -37,8 +37,8 @@
                                     <tr th:each="item : ${orderItems}">
                                         <td>
                                             <img width="120" th:src="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
-                                                ? ${item.bottle.bottlePic}
-                                                : ${item.crate.cratePic}">
+                                                ? ${item.bottle.picUrl}
+                                                : ${item.crate.picUrl}">
                                         </td>
                                         <td th:text="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
                                             ? ${item.bottle.name}

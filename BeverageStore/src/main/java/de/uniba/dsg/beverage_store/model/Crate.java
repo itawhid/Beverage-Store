@@ -1,44 +1,37 @@
 package de.uniba.dsg.beverage_store.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import de.uniba.dsg.beverage_store.validation.annotation.MoreThanZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity@NamedEntityGraph(
+@EqualsAndHashCode(callSuper = true)
+@Entity
+@NamedEntityGraph(
         name = "Crate.crates",
         attributeNodes = {
                 @NamedAttributeNode(value = "bottle")
         }
 )
-public class Crate {
-    @Id
-    private Long id;
+public class Crate extends Beverage {
+    public Crate(Long id, String name, String picUrl, int noOfBottles, double price, int inStock, Bottle bottle, Set<BeverageOrderItem> beverageOrderItems) {
+        super(id, name, picUrl, price, inStock, inStock);
 
-    @NotNull(message = "Name is required.")
-    @NotEmpty(message = "Name can not be empty.")
-    private String name;
-
-    @NotNull(message = "Crate Picture is required")
-    @Pattern(regexp = "(https://).*\\.(?:jpg|gif|png)", message = "Crate Pic Must be a valid URL to a picture.")
-    private String cratePic;
+        this.noOfBottles = noOfBottles;
+        this.bottle = bottle;
+        this.beverageOrderItems = beverageOrderItems;
+    }
 
     @Min(value = 0, message = "No of Bottles must be more then or equal to zero.")
     private int noOfBottles;
-
-    @MoreThanZero(message = "Price must be more than zero.")
-    private double price;
-
-    @Min(value = 0, message = "In Stock must be more then or equal to zero.")
-    private int inStock;
 
     //Entity Relations
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -47,15 +40,4 @@ public class Crate {
     @OneToMany(mappedBy = "crate")
     @JsonBackReference
     private Set<BeverageOrderItem> beverageOrderItems;
-
-    @Transient
-    private int allowedInStock;
-
-    public void setAllowedInStockToInStock() {
-        allowedInStock = inStock;
-    }
-
-    public void decreaseAllowedInStock(int quantity) {
-        this.allowedInStock -= quantity;
-    }
 }

@@ -32,7 +32,7 @@
                             th:with="quantityAllowed = ${crate.allowedInStock < 5 ? crate.allowedInStock : 5}, isEmptyStock = ${crate.allowedInStock == 0}"
                             th:attr="data-id=${crate.id}">
                             <td>
-                                <img width="120" th:src="${crate.cratePic}">
+                                <img width="120" th:src="${crate.picUrl}">
                             </td>
                             <td th:text="${crate.name}"></td>
                             <td th:text="${crate.noOfBottles}"></td>

@@ -35,7 +35,7 @@
                             th:with="quantityAllowed = ${bottle.allowedInStock < 5 ? bottle.allowedInStock : 5}, isEmptyStock = ${bottle.allowedInStock == 0}"
                             th:attr="data-id=${bottle.id}">
                             <td>
-                                <img width="120" th:src="${bottle.bottlePic}">
+                                <img width="120" th:src="${bottle.picUrl}">
                             </td>
                             <td th:text="${bottle.name}"></td>
                             <td th:text="${#numbers.formatDecimal(bottle.volume, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>

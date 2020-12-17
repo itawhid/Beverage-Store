@@ -95,7 +95,7 @@ public class CartService {
         cartItem.setBeverageId(bottle.getId());
         cartItem.setQuantity(quantity);
         cartItem.setName(bottle.getName());
-        cartItem.setPicUrl(bottle.getBottlePic());
+        cartItem.setPicUrl(bottle.getPicUrl());
         cartItem.setPrice(bottle.getPrice());
         cartItem.setInStock(bottle.getInStock());
         cartItem.setVolume(bottle.getVolume());
@@ -113,7 +113,7 @@ public class CartService {
         cartItem.setBeverageId(crate.getId());
         cartItem.setQuantity(quantity);
         cartItem.setName(crate.getName());
-        cartItem.setPicUrl(crate.getCratePic());
+        cartItem.setPicUrl(crate.getPicUrl());
         cartItem.setPrice(crate.getPrice());
         cartItem.setInStock(crate.getInStock());
         cartItem.setNoOfBottle(crate.getNoOfBottles());
