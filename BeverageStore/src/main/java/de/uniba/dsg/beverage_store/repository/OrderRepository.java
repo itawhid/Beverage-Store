@@ -1,6 +1,6 @@
 package de.uniba.dsg.beverage_store.repository;
 
-import de.uniba.dsg.beverage_store.model.Order;
+import de.uniba.dsg.beverage_store.model.db.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

@@ -1,8 +1,8 @@
 package de.uniba.dsg.beverage_store.controller;
 
-import de.uniba.dsg.beverage_store.dto.SubmitOrderDTO;
-import de.uniba.dsg.beverage_store.model.Address;
-import de.uniba.dsg.beverage_store.model.Order;
+import de.uniba.dsg.beverage_store.model.dto.SubmitOrderDTO;
+import de.uniba.dsg.beverage_store.model.db.Address;
+import de.uniba.dsg.beverage_store.model.db.Order;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.service.AddressService;
 import de.uniba.dsg.beverage_store.service.OrderService;

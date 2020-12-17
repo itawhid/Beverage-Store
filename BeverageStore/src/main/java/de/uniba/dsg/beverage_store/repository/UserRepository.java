@@ -1,6 +1,6 @@
 package de.uniba.dsg.beverage_store.repository;
 
-import de.uniba.dsg.beverage_store.model.User;
+import de.uniba.dsg.beverage_store.model.db.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

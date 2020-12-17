@@ -1,4 +1,4 @@
-package de.uniba.dsg.beverage_store.model;
+package de.uniba.dsg.beverage_store.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.uniba.dsg.beverage_store.validation.annotation.LaterThanOrEqualTo;

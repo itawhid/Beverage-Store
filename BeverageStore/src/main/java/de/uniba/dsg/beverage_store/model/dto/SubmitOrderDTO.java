@@ -1,4 +1,4 @@
-package de.uniba.dsg.beverage_store.dto;
+package de.uniba.dsg.beverage_store.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

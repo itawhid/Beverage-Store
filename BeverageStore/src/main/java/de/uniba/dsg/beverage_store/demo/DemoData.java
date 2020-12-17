@@ -2,6 +2,7 @@ package de.uniba.dsg.beverage_store.demo;
 
 import de.uniba.dsg.beverage_store.helper.Helper;
 import de.uniba.dsg.beverage_store.model.*;
+import de.uniba.dsg.beverage_store.model.db.*;
 import de.uniba.dsg.beverage_store.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

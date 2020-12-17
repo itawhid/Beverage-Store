@@ -2,9 +2,9 @@ package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.BeverageType;
-import de.uniba.dsg.beverage_store.model.Bottle;
+import de.uniba.dsg.beverage_store.model.db.Bottle;
 import de.uniba.dsg.beverage_store.model.CartItem;
-import de.uniba.dsg.beverage_store.model.Crate;
+import de.uniba.dsg.beverage_store.model.db.Crate;
 import de.uniba.dsg.beverage_store.properties.BottleProperties;
 import de.uniba.dsg.beverage_store.properties.CrateProperties;
 import de.uniba.dsg.beverage_store.repository.BottleRepository;

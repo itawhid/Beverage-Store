@@ -1,6 +1,6 @@
 package de.uniba.dsg.beverage_store.controller;
 
-import de.uniba.dsg.beverage_store.dto.CartItemDTO;
+import de.uniba.dsg.beverage_store.model.dto.CartItemDTO;
 import de.uniba.dsg.beverage_store.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.CartItem;

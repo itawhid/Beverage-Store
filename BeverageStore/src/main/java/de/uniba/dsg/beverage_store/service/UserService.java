@@ -1,7 +1,7 @@
 package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
-import de.uniba.dsg.beverage_store.model.User;
+import de.uniba.dsg.beverage_store.model.db.User;
 import de.uniba.dsg.beverage_store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

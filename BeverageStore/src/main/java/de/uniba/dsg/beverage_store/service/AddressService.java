@@ -1,9 +1,9 @@
 package de.uniba.dsg.beverage_store.service;
 
-import de.uniba.dsg.beverage_store.dto.AddressDTO;
+import de.uniba.dsg.beverage_store.model.dto.AddressDTO;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
-import de.uniba.dsg.beverage_store.model.Address;
-import de.uniba.dsg.beverage_store.model.User;
+import de.uniba.dsg.beverage_store.model.db.Address;
+import de.uniba.dsg.beverage_store.model.db.User;
 import de.uniba.dsg.beverage_store.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

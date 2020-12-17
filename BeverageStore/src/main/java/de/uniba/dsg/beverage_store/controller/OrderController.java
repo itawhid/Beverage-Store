@@ -1,8 +1,8 @@
 package de.uniba.dsg.beverage_store.controller;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
-import de.uniba.dsg.beverage_store.model.Order;
-import de.uniba.dsg.beverage_store.model.OrderItem;
+import de.uniba.dsg.beverage_store.model.db.Order;
+import de.uniba.dsg.beverage_store.model.db.OrderItem;
 import de.uniba.dsg.beverage_store.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

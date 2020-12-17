@@ -1,7 +1,7 @@
 package de.uniba.dsg.beverage_store.controller;
 
-import de.uniba.dsg.beverage_store.model.Bottle;
-import de.uniba.dsg.beverage_store.model.Crate;
+import de.uniba.dsg.beverage_store.model.db.Bottle;
+import de.uniba.dsg.beverage_store.model.db.Crate;
 import de.uniba.dsg.beverage_store.service.BeverageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

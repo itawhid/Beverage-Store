@@ -3,6 +3,7 @@ package de.uniba.dsg.beverage_store.service;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.helper.Helper;
 import de.uniba.dsg.beverage_store.model.*;
+import de.uniba.dsg.beverage_store.model.db.*;
 import de.uniba.dsg.beverage_store.properties.OrderProperties;
 import de.uniba.dsg.beverage_store.repository.OrderItemRepository;
 import de.uniba.dsg.beverage_store.repository.OrderRepository;
