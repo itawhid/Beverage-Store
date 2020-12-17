@@ -11,19 +11,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li id="home" class="nav-item active">
-                        <a class="nav-link" th:href="@{/home}">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" th:href="@{/home}">Home</span></a>
                     </li>
 
-                    <li id="beverages" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" onclick="return false;">Beverages</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" th:href="@{/beverage/bottle}">Bottles</a>
-                            <a class="dropdown-item" th:href="@{/beverage/crate}">Crates</a>
-                        </div>
+                    <li id="bottles" class="nav-item dropdown">
+                        <a class="nav-link" th:href="@{/beverage/bottle}">Bottles</a>
                     </li>
 
-                    <li id="orders" class="nav-item">
-                        <a class="nav-link" th:href="@{/order}">Orders</a>
+                    <li id="crates" class="nav-item">
+                        <a class="nav-link" th:href="@{/beverage/crate}">Crates</a>
                     </li>
 
                     <li id="cart" class="nav-item">
@@ -37,6 +33,7 @@
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" onclick="return false;"
                            th:text="${'Hello, ' + #authentication.principal.firstName + ' ' + #authentication.principal.lastName}"></a>
                         <div class="dropdown-menu">
+                            <a class="dropdown-item" th:href="@{/order}">Orders</a>
                             <a class="dropdown-item" th:href="@{/address}">Addresses</a>
                             <a id="lnk-logout" class="dropdown-item">Logout</a>
                         </div>

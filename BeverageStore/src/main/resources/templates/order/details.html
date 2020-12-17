@@ -9,9 +9,11 @@
             No order found with this Order Number.
         </div>
 
-        <div th:unless="${orderNotFound == true}" class="container-fluid">
+        <div class="container-fluid">
             <br>
-            <div class="row">
+            <a th:href="@{/order}">Return to orders</a>
+            <br>
+            <div th:unless="${orderNotFound == true}" class="row">
                 <div class="col-md-9">
                     <fieldset class="border p-2">
                         <legend class="w-auto">Items</legend>

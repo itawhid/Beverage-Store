@@ -12,10 +12,10 @@ function updateNavbarActiveLink() {
 
     if (window.location.pathname === '/' || window.location.href.endsWith('/home')) {
         $('.navbar-nav #home').addClass('active');
-    } else if (window.location.href.endsWith('/beverage/bottle') || window.location.href.endsWith('/beverage/crate')) {
-        $('.navbar-nav #beverages').addClass('active');
-    } else if (window.location.href.endsWith('/order')) {
-        $('.navbar-nav #orders').addClass('active');
+    } else if (window.location.href.endsWith('/beverage/crate')) {
+        $('.navbar-nav #crates').addClass('active');
+    } else if (window.location.href.endsWith('/beverage/bottle')) {
+        $('.navbar-nav #bottles').addClass('active');
     } else if (window.location.href.endsWith('/cart')) {
         $('.navbar-nav #cart').addClass('active');
     }
