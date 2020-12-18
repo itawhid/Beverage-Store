@@ -1,6 +1,7 @@
-package de.uniba.dsg.beverage_store.model;
+package de.uniba.dsg.beverage_store.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import de.uniba.dsg.beverage_store.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.validation.annotation.MoreThanZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,4 +49,8 @@ public class Bottle extends Beverage {
     @OneToMany(mappedBy = "bottle")
     @JsonBackReference
     private Set<OrderItem> orderItems;
+
+    public DropdownListItem<Long> getDropdownListItem() {
+        return new DropdownListItem<>(getId(), getName(), getName());
+    }
 }

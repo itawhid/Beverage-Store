@@ -2,9 +2,11 @@ package de.uniba.dsg.beverage_store.service;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.BeverageType;
-import de.uniba.dsg.beverage_store.model.Bottle;
+import de.uniba.dsg.beverage_store.model.db.Bottle;
 import de.uniba.dsg.beverage_store.model.CartItem;
-import de.uniba.dsg.beverage_store.model.Crate;
+import de.uniba.dsg.beverage_store.model.db.Crate;
+import de.uniba.dsg.beverage_store.model.dto.BottleDTO;
+import de.uniba.dsg.beverage_store.model.dto.CrateDTO;
 import de.uniba.dsg.beverage_store.properties.BottleProperties;
 import de.uniba.dsg.beverage_store.properties.CrateProperties;
 import de.uniba.dsg.beverage_store.repository.BottleRepository;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,6 +54,10 @@ public class BeverageService {
         return bottleOptional.get();
     }
 
+    public List<Bottle> getBottles() {
+        return bottleRepository.findAll();
+    }
+
     public Page<Bottle> getPagedBottlesWithAllowedStock(int page) {
         Page<Bottle> bottlePage = bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, bottleProperties.getPageSize()));
 
@@ -66,6 +73,25 @@ public class BeverageService {
         }
 
         return bottlePage;
+    }
+
+    public Bottle addBottle(BottleDTO bottleDTO) {
+        Bottle bottle = new Bottle(
+                null,
+                bottleDTO.getName(),
+                bottleDTO.getPicUrl(),
+                bottleDTO.getVolume(),
+                bottleDTO.getVolumePercent(),
+                bottleDTO.getPrice(),
+                bottleDTO.getSupplier(),
+                bottleDTO.getInStock(),
+                null,
+                null
+        );
+
+        bottleRepository.save(bottle);
+
+        return bottle;
     }
 
     public Crate getCrateById(Long id) throws NotFoundException {
@@ -93,5 +119,22 @@ public class BeverageService {
         }
 
         return cratePage;
+    }
+
+    public Crate addCrate(CrateDTO crateDTO) throws NotFoundException {
+        Crate crate = new Crate(
+                null,
+                crateDTO.getName(),
+                crateDTO.getPicUrl(),
+                crateDTO.getNoOfBottles(),
+                crateDTO.getPrice(),
+                crateDTO.getInStock(),
+                getBottleById(crateDTO.getBottleId()),
+                null
+        );
+
+        crateRepository.save(crate);
+
+        return crate;
     }
 }

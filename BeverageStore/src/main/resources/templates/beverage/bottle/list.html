@@ -11,6 +11,8 @@
             <br>
             <h2>Bottles</h2>
             <br>
+            <a th:href="@{/beverage/bottle/add}">Add new bottle</a>
+            <br>
 
             <div th:replace="fragments/pagination-control :: pagination-control(url = @{/beverage/bottle}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
 

@@ -1,13 +1,11 @@
-package de.uniba.dsg.beverage_store.model;
+package de.uniba.dsg.beverage_store.model.db;
 
 import de.uniba.dsg.beverage_store.validation.annotation.MoreThanZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -19,6 +17,7 @@ import javax.validation.constraints.Pattern;
 @MappedSuperclass
 public class Beverage {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull(message = "Name is required.")

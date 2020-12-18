@@ -1,12 +1,14 @@
 package de.uniba.dsg.beverage_store.controller;
 
-import de.uniba.dsg.beverage_store.dto.SubmitOrderDTO;
-import de.uniba.dsg.beverage_store.model.Address;
-import de.uniba.dsg.beverage_store.model.Order;
+import de.uniba.dsg.beverage_store.model.DropdownListItem;
+import de.uniba.dsg.beverage_store.model.dto.SubmitOrderDTO;
+import de.uniba.dsg.beverage_store.model.db.Address;
+import de.uniba.dsg.beverage_store.model.db.Order;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.service.AddressService;
 import de.uniba.dsg.beverage_store.service.OrderService;
 import de.uniba.dsg.beverage_store.service.CartService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,7 +20,9 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
@@ -36,6 +40,8 @@ public class CartController {
 
     @GetMapping
     public String getCart(Model model) {
+        log.info("Retrieving cart items - start");
+
         List<CartItem> cartItems = cartService.getCartItems();
         double cartTotal = cartService.getCartTotal();
 
@@ -43,15 +49,21 @@ public class CartController {
         model.addAttribute("cartTotal", cartTotal);
         model.addAttribute("cartItemCount", cartService.getCartItemCount());
 
+        log.info("Retrieving cart items - completed");
+
         return "cart/details";
     }
 
     @GetMapping(value = "/checkout")
     public String getCheckout(Model model, Principal principal) {
-        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
-        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        log.info("Retrieving cart details - start");
+
         model.addAttribute("cartTotal", cartService.getCartTotal());
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
+        model.addAttribute("addressesDropdownListItems", getAddressDropdownListByUserName(principal.getName()));
+
+        log.info("Retrieving cart details - completed");
 
         model.addAttribute("submitOrderDTO", new SubmitOrderDTO());
 
@@ -60,33 +72,48 @@ public class CartController {
 
     @PostMapping(value = "/checkout")
     public String checkout(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Model model, Principal principal) {
+        log.info("Creating order - start");
+
         boolean hasModelError = false, hasServerError = false;
 
         if (errors.hasErrors()) {
             hasModelError = true;
+
+            log.info("Creating order - failed, found model error");
         }
 
         if (!hasModelError) {
             try {
                 Order order = orderService.createOrder(principal.getName(), submitOrderDTO.getDeliveryAddressId(), submitOrderDTO.getBillingAddressId());
 
+                log.info("Creating order - completed");
+
                 return "redirect:/order/" + order.getOrderNumber();
             } catch (Exception ex) {
                 hasServerError = true;
+
+                log.info("Creating order - failed, found server error");
             }
         }
 
-        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
-        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        log.info("Retrieving cart details - start");
+
         model.addAttribute("cartTotal", cartService.getCartTotal());
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
+        model.addAttribute("addressesDropdownListItems", getAddressDropdownListByUserName(principal.getName()));
 
         model.addAttribute("hasServerError", hasServerError);
+
+        log.info("Retrieving cart details - completed");
 
         return "cart/checkout";
     }
 
-    private List<Address> getAddressesByUsername(String username) {
-        return addressService.getAllByUsername(username);
+    private List<DropdownListItem<Long>> getAddressDropdownListByUserName(String username) {
+        return addressService.getAllByUsername(username)
+                .stream()
+                .map(Address::getDropdownListItem)
+                .collect(Collectors.toList());
     }
 }

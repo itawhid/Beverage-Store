@@ -3,6 +3,7 @@ package de.uniba.dsg.beverage_store.service;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.helper.Helper;
 import de.uniba.dsg.beverage_store.model.*;
+import de.uniba.dsg.beverage_store.model.db.*;
 import de.uniba.dsg.beverage_store.properties.OrderProperties;
 import de.uniba.dsg.beverage_store.repository.OrderItemRepository;
 import de.uniba.dsg.beverage_store.repository.OrderRepository;
@@ -76,55 +77,48 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(String userName, Long deliveryAddressId, Long billingAddressId) throws NotFoundException {
-        try {
-            User user = userService.getUserByUserName(userName);
-            Address deliveryAddress = addressService.getAddressById(deliveryAddressId);
-            Address billingAddress = addressService.getAddressById(billingAddressId);
+        User user = userService.getUserByUserName(userName);
+        Address deliveryAddress = addressService.getAddressById(deliveryAddressId);
+        Address billingAddress = addressService.getAddressById(billingAddressId);
 
-            Order order = new Order(null, null, LocalDate.now(), cartService.getCartTotal(), user, deliveryAddress, billingAddress, null);
-            orderRepository.save(order);
+        Order order = new Order(null, null, LocalDate.now(), cartService.getCartTotal(), user, deliveryAddress, billingAddress, null);
+        orderRepository.save(order);
 
-            List<OrderItem> orderItems = new ArrayList<>();
-            for (CartItem cartItem: cartService.getCartItems()) {
-                int quantity = cartItem.getQuantity();
-                Long beverageId = cartItem.getBeverageId();
-                BeverageType beverageType = cartItem.getBeverageType();
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItem cartItem: cartService.getCartItems()) {
+            int quantity = cartItem.getQuantity();
+            Long beverageId = cartItem.getBeverageId();
+            BeverageType beverageType = cartItem.getBeverageType();
 
-                orderItems.add(buildOrderItem(order, beverageType, beverageId, quantity));
+            orderItems.add(buildOrderItem(order, beverageType, beverageId, quantity));
 
-                if (beverageType == BeverageType.CRATE) {
-                    crateRepository.decreaseQuantity(beverageId, quantity);
-                } else if (beverageType == BeverageType.BOTTLE) {
-                    bottleRepository.decreaseQuantity(beverageId, quantity);
-                }
+            if (beverageType == BeverageType.CRATE) {
+                crateRepository.decreaseQuantity(beverageId, quantity);
+            } else if (beverageType == BeverageType.BOTTLE) {
+                bottleRepository.decreaseQuantity(beverageId, quantity);
             }
-
-            orderItemRepository.saveAll(orderItems);
-
-            order.setOrderNumber(Helper.generateOrderNumber(order.getId()));
-            orderRepository.save(order);
-
-            cartService.clearCart();
-
-            return order;
-        } catch (Exception e) {
-            throw new NotFoundException();
         }
+
+        orderItemRepository.saveAll(orderItems);
+
+        order.setOrderNumber(Helper.generateOrderNumber(order.getId()));
+        orderRepository.save(order);
+
+        cartService.clearCart();
+
+        return order;
     }
 
     private OrderItem buildOrderItem(Order order, BeverageType beverageType, Long beverageId, int quantity) throws NotFoundException {
-        Bottle bottle = beverageService.getBottleById(beverageId);
-        Crate crate = beverageService.getCrateById(beverageId);
-
         return new OrderItem(
                 null,
                 beverageType,
                 quantity,
                 beverageType == BeverageType.BOTTLE
-                        ? bottle
+                        ? beverageService.getBottleById(beverageId)
                         : null,
                 beverageType == BeverageType.CRATE
-                        ? crate
+                        ? beverageService.getCrateById(beverageId)
                         : null,
                 order
         );

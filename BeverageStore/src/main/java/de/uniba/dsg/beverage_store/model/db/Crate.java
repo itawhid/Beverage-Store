@@ -1,13 +1,13 @@
-package de.uniba.dsg.beverage_store.model;
+package de.uniba.dsg.beverage_store.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import de.uniba.dsg.beverage_store.validation.annotation.MoreThanZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import java.util.Set;
 
 @Data
@@ -30,7 +30,7 @@ public class Crate extends Beverage {
         this.orderItems = orderItems;
     }
 
-    @Min(value = 0, message = "No of Bottles must be more then or equal to zero.")
+    @MoreThanZero(message = "No of Bottles must be more than zero.")
     private int noOfBottles;
 
     //Entity Relations

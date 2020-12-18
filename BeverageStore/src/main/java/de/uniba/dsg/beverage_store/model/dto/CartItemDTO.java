@@ -1,4 +1,4 @@
-package de.uniba.dsg.beverage_store.dto;
+package de.uniba.dsg.beverage_store.model.dto;
 
 import de.uniba.dsg.beverage_store.model.BeverageType;
 import lombok.Data;

@@ -1,6 +1,7 @@
-package de.uniba.dsg.beverage_store.model;
+package de.uniba.dsg.beverage_store.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.uniba.dsg.beverage_store.model.DropdownListItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,4 +49,8 @@ public class Address {
     @OneToMany(mappedBy = "billingAddress")
     @JsonIgnore
     private Set<Order> billingAddressOrders;
+
+    public DropdownListItem<Long> getDropdownListItem() {
+        return new DropdownListItem<>(getId(), getName(), String.format("%s %s, %s", getStreet(), getHouseNumber(), getPostalCode()));
+    }
 }

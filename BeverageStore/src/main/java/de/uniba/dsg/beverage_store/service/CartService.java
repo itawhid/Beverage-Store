@@ -3,6 +3,8 @@ package de.uniba.dsg.beverage_store.service;
 import de.uniba.dsg.beverage_store.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.*;
+import de.uniba.dsg.beverage_store.model.db.Bottle;
+import de.uniba.dsg.beverage_store.model.db.Crate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
