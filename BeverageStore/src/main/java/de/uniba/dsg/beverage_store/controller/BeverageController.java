@@ -6,6 +6,7 @@ import de.uniba.dsg.beverage_store.model.db.Crate;
 import de.uniba.dsg.beverage_store.model.dto.BottleDTO;
 import de.uniba.dsg.beverage_store.model.dto.CrateDTO;
 import de.uniba.dsg.beverage_store.service.BeverageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/beverage")
 public class BeverageController {
@@ -33,11 +35,15 @@ public class BeverageController {
 
     @GetMapping(value = "/bottle")
     public String getBottles(@RequestParam(defaultValue = "1") int page, Model model) {
+        log.info("Retrieving bottle page: " + page + " - start");
+
         Page<Bottle> bottlePage = beverageService.getPagedBottlesWithAllowedStock(page);
 
         model.addAttribute("bottles", bottlePage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", bottlePage.getTotalPages());
+
+        log.info("Retrieving bottle page: " + page + " - completed");
 
         return "beverage/bottle/list";
     }
@@ -51,17 +57,25 @@ public class BeverageController {
 
     @PostMapping(value = "/bottle/add")
     public String addBottle(@Valid BottleDTO bottleDTO, Errors errors, Model model) {
+        log.info("Creating bottle - start");
+
         boolean hasModelError = false, hasServerError = false;
 
         if (errors.hasErrors()) {
             hasModelError = true;
+
+            log.info("Creating bottle - failed, found model error");
         }
 
         if (!hasModelError) {
             try {
                 beverageService.addBottle(bottleDTO);
+
+                log.info("Creating bottle - completed");
             } catch (Exception e) {
                 hasServerError = true;
+
+                log.info("Creating bottle - failed, found server error");
             }
         }
 
@@ -76,11 +90,15 @@ public class BeverageController {
 
     @GetMapping(value = "/crate")
     public String getCrates(@RequestParam(defaultValue = "1") int page, Model model) {
+        log.info("Retrieving crate page: " + page + " - start");
+
         Page<Crate> cratePage = beverageService.getPagedCratesAllowedStock(page);
 
         model.addAttribute("crates", cratePage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", cratePage.getTotalPages());
+
+        log.info("Retrieving crate page: " + page + " - completed");
 
         return "beverage/crate/list";
     }
@@ -95,17 +113,25 @@ public class BeverageController {
 
     @PostMapping(value = "/crate/add")
     public String addCrate(@Valid CrateDTO crateDTO, Errors errors, Model model) {
+        log.info("Creating crate - start");
+
         boolean hasModelError = false, hasServerError = false;
 
         if (errors.hasErrors()) {
             hasModelError = true;
+
+            log.info("Creating crate - failed, found model error");
         }
 
         if (!hasModelError) {
             try {
                 beverageService.addCrate(crateDTO);
+
+                log.info("Creating crate - completed");
             } catch (Exception e) {
                 hasServerError = true;
+
+                log.info("Creating crate - failed, found server error");
             }
         }
 

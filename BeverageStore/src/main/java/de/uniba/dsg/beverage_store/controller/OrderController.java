@@ -4,6 +4,7 @@ import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.db.Order;
 import de.uniba.dsg.beverage_store.model.db.OrderItem;
 import de.uniba.dsg.beverage_store.service.OrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/order")
 public class OrderController {
@@ -29,17 +31,23 @@ public class OrderController {
 
     @GetMapping
     public String getOrders(@RequestParam(defaultValue = "1") int page, Model model, Principal principal) {
+        log.info("Retrieving order page: " + page + " - start");
+
         Page<Order> orderPage = orderService.getPagedOrdersByUsername(principal.getName(), page);
 
         model.addAttribute("orders", orderPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", orderPage.getTotalPages());
 
+        log.info("Retrieving order page: " + page + " - completed");
+
         return "order/list";
     }
 
     @GetMapping(value = "/{orderNumber}")
     public String getOrder(@PathVariable("orderNumber") String orderNumber, Model model) {
+        log.info("Retrieving order with order number: " + orderNumber + " - start");
+
         try {
             Order order = orderService.getOrderByOrderNumber(orderNumber);
             List<OrderItem> orderItems = orderService.getOrderItemsByOrderNumber(orderNumber);
@@ -47,8 +55,12 @@ public class OrderController {
             model.addAttribute("order", order);
             model.addAttribute("orderItems", orderItems);
             model.addAttribute("orderNotFound", false);
+
+            log.info("Retrieving order with order number: " + orderNumber + " - completed");
         } catch (NotFoundException ex) {
             model.addAttribute("orderNotFound", true);
+
+            log.info("Retrieving order with order number: " + orderNumber + " - failed, found not found exception");
         }
 
         return "order/details";

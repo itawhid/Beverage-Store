@@ -34,6 +34,8 @@ public class DemoData {
 
     @EventListener
     public void createDemoData(ApplicationReadyEvent event) {
+        log.info("Creating demo data - start");
+
         User adminUser = new User(1L, "admin", "Admin", "User", "$2y$12$uGcYuZ0wt7Kj02tSmsJaBuQsBwdgoL4ZRp1al2fpIboGVHwru6He2" /* password actual value: admin */, LocalDate.of(1990, 1, 1), null, null);
         userRepository.save(adminUser);
 
@@ -58,5 +60,7 @@ public class DemoData {
         OrderItem orderItem1 = new OrderItem(1L, BeverageType.BOTTLE, 2, cocaCola, null, order);
         OrderItem orderItem2 = new OrderItem(2L, BeverageType.CRATE, 1, null, pepsiCrate, order);
         orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
+
+        log.info("Creating demo data - completed");
     }
 }
