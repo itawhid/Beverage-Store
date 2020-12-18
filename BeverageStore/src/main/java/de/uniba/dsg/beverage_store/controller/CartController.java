@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.controller;
 
+import de.uniba.dsg.beverage_store.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.model.dto.SubmitOrderDTO;
 import de.uniba.dsg.beverage_store.model.db.Address;
 import de.uniba.dsg.beverage_store.model.db.Order;
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -48,10 +50,10 @@ public class CartController {
 
     @GetMapping(value = "/checkout")
     public String getCheckout(Model model, Principal principal) {
-        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
-        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
         model.addAttribute("cartTotal", cartService.getCartTotal());
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
+        model.addAttribute("addressesDropdownListItems", getAddressDropdownListByUserName(principal.getName()));
 
         model.addAttribute("submitOrderDTO", new SubmitOrderDTO());
 
@@ -76,17 +78,20 @@ public class CartController {
             }
         }
 
-        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
-        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
         model.addAttribute("cartTotal", cartService.getCartTotal());
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
+        model.addAttribute("addressesDropdownListItems", getAddressDropdownListByUserName(principal.getName()));
 
         model.addAttribute("hasServerError", hasServerError);
 
         return "cart/checkout";
     }
 
-    private List<Address> getAddressesByUsername(String username) {
-        return addressService.getAllByUsername(username);
+    private List<DropdownListItem<Long>> getAddressDropdownListByUserName(String username) {
+        return addressService.getAllByUsername(username)
+                .stream()
+                .map(Address::getDropdownListItem)
+                .collect(Collectors.toList());
     }
 }

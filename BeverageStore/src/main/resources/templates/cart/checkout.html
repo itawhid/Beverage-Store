@@ -26,9 +26,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="deliveryAddressId">Delivery Address</label>
-                                        <select th:field="*{deliveryAddressId}" id="deliveryAddressId" name="deliveryAddressId" class="form-control">
+                                        <select th:field="*{deliveryAddressId}" id="deliveryAddressId" class="form-control">
                                             <option value="0" disabled selected>Select Delivery Address</option>
-                                            <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address.name}"></option>
+                                            <option th:each="address : ${addressesDropdownListItems}" th:value="${address.id}" th:text="${address.label}"></option>
                                         </select>
                                         <small class="form-text text-danger" th:if="${#fields.hasErrors('deliveryAddressId')}" th:errors="*{deliveryAddressId}"></small>
                                     </div>
@@ -37,9 +37,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="billingAddressId">Billing Address</label>
-                                        <select th:field="*{billingAddressId}" id="billingAddressId" name="billingAddressId" class="form-control">
+                                        <select th:field="*{billingAddressId}" id="billingAddressId" class="form-control">
                                             <option value="0" disabled selected>Select Billing Address</option>
-                                            <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address.name}"></option>
+                                            <option th:each="address : ${addressesDropdownListItems}" th:value="${address.id}" th:text="${address.label}"></option>
                                         </select>
                                         <small class="form-text text-danger" th:if="${#fields.hasErrors('billingAddressId')}" th:errors="*{billingAddressId}"></small>
                                     </div>
@@ -89,7 +89,7 @@
 
     <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-        let addresses = [[${addresses}]];
+        let addressesDropdownListItems = [[${addressesDropdownListItems}]];
 
         $(document).ready(() => {
             updateDeliveryAddress();
@@ -114,11 +114,11 @@
                 return "No address is selected.";
             }
 
-            let address = addresses.filter((a) => {
+            let address = addressesDropdownListItems.filter((a) => {
                 return a.id === selectedAddressId;
             })[0];
 
-            return (address.street + ' ' + address.houseNumber + ', ' + address.postalCode);
+            return address.description;
         }
     /*]]>*/
     </script>

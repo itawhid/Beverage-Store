@@ -62,7 +62,7 @@ public class AddressController {
             return "address/list";
         }
 
-        return "redirect:address";
+        return "redirect:/address";
     }
 
     @GetMapping("/edit/{id}")

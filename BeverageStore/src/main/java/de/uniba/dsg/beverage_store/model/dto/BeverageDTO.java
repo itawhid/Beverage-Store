@@ -1,11 +1,10 @@
-package de.uniba.dsg.beverage_store.model.db;
+package de.uniba.dsg.beverage_store.model.dto;
 
 import de.uniba.dsg.beverage_store.validation.annotation.MoreThanZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -14,12 +13,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@MappedSuperclass
-public class Beverage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class BeverageDTO {
     @NotNull(message = "Name is required.")
     @NotEmpty(message = "Name can not be empty.")
     private String name;
@@ -33,15 +27,4 @@ public class Beverage {
 
     @Min(value = 0, message = "In Stock must be more then or equal to zero.")
     private int inStock;
-
-    @Transient
-    private int allowedInStock;
-
-    public void setAllowedInStockToInStock() {
-        allowedInStock = inStock;
-    }
-
-    public void decreaseAllowedInStock(int quantity) {
-        this.allowedInStock -= quantity;
-    }
 }
