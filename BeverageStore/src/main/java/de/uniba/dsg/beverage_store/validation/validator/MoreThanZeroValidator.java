@@ -5,13 +5,13 @@ import de.uniba.dsg.beverage_store.validation.annotation.MoreThanZero;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class MoreThanZeroValidator implements ConstraintValidator<MoreThanZero, Object> {
+public class MoreThanZeroValidator implements ConstraintValidator<MoreThanZero, Number> {
     @Override
     public void initialize(MoreThanZero constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(Object object, ConstraintValidatorContext constraintContext) {
+    public boolean isValid(Number object, ConstraintValidatorContext constraintContext) {
         if (object instanceof Integer) {
             return (int)object > 0;
         } else if (object instanceof Double) {

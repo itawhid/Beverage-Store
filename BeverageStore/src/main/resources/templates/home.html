@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/fragments :: headerfiles"></head>
+    <head th:replace="fragments/header :: header"></head>
     <body>
-        <div th:replace="fragments/fragments :: nav-bar"></div>
+        <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
-        <div th:replace="fragments/fragments :: footer"></div>
+        <h1 class="txt-page-center">Welcome To the Beverage Store</h1>
+
+        <div th:replace="fragments/footer :: footer"></div>
     </body>
 </html>

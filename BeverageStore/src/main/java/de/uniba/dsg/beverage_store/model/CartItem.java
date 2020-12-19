@@ -11,6 +11,7 @@ public class CartItem {
     private int cartItemId;
     private BeverageType beverageType;
     private long beverageId;
+    private int quantity;
     private String name;
     private String picUrl;
     private double price;
@@ -19,4 +20,8 @@ public class CartItem {
     private double volumePercent;
     private String supplier;
     private int noOfBottle;
+
+    public void addQuantity(int quantity) {
+        this.quantity += quantity;
+    }
 }

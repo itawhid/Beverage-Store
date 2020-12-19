@@ -1,106 +1,119 @@
 package de.uniba.dsg.beverage_store.controller;
 
-import de.uniba.dsg.beverage_store.dto.CheckoutDTO;
-import de.uniba.dsg.beverage_store.dto.SubmitOrderDTO;
-import de.uniba.dsg.beverage_store.model.Address;
-import de.uniba.dsg.beverage_store.model.BeverageOrder;
+import de.uniba.dsg.beverage_store.model.DropdownListItem;
+import de.uniba.dsg.beverage_store.model.dto.SubmitOrderDTO;
+import de.uniba.dsg.beverage_store.model.db.Address;
+import de.uniba.dsg.beverage_store.model.db.Order;
 import de.uniba.dsg.beverage_store.model.CartItem;
-import de.uniba.dsg.beverage_store.model.User;
-import de.uniba.dsg.beverage_store.repository.AddressRepository;
-import de.uniba.dsg.beverage_store.repository.UserRepository;
+import de.uniba.dsg.beverage_store.service.AddressService;
+import de.uniba.dsg.beverage_store.service.OrderService;
 import de.uniba.dsg.beverage_store.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
+    private final AddressService addressService;
+    private final OrderService orderService;
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
 
+    public CartController(AddressService addressService, OrderService orderService) {
+        this.addressService = addressService;
+        this.orderService = orderService;
+    }
+
     @GetMapping
-    public String getCart(Model model, HttpServletRequest request) {
+    public String getCart(Model model) {
+        log.info("Retrieving cart items - start");
+
         List<CartItem> cartItems = cartService.getCartItems();
         double cartTotal = cartService.getCartTotal();
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("cartTotal", cartTotal);
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
 
-        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-        if (inputFlashMap != null && inputFlashMap.get("hasCheckoutError") != null && (boolean)inputFlashMap.get("hasCheckoutError")) {
-            model.addAttribute("hasCheckoutError", true);
-        } else {
-            model.addAttribute("hasCheckoutError", false);
-        }
+        log.info("Retrieving cart items - completed");
 
-        return "cart";
-    }
-
-    @PostMapping(value = "/checkout/process")
-    public String processCheckout(@Valid CheckoutDTO checkoutDTO, Errors errors, RedirectAttributes redirectAttributes) {
-        if (errors.hasErrors()) {
-            redirectAttributes.addFlashAttribute("hasCheckoutError", true);
-
-            return "redirect:/cart";
-        }
-
-        return "redirect:/cart/checkout";
+        return "cart/details";
     }
 
     @GetMapping(value = "/checkout")
     public String getCheckout(Model model, Principal principal) {
-        model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        log.info("Retrieving cart details - start");
+
         model.addAttribute("cartTotal", cartService.getCartTotal());
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
+        model.addAttribute("addressesDropdownListItems", getAddressDropdownListByUserName(principal.getName()));
+
+        log.info("Retrieving cart details - completed");
 
         model.addAttribute("submitOrderDTO", new SubmitOrderDTO());
 
-        return "checkout";
+        return "cart/checkout";
     }
 
-    @PostMapping(value = "/submit")
-    public String submit(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Model model, Principal principal) {
-        if (errors.hasErrors()) {
-            model.addAttribute("addresses", getAddressesByUsername(principal.getName()));
-            model.addAttribute("cartItemCount", cartService.getCartItemCount());
-            model.addAttribute("cartTotal", cartService.getCartTotal());
+    @PostMapping(value = "/checkout")
+    public String checkout(@Valid SubmitOrderDTO submitOrderDTO, Errors errors, Model model, Principal principal) {
+        log.info("Creating order - start");
 
-            return "checkout";
+        boolean hasModelError = false, hasServerError = false;
+
+        if (errors.hasErrors()) {
+            hasModelError = true;
+
+            log.info("Creating order - failed, found model error");
         }
 
-        Optional<User> optionalUser = userRepository.findUserByUsername(principal.getName());
+        if (!hasModelError) {
+            try {
+                Order order = orderService.createOrder(principal.getName(), submitOrderDTO.getDeliveryAddressId(), submitOrderDTO.getBillingAddressId());
 
-        Optional<Address> optionalDeliveryAddress = addressRepository.findById(submitOrderDTO.getDeliveryAddressId());
-        Optional<Address> optionalBillingAddress = addressRepository.findById(submitOrderDTO.getBillingAddressId());
+                log.info("Creating order - completed");
 
-        BeverageOrder beverageOrder = cartService.submitOrder(optionalUser.get(), optionalDeliveryAddress.get(), optionalBillingAddress.get());
+                return "redirect:/order/" + order.getOrderNumber();
+            } catch (Exception ex) {
+                hasServerError = true;
 
-        return "redirect:/orders/" + beverageOrder.getOrderNumber();
+                log.info("Creating order - failed, found server error");
+            }
+        }
+
+        log.info("Retrieving cart details - start");
+
+        model.addAttribute("cartTotal", cartService.getCartTotal());
+        model.addAttribute("cartItemCount", cartService.getCartItemCount());
+        model.addAttribute("isEmptyCart", (cartService.getCartItemCount() == 0));
+        model.addAttribute("addressesDropdownListItems", getAddressDropdownListByUserName(principal.getName()));
+
+        model.addAttribute("hasServerError", hasServerError);
+
+        log.info("Retrieving cart details - completed");
+
+        return "cart/checkout";
     }
 
-    private List<Address> getAddressesByUsername(String username) {
-        return addressRepository.findAllByUserUsername(username);
+    private List<DropdownListItem<Long>> getAddressDropdownListByUserName(String username) {
+        return addressService.getAllByUsername(username)
+                .stream()
+                .map(Address::getDropdownListItem)
+                .collect(Collectors.toList());
     }
 }

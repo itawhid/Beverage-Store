@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface MoreThanZero {
 
-    String message() default "{Value must be more than zero}";
+    String message() default "Must be greater than zero";
 
     Class<?>[] groups() default { };
 
