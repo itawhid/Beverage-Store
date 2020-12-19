@@ -57,8 +57,8 @@ public class DemoData {
 
         Order order = new Order(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, adminUser, address1, address2, null);
 
-        OrderItem orderItem1 = new OrderItem(1L, BeverageType.BOTTLE, 2, cocaCola, null, order);
-        OrderItem orderItem2 = new OrderItem(2L, BeverageType.CRATE, 1, null, pepsiCrate, order);
+        OrderItem orderItem1 = new OrderItem(1L, BeverageType.BOTTLE, 2, 1, cocaCola, null, order);
+        OrderItem orderItem2 = new OrderItem(2L, BeverageType.CRATE, 1, 1, null, pepsiCrate, order);
         orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
 
         log.info("Creating demo data - completed");
