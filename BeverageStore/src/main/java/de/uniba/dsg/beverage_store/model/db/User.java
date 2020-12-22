@@ -19,6 +19,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "username"
+        })
+})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,13 +50,12 @@ public class User implements UserDetails {
     private LocalDate birthday;
 
 
-
     // Entity Relations
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Address> addresses;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Order> orders;
 
