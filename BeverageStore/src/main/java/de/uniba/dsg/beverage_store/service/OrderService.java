@@ -84,13 +84,14 @@ public class OrderService {
         Order order = new Order(null, null, LocalDate.now(), cartService.getCartTotal(), user, deliveryAddress, billingAddress, null);
         orderRepository.save(order);
 
+        int count = 0;
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem: cartService.getCartItems()) {
             int quantity = cartItem.getQuantity();
             Long beverageId = cartItem.getBeverageId();
             BeverageType beverageType = cartItem.getBeverageType();
 
-            orderItems.add(buildOrderItem(order, beverageType, beverageId, quantity));
+            orderItems.add(buildOrderItem(order, beverageType, beverageId, quantity, ++count));
 
             if (beverageType == BeverageType.CRATE) {
                 crateRepository.decreaseQuantity(beverageId, quantity);
@@ -109,11 +110,12 @@ public class OrderService {
         return order;
     }
 
-    private OrderItem buildOrderItem(Order order, BeverageType beverageType, Long beverageId, int quantity) throws NotFoundException {
+    private OrderItem buildOrderItem(Order order, BeverageType beverageType, Long beverageId, int quantity, int position) throws NotFoundException {
         return new OrderItem(
                 null,
                 beverageType,
                 quantity,
+                position,
                 beverageType == BeverageType.BOTTLE
                         ? beverageService.getBottleById(beverageId)
                         : null,

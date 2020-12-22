@@ -22,6 +22,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th scope="col">Pos</th>
                                         <th scope="col">Image</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Type</th>
@@ -37,6 +38,7 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="item : ${orderItems}">
+                                        <td th:text="${item.position}"></td>
                                         <td>
                                             <img width="120" th:src="${item.beverageType == T(de.uniba.dsg.beverage_store.model.BeverageType).BOTTLE}
                                                 ? ${item.bottle.picUrl}

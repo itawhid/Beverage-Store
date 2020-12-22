@@ -86,41 +86,42 @@ public class CartService {
     }
 
     public void clearCart() {
+        cartItemId = 0;
         cartItems.clear();
     }
 
     private CartItem buildBottleCartItem(Bottle bottle, int quantity) {
-        CartItem cartItem = new CartItem();
-
-        cartItem.setCartItemId(0);
-        cartItem.setBeverageType(BeverageType.BOTTLE);
-        cartItem.setBeverageId(bottle.getId());
-        cartItem.setQuantity(quantity);
-        cartItem.setName(bottle.getName());
-        cartItem.setPicUrl(bottle.getPicUrl());
-        cartItem.setPrice(bottle.getPrice());
-        cartItem.setInStock(bottle.getInStock());
-        cartItem.setVolume(bottle.getVolume());
-        cartItem.setVolumePercent(bottle.getVolumePercent());
-        cartItem.setSupplier(bottle.getSupplier());
-
-        return cartItem;
+        return new CartItem() {
+            {
+                setCartItemId(0);
+                setBeverageType(BeverageType.BOTTLE);
+                setBeverageId(bottle.getId());
+                setQuantity(quantity);
+                setName(bottle.getName());
+                setPicUrl(bottle.getPicUrl());
+                setPrice(bottle.getPrice());
+                setInStock(bottle.getInStock());
+                setVolume(bottle.getVolume());
+                setVolumePercent(bottle.getVolumePercent());
+                setSupplier(bottle.getSupplier());
+            }
+        };
     }
 
     private CartItem buildCrateCartItem(Crate crate, int quantity) {
-        CartItem cartItem = new CartItem();
-
-        cartItem.setCartItemId(0);
-        cartItem.setBeverageType(BeverageType.CRATE);
-        cartItem.setBeverageId(crate.getId());
-        cartItem.setQuantity(quantity);
-        cartItem.setName(crate.getName());
-        cartItem.setPicUrl(crate.getPicUrl());
-        cartItem.setPrice(crate.getPrice());
-        cartItem.setInStock(crate.getInStock());
-        cartItem.setNoOfBottle(crate.getNoOfBottles());
-
-        return cartItem;
+        return new CartItem() {
+            {
+                setCartItemId(0);
+                setBeverageType(BeverageType.CRATE);
+                setBeverageId(crate.getId());
+                setQuantity(quantity);
+                setName(crate.getName());
+                setPicUrl(crate.getPicUrl());
+                setPrice(crate.getPrice());
+                setInStock(crate.getInStock());
+                setNoOfBottle(crate.getNoOfBottles());
+            }
+        };
     }
 
     private Optional<CartItem> getCartBeverage(long beverageId, BeverageType beverageType) {
