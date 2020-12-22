@@ -51,7 +51,7 @@ public class Order {
     @JsonIgnoreProperties({"user", "deliveryAddressOrders", "billingAddressOrders"})
     private Address billingAddress;
 
-    @OneToMany(mappedBy = "order", orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     @JsonBackReference
     private Set<OrderItem> orderItems;
 }

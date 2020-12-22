@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
@@ -42,7 +43,7 @@ public class Bottle extends Beverage {
     private String supplier;
 
     //Entity Relations
-    @OneToMany(mappedBy = "bottle")
+    @OneToMany(mappedBy = "bottle", cascade = CascadeType.REMOVE)
     @JsonBackReference
     private Set<Crate> crates;
 
