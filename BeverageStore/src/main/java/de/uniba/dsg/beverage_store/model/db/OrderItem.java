@@ -2,13 +2,13 @@ package de.uniba.dsg.beverage_store.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import de.uniba.dsg.beverage_store.model.BeverageType;
+import de.uniba.dsg.beverage_store.validation.annotation.MoreThanZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -32,8 +32,11 @@ public class OrderItem {
     @NotNull(message = "Beverage Type is required.")
     private BeverageType beverageType;
 
-    @Min(value = 1, message = "Quantity must be at least one.")
+    @MoreThanZero(message = "Quantity must be greater than zero.")
     private int quantity;
+
+    @MoreThanZero(message = "Position must be greater than zero.")
+    private int position;
 
     //Entity Relations
     @ManyToOne
