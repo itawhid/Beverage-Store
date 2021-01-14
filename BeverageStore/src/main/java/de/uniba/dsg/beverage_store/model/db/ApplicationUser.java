@@ -26,7 +26,7 @@ import java.util.Set;
                 "username"
         })
 })
-public class User implements UserDetails {
+public class ApplicationUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -61,7 +61,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
-    private Set<Order> orders;
+    private Set<BeverageOrder> orders;
 
     // Authentication
     @Override

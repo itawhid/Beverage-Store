@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/beverage/bottle/add", "/beverage/crate/add", "/h2-console/**")
+                .antMatchers("/beverage/bottle/add", "/beverage/crate/add")
                     .hasRole(Role.MANAGER.name())
                 .antMatchers("/cart", "/cart/checkout", "/order/**", "/address/**")
                     .hasRole(Role.CUSTOMER.name())
@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                     .logoutSuccessUrl("/")
                 .and()
                 .csrf()
-                    .ignoringAntMatchers("/h2-console/**", "/api/**")
+                    .ignoringAntMatchers("/api/**")
                 .and()
                 .headers()
                     .frameOptions()

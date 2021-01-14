@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "BEVERAGE_ORDER")
 @NamedEntityGraph(
         name = "Order.orders",
         attributeNodes = {
@@ -25,7 +24,7 @@ import java.util.Set;
                 @NamedAttributeNode(value = "billingAddress")
         }
 )
-public class Order {
+public class BeverageOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,7 +40,7 @@ public class Order {
     //Entity Relations
     @ManyToOne
     @JsonIgnoreProperties({"addresses", "orders"})
-    private User user;
+    private ApplicationUser user;
 
     @ManyToOne
     @JsonIgnoreProperties({"user", "deliveryAddressOrders", "billingAddressOrders"})
@@ -53,5 +52,5 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     @JsonBackReference
-    private Set<OrderItem> orderItems;
+    private Set<BeverageOrderItem> orderItems;
 }

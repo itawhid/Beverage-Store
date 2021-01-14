@@ -3,7 +3,7 @@ package de.uniba.dsg.beverage_store.controller;
 import de.uniba.dsg.beverage_store.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.model.dto.SubmitOrderDTO;
 import de.uniba.dsg.beverage_store.model.db.Address;
-import de.uniba.dsg.beverage_store.model.db.Order;
+import de.uniba.dsg.beverage_store.model.db.BeverageOrder;
 import de.uniba.dsg.beverage_store.model.CartItem;
 import de.uniba.dsg.beverage_store.service.AddressService;
 import de.uniba.dsg.beverage_store.service.OrderService;
@@ -84,7 +84,7 @@ public class CartController {
 
         if (!hasModelError) {
             try {
-                Order order = orderService.createOrder(principal.getName(), submitOrderDTO.getDeliveryAddressId(), submitOrderDTO.getBillingAddressId());
+                BeverageOrder order = orderService.createOrder(principal.getName(), submitOrderDTO.getDeliveryAddressId(), submitOrderDTO.getBillingAddressId());
 
                 log.info("Creating order - completed");
 

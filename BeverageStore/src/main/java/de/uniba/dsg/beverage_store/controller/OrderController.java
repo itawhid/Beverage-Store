@@ -1,8 +1,8 @@
 package de.uniba.dsg.beverage_store.controller;
 
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
-import de.uniba.dsg.beverage_store.model.db.Order;
-import de.uniba.dsg.beverage_store.model.db.OrderItem;
+import de.uniba.dsg.beverage_store.model.db.BeverageOrder;
+import de.uniba.dsg.beverage_store.model.db.BeverageOrderItem;
 import de.uniba.dsg.beverage_store.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class OrderController {
     public String getOrders(@RequestParam(defaultValue = "1") int page, Model model, Principal principal) {
         log.info("Retrieving order page: " + page + " - start");
 
-        Page<Order> orderPage = orderService.getPagedOrdersByUsername(principal.getName(), page);
+        Page<BeverageOrder> orderPage = orderService.getPagedOrdersByUsername(principal.getName(), page);
 
         model.addAttribute("orders", orderPage.getContent());
         model.addAttribute("currentPage", page);
@@ -49,8 +49,8 @@ public class OrderController {
         log.info("Retrieving order with order number: " + orderNumber + " - start");
 
         try {
-            Order order = orderService.getOrderByOrderNumber(orderNumber);
-            List<OrderItem> orderItems = orderService.getOrderItemsByOrderNumber(orderNumber);
+            BeverageOrder order = orderService.getOrderByOrderNumber(orderNumber);
+            List<BeverageOrderItem> orderItems = orderService.getOrderItemsByOrderNumber(orderNumber);
 
             model.addAttribute("order", order);
             model.addAttribute("orderItems", orderItems);

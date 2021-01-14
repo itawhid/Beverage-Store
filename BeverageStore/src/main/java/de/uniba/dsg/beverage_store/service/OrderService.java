@@ -57,8 +57,8 @@ public class OrderService {
         this.orderProperties = orderProperties;
     }
 
-    public Order getOrderByOrderNumber(String orderNumber) throws NotFoundException {
-        Optional<Order> orderOptional = orderRepository.findOrderByOrderNumber(orderNumber);
+    public BeverageOrder getOrderByOrderNumber(String orderNumber) throws NotFoundException {
+        Optional<BeverageOrder> orderOptional = orderRepository.findOrderByOrderNumber(orderNumber);
 
         if (orderOptional.isEmpty()) {
             throw new NotFoundException("No Order found with Order Number: " + orderNumber);
@@ -67,25 +67,25 @@ public class OrderService {
         return orderOptional.get();
     }
 
-    public Page<Order> getPagedOrdersByUsername(String username, int page) {
+    public Page<BeverageOrder> getPagedOrdersByUsername(String username, int page) {
         return orderRepository.findAllByUserUsernameOrderByOrderNumber(username, PageRequest.of(page - 1, orderProperties.getPageSize()));
     }
 
-    public List<OrderItem> getOrderItemsByOrderNumber(String orderNumber) {
+    public List<BeverageOrderItem> getOrderItemsByOrderNumber(String orderNumber) {
         return orderItemRepository.findAllByOrderOrderNumber(orderNumber);
     }
 
     @Transactional
-    public Order createOrder(String userName, Long deliveryAddressId, Long billingAddressId) throws NotFoundException {
-        User user = userService.getUserByUserName(userName);
+    public BeverageOrder createOrder(String userName, Long deliveryAddressId, Long billingAddressId) throws NotFoundException {
+        ApplicationUser user = userService.getUserByUserName(userName);
         Address deliveryAddress = addressService.getAddressById(deliveryAddressId);
         Address billingAddress = addressService.getAddressById(billingAddressId);
 
-        Order order = new Order(null, null, LocalDate.now(), cartService.getCartTotal(), user, deliveryAddress, billingAddress, null);
+        BeverageOrder order = new BeverageOrder(null, null, LocalDate.now(), cartService.getCartTotal(), user, deliveryAddress, billingAddress, null);
         orderRepository.save(order);
 
         int count = 0;
-        List<OrderItem> orderItems = new ArrayList<>();
+        List<BeverageOrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem: cartService.getCartItems()) {
             int quantity = cartItem.getQuantity();
             Long beverageId = cartItem.getBeverageId();
@@ -110,8 +110,8 @@ public class OrderService {
         return order;
     }
 
-    private OrderItem buildOrderItem(Order order, BeverageType beverageType, Long beverageId, int quantity, int position) throws NotFoundException {
-        return new OrderItem(
+    private BeverageOrderItem buildOrderItem(BeverageOrder order, BeverageType beverageType, Long beverageId, int quantity, int position) throws NotFoundException {
+        return new BeverageOrderItem(
                 null,
                 beverageType,
                 quantity,

@@ -22,7 +22,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 public class Bottle extends Beverage {
-    public Bottle (Long id, String name, String picUrl, double volume, double volumePercent, double price, String supplier, int inStock, Set<Crate> crates, Set<OrderItem> orderItems) {
+    public Bottle (Long id, String name, String picUrl, double volume, double volumePercent, double price, String supplier, int inStock, Set<Crate> crates, Set<BeverageOrderItem> orderItems) {
         super(id, name, picUrl, price, inStock, inStock);
 
         this.volume = volume;
@@ -49,7 +49,7 @@ public class Bottle extends Beverage {
 
     @OneToMany(mappedBy = "bottle")
     @JsonBackReference
-    private Set<OrderItem> orderItems;
+    private Set<BeverageOrderItem> orderItems;
 
     public DropdownListItem<Long> getDropdownListItem() {
         return new DropdownListItem<>(getId(), getName(), getName());

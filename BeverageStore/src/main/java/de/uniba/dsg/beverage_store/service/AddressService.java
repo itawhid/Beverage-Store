@@ -3,7 +3,7 @@ package de.uniba.dsg.beverage_store.service;
 import de.uniba.dsg.beverage_store.model.dto.AddressDTO;
 import de.uniba.dsg.beverage_store.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.model.db.Address;
-import de.uniba.dsg.beverage_store.model.db.User;
+import de.uniba.dsg.beverage_store.model.db.ApplicationUser;
 import de.uniba.dsg.beverage_store.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class AddressService {
     }
 
     public Address addAddress(AddressDTO addressDTO, String username) throws NotFoundException {
-        User user = userService.getUserByUserName(username);
+        ApplicationUser user = userService.getUserByUserName(username);
 
         Address address = new Address(
                 null,

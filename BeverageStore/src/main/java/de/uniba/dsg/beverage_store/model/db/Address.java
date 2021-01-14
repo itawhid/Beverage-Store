@@ -40,15 +40,15 @@ public class Address {
     // Entity Relations
     @ManyToOne
     @JsonIgnore
-    private User user;
+    private ApplicationUser user;
 
     @OneToMany(mappedBy = "deliveryAddress")
     @JsonIgnore
-    private Set<Order> deliveryAddressOrders;
+    private Set<BeverageOrder> deliveryAddressOrders;
 
     @OneToMany(mappedBy = "billingAddress")
     @JsonIgnore
-    private Set<Order> billingAddressOrders;
+    private Set<BeverageOrder> billingAddressOrders;
 
     public DropdownListItem<Long> getDropdownListItem() {
         return new DropdownListItem<>(getId(), getName(), String.format("%s %s, %s", getStreet(), getHouseNumber(), getPostalCode()));

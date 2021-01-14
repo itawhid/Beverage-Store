@@ -39,8 +39,8 @@ public class DemoData {
 
         log.info("Creating demo data - start");
 
-        User managerUser = new User(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.MANAGER, null, null);
-        User customerUser = new User(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.CUSTOMER, null, null);
+        ApplicationUser managerUser = new ApplicationUser(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.MANAGER, null, null);
+        ApplicationUser customerUser = new ApplicationUser(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.CUSTOMER, null, null);
 
         userRepository.saveAll(Arrays.asList(managerUser, customerUser));
 
@@ -60,10 +60,10 @@ public class DemoData {
 
         crateRepository.saveAll(Arrays.asList(cocaColaCrate, spriteCrate, pepsiCrate, sevenUpCrate));
 
-        Order order = new Order(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, customerUser, address1, address2, null);
+        BeverageOrder order = new BeverageOrder(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, customerUser, address1, address2, null);
 
-        OrderItem orderItem1 = new OrderItem(1L, BeverageType.BOTTLE, 2, 1, cocaCola, null, order);
-        OrderItem orderItem2 = new OrderItem(2L, BeverageType.CRATE, 1, 1, null, pepsiCrate, order);
+        BeverageOrderItem orderItem1 = new BeverageOrderItem(1L, BeverageType.BOTTLE, 2, 1, cocaCola, null, order);
+        BeverageOrderItem orderItem2 = new BeverageOrderItem(2L, BeverageType.CRATE, 1, 1, null, pepsiCrate, order);
         orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
 
         log.info("Creating demo data - completed");

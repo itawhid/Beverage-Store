@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "BEVERAGE_ORDER_ITEM")
+@Table
 @NamedEntityGraph(
         name = "OrderItem.orderItems",
         attributeNodes = {
@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
                 @NamedAttributeNode(value = "crate")
         }
 )
-public class OrderItem {
+public class BeverageOrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,7 +47,7 @@ public class OrderItem {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
-    private Order order;
+    private BeverageOrder order;
 
     //Validation
     @PrePersist
