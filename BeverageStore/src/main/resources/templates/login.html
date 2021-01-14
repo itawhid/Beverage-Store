@@ -10,8 +10,8 @@
                     <br>
                     <br>
 
-                    <form id="login-form" method="POST" th:action="@{/login}">
-                        <div class="card">
+                    <div class="card">
+                        <form id="login-form" method="POST" th:action="@{/login}">
                             <p th:if="${param.error}" class="text-center text-danger">Wrong Username or Password</p>
                             <h2 class="text-center"> Sign In </h2>
                             <br>
@@ -35,8 +35,10 @@
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary btn-block"> Sign In </button>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+
+                        <a th:href="@{/register}" class="btn btn-block btn-warning">Register</a>
+                    </div>
                 </div>
             </div>
         </div>

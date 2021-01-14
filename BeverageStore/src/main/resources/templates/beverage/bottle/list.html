@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head th:replace="fragments/header :: header"></head>
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
@@ -11,7 +12,7 @@
             <br>
             <h2>Bottles</h2>
             <br>
-            <a th:href="@{/beverage/bottle/add}">Add new bottle</a>
+            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).MANAGER.name())" th:href="@{/beverage/bottle/add}">Add new bottle</a>
             <br>
 
             <div th:replace="fragments/pagination-control :: pagination-control(url = @{/beverage/bottle}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>

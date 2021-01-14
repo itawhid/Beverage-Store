@@ -33,8 +33,8 @@
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" onclick="return false;"
                            th:text="${'Hello, ' + #authentication.principal.firstName + ' ' + #authentication.principal.lastName}"></a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" th:href="@{/order}">Orders</a>
-                            <a class="dropdown-item" th:href="@{/address}">Addresses</a>
+                            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).CUSTOMER.name())" class="dropdown-item" th:href="@{/order}">Orders</a>
+                            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).CUSTOMER.name())" class="dropdown-item" th:href="@{/address}">Addresses</a>
                             <a id="lnk-logout" class="dropdown-item">Logout</a>
                         </div>
                         <form id="form-logout" method="POST" th:action="@{/logout}"></form>

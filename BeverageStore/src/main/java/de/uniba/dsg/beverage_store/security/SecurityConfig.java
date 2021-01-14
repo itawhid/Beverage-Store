@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.security;
 
+import de.uniba.dsg.beverage_store.model.db.Role;
 import de.uniba.dsg.beverage_store.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,18 +38,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/scripts/**", "/stylesheets/**").permitAll()
-                .antMatchers("/", "/home", "/beverage/**", "/cart/**", "/order/**", "/address/**", "/api/**", "/h2-console/**").authenticated()
+                .antMatchers("/beverage/bottle/add", "/beverage/crate/add", "/h2-console/**")
+                    .hasRole(Role.MANAGER.name())
+                .antMatchers("/cart", "/cart/checkout", "/order/**", "/address/**")
+                    .hasRole(Role.CUSTOMER.name())
+                .antMatchers("/beverage/bottle", "/beverage/crate")
+                    .hasAnyRole(Role.MANAGER.name(), Role.CUSTOMER.name())
+                .antMatchers("/", "/home", "/api/**")
+                    .authenticated()
+                .antMatchers("/scripts/**", "/stylesheets/**")
+                    .permitAll()
                 .and()
-                .formLogin().loginPage("/login").defaultSuccessUrl("/home")
+                .formLogin()
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/home")
                 .and()
-                .logout().logoutSuccessUrl("/")
+                .logout()
+                    .logoutSuccessUrl("/")
                 .and()
-                .csrf().ignoringAntMatchers("/h2-console/**", "/api/**")
+                .csrf()
+                    .ignoringAntMatchers("/h2-console/**", "/api/**")
                 .and()
-                .headers().frameOptions().sameOrigin()
+                .headers()
+                    .frameOptions()
+                    .sameOrigin()
                 .and()
-                .logout().invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/login");
+                .logout()
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .logoutSuccessUrl("/login");
     }
 
     @Override

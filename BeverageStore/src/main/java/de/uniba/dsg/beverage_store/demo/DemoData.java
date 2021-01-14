@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -34,13 +35,17 @@ public class DemoData {
 
     @EventListener
     public void createDemoData(ApplicationReadyEvent event) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         log.info("Creating demo data - start");
 
-        User adminUser = new User(1L, "admin", "Admin", "User", "$2y$12$uGcYuZ0wt7Kj02tSmsJaBuQsBwdgoL4ZRp1al2fpIboGVHwru6He2" /* password actual value: admin */, LocalDate.of(1990, 1, 1), null, null);
-        userRepository.save(adminUser);
+        User managerUser = new User(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.MANAGER, null, null);
+        User customerUser = new User(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.CUSTOMER, null, null);
 
-        Address address1 = new Address(1L, "Address 1", "Pestalozzistraße", "9f", "96052", adminUser, null, null);
-        Address address2 = new Address(2L, "Address 2", "Kapellenstraße", "23", "96050", adminUser, null, null);
+        userRepository.saveAll(Arrays.asList(managerUser, customerUser));
+
+        Address address1 = new Address(1L, "Address 1", "Pestalozzistraße", "9f", "96052", customerUser, null, null);
+        Address address2 = new Address(2L, "Address 2", "Kapellenstraße", "23", "96050", customerUser, null, null);
         addressRepository.saveAll(Arrays.asList(address1, address2));
 
         Bottle cocaCola = new Bottle(1L, "Coca-Cola", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Coca-cola Limited", 5, null, null);
@@ -55,7 +60,7 @@ public class DemoData {
 
         crateRepository.saveAll(Arrays.asList(cocaColaCrate, spriteCrate, pepsiCrate, sevenUpCrate));
 
-        Order order = new Order(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, adminUser, address1, address2, null);
+        Order order = new Order(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, customerUser, address1, address2, null);
 
         OrderItem orderItem1 = new OrderItem(1L, BeverageType.BOTTLE, 2, 1, cocaCola, null, order);
         OrderItem orderItem2 = new OrderItem(2L, BeverageType.CRATE, 1, 1, null, pepsiCrate, order);
