@@ -25,8 +25,8 @@
                             <th scope="col">No. of Bottles</th>
                             <th scope="col">Price</th>
                             <th scope="col">In Stock</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Action(s)</th>
+                            <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).CUSTOMER.name())" scope="col">Quantity</th>
+                            <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).CUSTOMER.name())" scope="col">Action(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,7 +40,7 @@
                             <td th:text="${crate.noOfBottles}"></td>
                             <td th:text="${#numbers.formatDecimal(crate.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
                             <td class="txt-in-stock" th:text="${crate.allowedInStock}"></td>
-                            <td>
+                            <td sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).CUSTOMER.name())">
                                 <select class="form-control crateQuantity" th:disabled="${isEmptyStock}">
                                     <option th:if="${!isEmptyStock}"
                                             th:each="i : ${#numbers.sequence(1, quantityAllowed)}"
@@ -48,7 +48,7 @@
                                             th:text="${i}"></option>
                                 </select>
                             </td>
-                            <td>
+                            <td sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).CUSTOMER.name())">
                                 <button type="button" class="btn btn-primary btn-add-crate"
                                         th:disabled="${isEmptyStock}"
                                         th:attr="data-id=${crate.id}">Add To Cart</button>

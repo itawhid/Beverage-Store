@@ -22,7 +22,7 @@
                         <a class="nav-link" th:href="@{/beverage/crate}">Crates</a>
                     </li>
 
-                    <li id="cart" class="nav-item">
+                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.model.db.Role).CUSTOMER.name())" id="cart" class="nav-item">
                         <span id="badge-cart-item-count" class="badge badge-pill badge-primary" style="float:right;margin-bottom:-10px;">0</span>
                         <a class="nav-link" th:href="@{/cart}">Cart</a>
                     </li>
