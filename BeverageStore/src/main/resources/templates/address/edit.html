@@ -19,8 +19,9 @@
             <br>
             <div class="row">
                 <div class="col-md-4 offset-md-4">
-                    <fieldset class="border p-2">
-                        <legend class="w-auto text-center">Edit Address</legend>
+                    <div class="card">
+                        <h3>Edit Address</h3>
+                        <br>
 
                         <form method="POST" th:action="@{/address/edit/{id}(id=${addressId})}" th:object="${addressDTO}">
                             <div class="row">
@@ -69,7 +70,7 @@
                                 </div>
                             </div>
                         </form>
-                    </fieldset>
+                    </div>
                 </div>
             </div>
         </div>

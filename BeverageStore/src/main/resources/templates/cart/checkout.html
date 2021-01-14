@@ -19,8 +19,9 @@
             <form method="POST" th:if="${isEmptyCart == false}" th:action="@{/cart/checkout}" th:object="${submitOrderDTO}">
                 <div class="row">
                     <div class="col-md-7">
-                        <fieldset class="border p-2">
-                            <legend class="w-auto">Addresses</legend>
+                        <div class="card">
+                            <h3>Addresses</h3>
+                            <br>
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -55,12 +56,13 @@
                                     <p id="txt-billingAddress"></p>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </div>
 
                     <div class="col-md-3">
-                        <fieldset class="border p-2">
-                            <legend class="w-auto">Details</legend>
+                        <div class="card">
+                            <h3>Details</h3>
+                            <br>
 
                             <table class="tbl-details">
                                 <tbody>
@@ -74,11 +76,13 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </fieldset>
+                        </div>
+
+                        <button id="btn-submit-order" type="submit" class="btn btn-primary btn-block">Submit</button>
                     </div>
 
                     <div class="col-md-2">
-                        <button id="btn-submit-order" type="submit" class="btn btn-primary btn-block">Submit</button>
+
                     </div>
                 </div>
             </form>

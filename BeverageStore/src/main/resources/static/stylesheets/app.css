@@ -1,13 +1,6 @@
-#login-form {
+#cnt-login-form {
     width: 350px;
     margin: 200px auto;
-}
-
-#login-form>div {
-    margin-bottom: 15px;
-    background: #f7f7f7;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
-    padding: 30px;
 }
 
 .nav-tabs .nav-item .nav-link {
@@ -137,4 +130,16 @@ input::-webkit-inner-spin-button {
     height: 50px;
     display: block;
     margin: 450px auto 0;
+}
+
+.card {
+    width: 100%;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px rgba(0,0,0,.16);
+}
+
+#btn-submit-order {
+    height: 58px;
 }

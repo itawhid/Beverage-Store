@@ -11,8 +11,9 @@
             <br>
             <div class="row">
                 <div class="col-md-9">
-                    <fieldset class="border p-2">
-                        <legend class="w-auto">Cart Items</legend>
+                    <div class="card">
+                        <h3>Cart Items</h3>
+                        <br>
 
                         <div id="cnt-tbl-cart">
                             <table id="tbl-cart" class="table table-bordered">
@@ -74,12 +75,13 @@
                                 </tbody>
                             </table>
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
 
                 <div class="col-md-3">
-                    <fieldset class="border p-2">
-                        <legend class="w-auto">Cart Details</legend>
+                    <div class="card">
+                        <h3>Cart Details</h3>
+                        <br>
 
                         <table class="tbl-details">
                             <tbody>
@@ -99,7 +101,7 @@
                         <a id="lnk-checkout" class="btn btn-primary btn-block"
                            th:href="@{/cart/checkout}"
                            th:classappend="${cartItemCount == 0} ? 'disabled' : ''">Checkout</a>
-                    </fieldset>
+                    </div>
                 </div>
             </div>
         </div>
