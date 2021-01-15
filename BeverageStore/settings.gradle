@@ -1,1 +1,3 @@
 rootProject.name = 'BeverageStore'
+
+include 'spring_boot'
