@@ -73,6 +73,10 @@ public class OrderService {
         return orderOptional.get();
     }
 
+    public Page<BeverageOrder> getPagedAllOrders(int page) {
+        return orderRepository.findAll(PageRequest.of(page - 1, orderProperties.getPageSize()));
+    }
+
     public Page<BeverageOrder> getPagedOrdersByUsername(String username, int page) {
         return orderRepository.findAllByUserUsernameOrderByOrderNumber(username, PageRequest.of(page - 1, orderProperties.getPageSize()));
     }

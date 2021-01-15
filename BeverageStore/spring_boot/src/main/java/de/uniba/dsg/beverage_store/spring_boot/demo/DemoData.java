@@ -37,8 +37,8 @@ public class DemoData {
 
         log.info("Creating demo data - start");
 
-        ApplicationUser managerUser = new ApplicationUser(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.MANAGER, null, null);
-        ApplicationUser customerUser = new ApplicationUser(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.CUSTOMER, null, null);
+        ApplicationUser managerUser = new ApplicationUser(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.ROLE_MANAGER, null, null);
+        ApplicationUser customerUser = new ApplicationUser(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
 
         userRepository.saveAll(Arrays.asList(managerUser, customerUser));
 

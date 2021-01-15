@@ -12,7 +12,7 @@
             <br>
             <h2>Bottles</h2>
             <br>
-            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).MANAGER.name())" th:href="@{/beverage/bottle/add}">Add new bottle</a>
+            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" th:href="@{/beverage/bottle/add}">Add new bottle</a>
             <br>
 
             <div th:replace="fragments/pagination-control :: pagination-control(url = @{/beverage/bottle}, currentPage = ${currentPage}, numberOfPages = ${numberOfPages})"></div>
@@ -29,8 +29,8 @@
                             <th scope="col">Supplier</th>
                             <th scope="col">Price</th>
                             <th scope="col">In Stock</th>
-                            <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).CUSTOMER.name())" scope="col">Quantity</th>
-                            <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).CUSTOMER.name())" scope="col">Action(s)</th>
+                            <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" scope="col">Quantity</th>
+                            <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" scope="col">Action(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,7 +49,7 @@
                             <td th:text="${bottle.supplier}"></td>
                             <td th:text="${#numbers.formatDecimal(bottle.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
                             <td class="txt-in-stock" th:text="${bottle.allowedInStock}"></td>
-                            <td sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).CUSTOMER.name())">
+                            <td sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())">
                                 <select class="form-control bottleQuantity" th:disabled="${isEmptyStock}">
                                     <option th:if="${!isEmptyStock}"
                                             th:each="i : ${#numbers.sequence(1, quantityAllowed)}"
@@ -57,7 +57,7 @@
                                             th:text="${i}"></option>
                                 </select>
                             </td>
-                            <td sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).CUSTOMER.name())">
+                            <td sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())">
                                 <button type="button" class="btn btn-primary btn-add-bottle"
                                         th:disabled="${isEmptyStock}"
                                         th:attr="data-id=${bottle.id}">Add To Cart</button>

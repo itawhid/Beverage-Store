@@ -9,6 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<BeverageOrder, Long> {
+    @Override
+    @EntityGraph(value = "Order.orders")
+    Page<BeverageOrder> findAll(Pageable pageable);
+
     @EntityGraph(value = "Order.orders")
     Page<BeverageOrder> findAllByUserUsernameOrderByOrderNumber(String userName, Pageable pageable);
 
