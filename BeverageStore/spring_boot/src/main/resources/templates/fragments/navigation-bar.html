@@ -26,8 +26,8 @@
                         <a class="nav-link" th:href="@{/order}">All Orders</a>
                     </li>
 
-                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" id="customer-all" class="nav-item">
-                        <a class="nav-link" th:href="@{/user/customers}">All Customers</a>
+                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" id="customer" class="nav-item">
+                        <a class="nav-link" th:href="@{/customer}">All Customers</a>
                     </li>
 
                     <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" id="cart" class="nav-item">

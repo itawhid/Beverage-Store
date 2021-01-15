@@ -45,7 +45,7 @@ footer a:hover {
     max-height: 730px;
 }
 
-.al-order:hover {
+a:hover {
     text-decoration: none;
 }
 
