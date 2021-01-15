@@ -51,6 +51,7 @@ public class ApplicationUser implements UserDetails {
     @LaterThanOrEqualTo(year = "1990", month = "01", dayOfMonth = "01")
     private LocalDate birthday;
 
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Role is required.")
     private Role role;
 

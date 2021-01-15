@@ -18,6 +18,8 @@ function updateNavbarActiveLink() {
         $('.navbar-nav #bottles').addClass('active');
     } else if (window.location.href.endsWith('/cart')) {
         $('.navbar-nav #cart').addClass('active');
+    } else if (window.location.href.endsWith('/order')) {
+        $('.navbar-nav #order').addClass('active');
     } else if (window.location.href.endsWith('/customer')) {
         $('.navbar-nav #customer').addClass('active');
     }

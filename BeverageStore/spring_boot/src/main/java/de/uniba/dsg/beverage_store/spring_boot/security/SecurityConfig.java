@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/beverage/bottle/add", "/beverage/crate/add", "/user/customers")
+                .antMatchers("/beverage/bottle/add", "/beverage/crate/add", "/customer/**")
                     .hasRole("MANAGER")
                 .antMatchers("/cart", "/cart/checkout", "/address/**")
                     .hasRole("CUSTOMER")

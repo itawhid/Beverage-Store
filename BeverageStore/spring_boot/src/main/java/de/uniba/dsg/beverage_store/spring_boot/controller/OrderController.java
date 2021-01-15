@@ -50,7 +50,7 @@ public class OrderController {
             log.info("Retrieving order page: " + page + " - start");
 
             orderPage = userRole.equals(Role.ROLE_MANAGER.name())
-                    ? orderService.getPagedAllOrders(page)
+                    ? orderService.getPagedOrders(page)
                     : userRole.equals(Role.ROLE_CUSTOMER.name())
                         ? orderService.getPagedOrdersByUsername(principal.getName(), page)
                         : Page.empty();

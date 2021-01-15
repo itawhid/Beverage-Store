@@ -22,12 +22,12 @@
                         <a class="nav-link" th:href="@{/beverage/crate}">Crates</a>
                     </li>
 
-                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" id="order-all" class="nav-item">
-                        <a class="nav-link" th:href="@{/order}">All Orders</a>
+                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" id="order" class="nav-item">
+                        <a class="nav-link" th:href="@{/order}">Orders</a>
                     </li>
 
                     <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" id="customer" class="nav-item">
-                        <a class="nav-link" th:href="@{/customer}">All Customers</a>
+                        <a class="nav-link" th:href="@{/customer}">Customers</a>
                     </li>
 
                     <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" id="cart" class="nav-item">
