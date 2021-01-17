@@ -137,4 +137,32 @@ public class BeverageService {
 
         return crate;
     }
+
+    public Bottle addStockToBottle(Long id, int quantity) throws NotFoundException {
+        Optional<Bottle> optionalBottle = bottleRepository.findById(id);
+
+        if (optionalBottle.isEmpty())
+            throw new NotFoundException("Bottle not found with ID: " + id);
+
+        Bottle bottle = optionalBottle.get();
+        bottle.setInStock(bottle.getInStock() + quantity);
+
+        bottleRepository.save(bottle);
+
+        return bottle;
+    }
+
+    public Crate addStockToCrate(Long id, int quantity) throws NotFoundException {
+        Optional<Crate> optionalCrate = crateRepository.findById(id);
+
+        if (optionalCrate.isEmpty())
+            throw new NotFoundException("Crate not found with ID: " + id);
+
+        Crate crate = optionalCrate.get();
+        crate.setInStock(crate.getInStock() + quantity);
+
+        crateRepository.save(crate);
+
+        return crate;
+    }
 }

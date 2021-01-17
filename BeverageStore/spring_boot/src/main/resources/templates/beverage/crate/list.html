@@ -26,7 +26,7 @@
                             <th scope="col">Price</th>
                             <th scope="col">In Stock</th>
                             <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" scope="col">Quantity</th>
-                            <th sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" scope="col">Action(s)</th>
+                            <th scope="col">Action(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,8 +48,19 @@
                                             th:text="${i}"></option>
                                 </select>
                             </td>
-                            <td sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())">
-                                <button type="button" class="btn btn-primary btn-add-crate"
+                            <td>
+                                <button type="button"
+                                        class="btn btn-primary btn-add-crate-stock"
+                                        sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())"
+                                        th:attr="data-id=${crate.id}">Add Stock</button>
+
+                                <a class="btn btn-primary"
+                                   th:href="@{'/crate/edit/' + ${crate.id}}"
+                                   sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())">Edit</a>
+
+                                <button type="button"
+                                        class="btn btn-primary btn-add-crate"
+                                        sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())"
                                         th:disabled="${isEmptyStock}"
                                         th:attr="data-id=${crate.id}">Add To Cart</button>
                             </td>
@@ -68,16 +79,32 @@
             let quantity = parseInt($(this).closest('tr').find('.crateQuantity').val());
 
             addItemToCart(id, quantity, false, (addedItem) => {
-                let allowedQuantity = addedItem.inStock - addedItem.quantity;
+                let allowedStock = addedItem.inStock - addedItem.quantity;
+                let allowedQuantity = allowedStock < 5 ? allowedStock : 5;
 
                 let crateTr = $('#tbl-crates tr[data-id="' + addedItem.beverageId +'"]');
                 let btnAddToCart = crateTr.find('.btn-add-crate');
                 let selectQuantity = crateTr.find('.crateQuantity');
 
-                crateTr.find('.txt-in-stock').text(allowedQuantity);
+                crateTr.find('.txt-in-stock').text(allowedStock);
 
                 updateAllowedQuantity(allowedQuantity, selectQuantity, btnAddToCart);
             });
+        });
+
+        $('.btn-add-crate-stock').click(function () {
+            let id = parseInt($(this).data('id'));
+
+            let quantity = prompt("Please enter the quantity");
+
+            if (quantity != null && isValidPositiveInteger(quantity))
+                addStockToBeverage(id, parseInt(quantity), false, (crate) => {
+                    let crateTr = $('#tbl-crates tr[data-id="' + id +'"]');
+
+                    crateTr.find('.txt-in-stock').text(crate.inStock);
+                });
+            else
+                alertify.error("Please enter a valid quantity.");
         });
     </script>
 </html>

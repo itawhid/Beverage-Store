@@ -1,4 +1,4 @@
-package de.uniba.dsg.beverage_store.spring_boot.controller;
+package de.uniba.dsg.beverage_store.spring_boot.api.controller;
 
 import de.uniba.dsg.beverage_store.spring_boot.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
