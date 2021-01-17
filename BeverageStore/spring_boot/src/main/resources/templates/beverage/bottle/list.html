@@ -64,7 +64,7 @@
                                         th:attr="data-id=${bottle.id}">Add Stock</button>
 
                                 <a class="btn btn-primary"
-                                   th:href="@{'/bottle/edit/' + ${bottle.id}}"
+                                   th:href="@{'/beverage/bottle/edit/' + ${bottle.id}}"
                                    sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())">Edit</a>
 
                                 <button type="button"

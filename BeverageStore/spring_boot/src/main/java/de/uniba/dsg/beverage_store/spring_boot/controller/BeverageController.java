@@ -3,8 +3,7 @@ package de.uniba.dsg.beverage_store.spring_boot.controller;
 import de.uniba.dsg.beverage_store.spring_boot.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Bottle;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Crate;
-import de.uniba.dsg.beverage_store.spring_boot.model.dto.BottleDTO;
-import de.uniba.dsg.beverage_store.spring_boot.model.dto.CrateDTO;
+import de.uniba.dsg.beverage_store.spring_boot.model.dto.*;
 import de.uniba.dsg.beverage_store.spring_boot.service.BeverageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -88,6 +84,62 @@ public class BeverageController {
         return "redirect:/beverage/bottle";
     }
 
+    @GetMapping(value = "/bottle/edit/{id}")
+    public String getEditBottle(@PathVariable("id") long id, Model model) {
+        try {
+            log.info("Retrieving bottle with ID: " + id + " - start");
+
+            Bottle bottle = beverageService.getBottleById(id);
+
+            model.addAttribute("bottleUpdateDTO", new BottleUpdateDTO(bottle.getName(), bottle.getPicUrl(), bottle.getPrice(), bottle.getVolume(), bottle.getVolumePercent(), bottle.getSupplier()));
+
+            log.info("Retrieving bottle with ID: " + id + " - completed");
+        } catch (Exception e) {
+            model.addAttribute("bottleUpdateDTO", new BottleUpdateDTO());
+            model.addAttribute("hasServerError", true);
+
+            log.info("Retrieving bottle with ID: " + id + " - failed, server error found");
+        }
+
+        model.addAttribute("bottleId", id);
+
+        return "beverage/bottle/edit";
+    }
+
+    @PostMapping(value = "/bottle/edit/{id}")
+    public String updateBottle(@PathVariable("id") long id, @Valid BottleUpdateDTO bottleUpdateDTO, Errors errors, Model model) {
+        log.info("Updating bottle - start");
+
+        boolean hasModelError = false, hasServerError = false;
+
+        if (errors.hasErrors()) {
+            hasModelError = true;
+
+            log.info("Updating bottle - failed, found model error");
+        }
+
+        if (!hasModelError) {
+            try {
+                beverageService.updateBottle(id, bottleUpdateDTO);
+
+                log.info("Updating bottle - completed");
+            } catch (Exception e) {
+                hasServerError = true;
+
+                log.info("Updating bottle - failed, found server error");
+            }
+        }
+
+        if (hasModelError || hasServerError) {
+            model.addAttribute("bottleId", id);
+            model.addAttribute("hasServerError", hasServerError);
+
+            return "beverage/bottle/edit";
+        }
+
+        return "redirect:/beverage/bottle";
+    }
+
     @GetMapping(value = "/crate")
     public String getCrates(@RequestParam(defaultValue = "1") int page, Model model) {
         log.info("Retrieving crate page: " + page + " - start");
@@ -140,6 +192,63 @@ public class BeverageController {
             model.addAttribute("bottleDropdownListItems", getBottleDropdownList());
 
             return "beverage/crate/add";
+        }
+
+        return "redirect:/beverage/crate";
+    }
+
+    @GetMapping(value = "/crate/edit/{id}")
+    public String getEditCrate(@PathVariable("id") long id, Model model) {
+        try {
+            log.info("Retrieving crate with ID: " + id + " - start");
+
+            Crate crate = beverageService.getCrateById(id);
+
+            model.addAttribute("crateId", crate.getId());
+            model.addAttribute("crateDTO", new CrateUpdateDTO(crate.getName(), crate.getPicUrl(), crate.getPrice(), crate.getNoOfBottles(), crate.getBottle().getId()));
+            model.addAttribute("bottleDropdownListItems", getBottleDropdownList());
+
+            log.info("Retrieving crate with ID: " + id + " - completed");
+        } catch (Exception e) {
+            model.addAttribute("crateDTO", new CrateUpdateDTO());
+            model.addAttribute("hasServerError", true);
+            model.addAttribute("crateDropdownListItems", getBottleDropdownList());
+
+            log.info("Retrieving crate with ID: " + id + " - failed, server error found");
+        }
+
+        return "beverage/crate/edit";
+    }
+
+    @PostMapping(value = "/crate/edit/{id}")
+    public String updateCrate(@PathVariable("id") long id, @Valid CrateUpdateDTO crateUpdateDTO, Errors errors, Model model) {
+        log.info("Updating crate - start");
+
+        boolean hasModelError = false, hasServerError = false;
+
+        if (errors.hasErrors()) {
+            hasModelError = true;
+
+            log.info("Updating crate - failed, found model error");
+        }
+
+        if (!hasModelError) {
+            try {
+                beverageService.updateCrate(id, crateUpdateDTO);
+
+                log.info("Updating crate - completed");
+            } catch (Exception e) {
+                hasServerError = true;
+
+                log.info("Updating crate - failed, found server error");
+            }
+        }
+
+        if (hasModelError || hasServerError) {
+            model.addAttribute("crateId", id);
+            model.addAttribute("hasServerError", hasServerError);
+
+            return "beverage/crate/edit";
         }
 
         return "redirect:/beverage/crate";

@@ -82,7 +82,6 @@ public class AddressController {
 
             Address address = addressService.getAddressById(id);
 
-            model.addAttribute("addressId", address.getId());
             model.addAttribute("addressDTO", new AddressDTO(address.getName(), address.getStreet(), address.getHouseNumber(), address.getPostalCode()));
 
             log.info("Retrieving address with ID: " + id + " - completed");
@@ -92,6 +91,8 @@ public class AddressController {
 
             log.info("Retrieving address with ID: " + id + " - failed, server error found");
         }
+
+        model.addAttribute("addressId", id);
 
         return "address/edit";
     }
