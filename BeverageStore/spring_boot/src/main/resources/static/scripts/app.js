@@ -18,6 +18,10 @@ function updateNavbarActiveLink() {
         $('.navbar-nav #bottles').addClass('active');
     } else if (window.location.href.endsWith('/cart')) {
         $('.navbar-nav #cart').addClass('active');
+    } else if (window.location.href.endsWith('/order')) {
+        $('.navbar-nav #order').addClass('active');
+    } else if (window.location.href.endsWith('/customer')) {
+        $('.navbar-nav #customer').addClass('active');
     }
 }
 
@@ -118,3 +122,37 @@ function updateAllowedQuantity(allowedQuantity, selectQuantity, btnAddToCart) {
         }
     }
 }
+
+function isValidPositiveInteger(value) {
+    return (/^[0-9]\d*$/.test(value) && parseInt(value) > 0);
+}
+
+function addStockToBeverage(id, quantity, isBottle, successCallback) {
+    blockScreen();
+
+    let url = '/api/'
+        + (isBottle ? 'bottles/' : 'crates/')
+        + id
+        + '/stock';
+
+    $.ajax({
+        url: url,
+        type: 'PATCH',
+        data: JSON.stringify({
+            quantity: quantity
+        }),
+        contentType: 'application/json',
+        success: (data) => {
+            unblockScreen();
+            alertify.success("Quantity successfully added.");
+
+            successCallback(data);
+        },
+        error: () => {
+            unblockScreen();
+            alertify.error("Error in adding quantity.");
+        }
+    });
+}
+
+

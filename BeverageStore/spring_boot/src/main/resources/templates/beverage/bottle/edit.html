@@ -20,16 +20,29 @@
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <div class="card">
-                        <h3>Add New Bottle</h3>
+                        <h3>Edit Address</h3>
                         <br>
 
-                        <form method="POST" th:action="@{/beverage/bottle/add}" th:object="${bottleDTO}">
+                        <form method="POST" th:action="@{/beverage/bottle/edit/{id}(id=${bottleId})}" th:object="${bottleUpdateDTO}">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name">Name</label>
                                         <input id="name" class="form-control" type="text" th:field="*{name}" />
                                         <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="price">Price</label>
+                                        <div class="input-group">
+                                            <input id="price" class="form-control" type="number" step=".01" th:field="*{price}" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">€</span>
+                                            </div>
+                                        </div>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></small>
                                     </div>
                                 </div>
                             </div>
@@ -76,31 +89,8 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="price">Price</label>
-                                        <div class="input-group">
-                                            <input id="price" class="form-control" type="number" step=".01" th:field="*{price}" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">€</span>
-                                            </div>
-                                        </div>
-                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="in-stock">In Stock</label>
-                                        <input id="in-stock" class="form-control" type="number" step="1" th:field="*{inStock}" />
-                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('inStock')}" th:errors="*{inStock}"></small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary btn-block" type="submit">Add</button>
+                                    <button class="btn btn-primary btn-block" type="submit">Update</button>
                                 </div>
                             </div>
                         </form>

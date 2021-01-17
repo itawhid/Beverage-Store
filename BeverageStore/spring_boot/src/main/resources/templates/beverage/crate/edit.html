@@ -13,17 +13,17 @@
             <br>
             <div class="row">
                 <div class="col-md-8 offset-md-2">
-                    <a th:href="@{/beverage/crate}">Return to bottles</a>
+                    <a th:href="@{/beverage/crate}">Return to crates</a>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <div class="card">
-                        <h3>Add New Crate</h3>
+                        <h3>Edit Address</h3>
                         <br>
 
-                        <form method="POST" th:action="@{/beverage/crate/add}" th:object="${crateDTO}">
+                        <form method="POST" th:action="@{/beverage/crate/edit/{id}(id=${crateId})}" th:object="${crateDTO}">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -35,7 +35,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="bottle-id">Bottle</label>
                                         <select class="form-control" th:field="*{bottleId}" id="bottle-id">
@@ -43,6 +43,19 @@
                                             <option th:each="bottle : ${bottleDropdownListItems}" th:value="${bottle.id}" th:text="${bottle.label}"></option>
                                         </select>
                                         <small class="form-text text-danger" th:if="${#fields.hasErrors('bottleId')}" th:errors="*{bottleId}"></small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="price">Price</label>
+                                        <div class="input-group">
+                                            <input id="price" class="form-control" type="number" step=".01" th:field="*{price}" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">€</span>
+                                            </div>
+                                        </div>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></small>
                                     </div>
                                 </div>
                             </div>
@@ -66,31 +79,8 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="price">Price</label>
-                                        <div class="input-group">
-                                            <input id="price" class="form-control" type="number" step=".01" th:field="*{price}" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">€</span>
-                                            </div>
-                                        </div>
-                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="in-stock">In Stock</label>
-                                        <input id="in-stock" class="form-control" type="number" step="1" th:field="*{inStock}" />
-                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('inStock')}" th:errors="*{inStock}"></small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary btn-block" type="submit">Add</button>
+                                    <button class="btn btn-primary btn-block" type="submit">Update</button>
                                 </div>
                             </div>
                         </form>

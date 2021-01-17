@@ -3,10 +3,13 @@ package de.uniba.dsg.beverage_store.spring_boot.controller;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrder;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrderItem;
+import de.uniba.dsg.beverage_store.spring_boot.model.db.Role;
 import de.uniba.dsg.beverage_store.spring_boot.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -30,16 +34,33 @@ public class OrderController {
     }
 
     @GetMapping
-    public String getOrders(@RequestParam(defaultValue = "1") int page, Model model, Principal principal) {
-        log.info("Retrieving order page: " + page + " - start");
+    public String getCustomerOrders(@RequestParam(defaultValue = "1") int page, Model model, Principal principal) {
+        Page<BeverageOrder> orderPage = Page.empty();
 
-        Page<BeverageOrder> orderPage = orderService.getPagedOrdersByUsername(principal.getName(), page);
+        Optional<? extends GrantedAuthority> grantedAuthority = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .findFirst();
+
+        if (grantedAuthority.isPresent()) {
+            String userRole = grantedAuthority.get()
+                    .getAuthority();
+
+            log.info("Retrieving order page: " + page + " - start");
+
+            orderPage = userRole.equals(Role.ROLE_MANAGER.name())
+                    ? orderService.getPagedOrders(page)
+                    : userRole.equals(Role.ROLE_CUSTOMER.name())
+                        ? orderService.getPagedOrdersByUsername(principal.getName(), page)
+                        : Page.empty();
+
+            log.info("Retrieving order page: " + page + " - completed");
+        }
 
         model.addAttribute("orders", orderPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("numberOfPages", orderPage.getTotalPages());
-
-        log.info("Retrieving order page: " + page + " - completed");
 
         return "order/list";
     }

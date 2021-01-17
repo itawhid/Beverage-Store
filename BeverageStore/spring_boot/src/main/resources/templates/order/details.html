@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head th:replace="fragments/header :: header"></head>
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
@@ -101,6 +102,13 @@
 
                                 <table class="tbl-details">
                                     <tbody>
+                                        <tr sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())">
+                                            <td>Customer Name:</td>
+                                            <td>
+                                                <a th:text="${order.user.firstName + ' ' +  order.user.lastName}"
+                                                   th:href="@{'/customer/' + ${order.user.username}}"></a>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>Order Number:</td>
                                             <td th:text="${order.orderNumber}"></td>
