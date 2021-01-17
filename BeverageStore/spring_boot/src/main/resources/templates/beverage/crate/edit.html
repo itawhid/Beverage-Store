@@ -50,7 +50,7 @@
                                     <div class="form-group">
                                         <label for="price">Price</label>
                                         <div class="input-group">
-                                            <input id="price" class="form-control" type="number" th:field="*{price}" />
+                                            <input id="price" class="form-control" type="number" step=".01" th:field="*{price}" />
                                             <div class="input-group-append">
                                                 <span class="input-group-text">€</span>
                                             </div>
@@ -72,7 +72,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="no-of-bottles">No. of Bottles</label>
-                                        <input id="no-of-bottles" class="form-control" type="number" th:field="*{noOfBottles}" />
+                                        <input id="no-of-bottles" class="form-control" type="number" step="1" th:field="*{noOfBottles}" />
                                         <small class="form-text text-danger" th:if="${#fields.hasErrors('noOfBottles')}" th:errors="*{noOfBottles}"></small>
                                     </div>
                                 </div>
