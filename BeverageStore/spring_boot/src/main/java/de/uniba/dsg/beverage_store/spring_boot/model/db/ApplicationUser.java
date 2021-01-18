@@ -51,6 +51,7 @@ public class ApplicationUser implements UserDetails {
     @LaterThanOrEqualTo(year = "1990", month = "01", dayOfMonth = "01")
     private LocalDate birthday;
 
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Role is required.")
     private Role role;
 
@@ -66,7 +67,7 @@ public class ApplicationUser implements UserDetails {
     // Authentication
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role.name()));
     }
 
     @Override

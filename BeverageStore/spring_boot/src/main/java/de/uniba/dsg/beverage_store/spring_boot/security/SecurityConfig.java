@@ -1,6 +1,5 @@
 package de.uniba.dsg.beverage_store.spring_boot.security;
 
-import de.uniba.dsg.beverage_store.spring_boot.model.db.Role;
 import de.uniba.dsg.beverage_store.spring_boot.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,13 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/beverage/bottle/add", "/beverage/crate/add")
-                    .hasRole(Role.MANAGER.name())
-                .antMatchers("/cart", "/cart/checkout", "/order/**", "/address/**")
-                    .hasRole(Role.CUSTOMER.name())
-                .antMatchers("/beverage/bottle", "/beverage/crate")
-                    .hasAnyRole(Role.MANAGER.name(), Role.CUSTOMER.name())
-                .antMatchers("/", "/home", "/api/**")
+                .antMatchers("/beverage/bottle/add", "/beverage/bottle/edit/**", "/beverage/crate/add", "/beverage/crate/edit/**", "/customer/**", "/api/bottles/{\\\\d+}/stock", "/api/crates/{\\\\d+}/stock")
+                    .hasRole("MANAGER")
+                .antMatchers("/cart", "/cart/checkout", "/address/**", "/api/cart-items")
+                    .hasRole("CUSTOMER")
+                .antMatchers("/beverage/bottle", "/beverage/crate", "/order/**")
+                    .hasAnyRole("MANAGER", "CUSTOMER")
+                .antMatchers("/", "/home")
                     .authenticated()
                 .antMatchers("/scripts/**", "/stylesheets/**")
                     .permitAll()

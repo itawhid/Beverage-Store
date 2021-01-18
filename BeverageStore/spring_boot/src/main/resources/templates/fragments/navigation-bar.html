@@ -22,7 +22,15 @@
                         <a class="nav-link" th:href="@{/beverage/crate}">Crates</a>
                     </li>
 
-                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).CUSTOMER.name())" id="cart" class="nav-item">
+                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" id="order" class="nav-item">
+                        <a class="nav-link" th:href="@{/order}">Orders</a>
+                    </li>
+
+                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())" id="customer" class="nav-item">
+                        <a class="nav-link" th:href="@{/customer}">Customers</a>
+                    </li>
+
+                    <li sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" id="cart" class="nav-item">
                         <span id="badge-cart-item-count" class="badge badge-pill badge-primary" style="float:right;margin-bottom:-10px;">0</span>
                         <a class="nav-link" th:href="@{/cart}">Cart</a>
                     </li>
@@ -33,8 +41,8 @@
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" onclick="return false;"
                            th:text="${'Hello, ' + #authentication.principal.firstName + ' ' + #authentication.principal.lastName}"></a>
                         <div class="dropdown-menu">
-                            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).CUSTOMER.name())" class="dropdown-item" th:href="@{/order}">Orders</a>
-                            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).CUSTOMER.name())" class="dropdown-item" th:href="@{/address}">Addresses</a>
+                            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" class="dropdown-item" th:href="@{/order}">Orders</a>
+                            <a sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_CUSTOMER.name())" class="dropdown-item" th:href="@{/address}">Addresses</a>
                             <a id="lnk-logout" class="dropdown-item">Logout</a>
                         </div>
                         <form id="form-logout" method="POST" th:action="@{/logout}"></form>

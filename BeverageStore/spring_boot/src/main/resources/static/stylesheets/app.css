@@ -45,7 +45,13 @@ footer a:hover {
     max-height: 730px;
 }
 
-.al-order:hover {
+#cnt-tbl-customers {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 730px;
+}
+
+a:hover {
     text-decoration: none;
 }
 
@@ -142,4 +148,14 @@ input::-webkit-inner-spin-button {
 
 #btn-submit-order {
     height: 58px;
+}
+
+.nav-tabs .nav-item .nav-link {
+    font-size: 25px;
+}
+
+.cnt-tbl-customer-details {
+    max-height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

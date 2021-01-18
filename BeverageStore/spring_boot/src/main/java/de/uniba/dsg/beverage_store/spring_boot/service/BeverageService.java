@@ -6,7 +6,9 @@ import de.uniba.dsg.beverage_store.spring_boot.model.CartItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Bottle;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Crate;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.BottleDTO;
+import de.uniba.dsg.beverage_store.spring_boot.model.dto.BottleUpdateDTO;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.CrateDTO;
+import de.uniba.dsg.beverage_store.spring_boot.model.dto.CrateUpdateDTO;
 import de.uniba.dsg.beverage_store.spring_boot.properties.BottleProperties;
 import de.uniba.dsg.beverage_store.spring_boot.properties.CrateProperties;
 import de.uniba.dsg.beverage_store.spring_boot.repository.BottleRepository;
@@ -94,6 +96,26 @@ public class BeverageService {
         return bottle;
     }
 
+    public Bottle updateBottle(Long id, BottleUpdateDTO bottleUpdateDTO) throws NotFoundException {
+        Optional<Bottle> optionalBottle = bottleRepository.findById(id);
+
+        if (optionalBottle.isEmpty())
+            throw new NotFoundException("Bottle not found with ID: " + id);
+
+        Bottle bottle = optionalBottle.get();
+
+        bottle.setName(bottleUpdateDTO.getName());
+        bottle.setPicUrl(bottleUpdateDTO.getPicUrl());
+        bottle.setPrice(bottleUpdateDTO.getPrice());
+        bottle.setVolume(bottleUpdateDTO.getVolume());
+        bottle.setVolumePercent(bottleUpdateDTO.getVolumePercent());
+        bottle.setSupplier(bottleUpdateDTO.getSupplier());
+
+        bottleRepository.save(bottle);
+
+        return bottle;
+    }
+
     public Crate getCrateById(Long id) throws NotFoundException {
         Optional<Crate> crateOptional = crateRepository.findById(id);
 
@@ -132,6 +154,53 @@ public class BeverageService {
                 getBottleById(crateDTO.getBottleId()),
                 null
         );
+
+        crateRepository.save(crate);
+
+        return crate;
+    }
+
+    public Crate updateCrate(Long id, CrateUpdateDTO crateUpdateDTO) throws NotFoundException {
+        Optional<Crate> optionalCrate = crateRepository.findById(id);
+
+        if (optionalCrate.isEmpty())
+            throw new NotFoundException("Crate not found with ID: " + id);
+
+        Crate crate = optionalCrate.get();
+
+        crate.setName(crateUpdateDTO.getName());
+        crate.setPicUrl(crateUpdateDTO.getPicUrl());
+        crate.setPrice(crateUpdateDTO.getPrice());
+        crate.setNoOfBottles(crateUpdateDTO.getNoOfBottles());
+        crate.setBottle(getBottleById(crateUpdateDTO.getBottleId()));
+
+        crateRepository.save(crate);
+
+        return crate;
+    }
+
+    public Bottle addStockToBottle(Long id, int quantity) throws NotFoundException {
+        Optional<Bottle> optionalBottle = bottleRepository.findById(id);
+
+        if (optionalBottle.isEmpty())
+            throw new NotFoundException("Bottle not found with ID: " + id);
+
+        Bottle bottle = optionalBottle.get();
+        bottle.setInStock(bottle.getInStock() + quantity);
+
+        bottleRepository.save(bottle);
+
+        return bottle;
+    }
+
+    public Crate addStockToCrate(Long id, int quantity) throws NotFoundException {
+        Optional<Crate> optionalCrate = crateRepository.findById(id);
+
+        if (optionalCrate.isEmpty())
+            throw new NotFoundException("Crate not found with ID: " + id);
+
+        Crate crate = optionalCrate.get();
+        crate.setInStock(crate.getInStock() + quantity);
 
         crateRepository.save(crate);
 

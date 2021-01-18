@@ -37,8 +37,8 @@ public class DemoData {
 
         log.info("Creating demo data - start");
 
-        ApplicationUser managerUser = new ApplicationUser(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.MANAGER, null, null);
-        ApplicationUser customerUser = new ApplicationUser(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.CUSTOMER, null, null);
+        ApplicationUser managerUser = new ApplicationUser(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.ROLE_MANAGER, null, null);
+        ApplicationUser customerUser = new ApplicationUser(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
 
         userRepository.saveAll(Arrays.asList(managerUser, customerUser));
 
@@ -46,15 +46,15 @@ public class DemoData {
         Address address2 = new Address(2L, "Address 2", "Kapellenstraße", "23", "96050", customerUser, null, null);
         addressRepository.saveAll(Arrays.asList(address1, address2));
 
-        Bottle cocaCola = new Bottle(1L, "Coca-Cola", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Coca-cola Limited", 5, null, null);
-        Bottle sprite = new Bottle(2L, "Sprite", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Coca-cola Limited", 5, null, null);
-        Bottle pepsi = new Bottle(3L, "Pepsi", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Pepsi Limited", 5, null, null);
-        Bottle sevenUp = new Bottle(4L, "7Up", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Pepsi Limited", 5, null, null);
+        Bottle cocaCola = new Bottle(1L, "Coca-Cola", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
+        Bottle sprite = new Bottle(2L, "Sprite", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
+        Bottle pepsi = new Bottle(3L, "Pepsi", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
+        Bottle sevenUp = new Bottle(4L, "7Up", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
 
-        Crate cocaColaCrate = new Crate(1L, "Coca-Cola Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 5, cocaCola, null);
-        Crate spriteCrate = new Crate(2L, "Sprite Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 5, sprite, null);
-        Crate pepsiCrate = new Crate(3L, "Pepsi Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 5, pepsi, null);
-        Crate sevenUpCrate = new Crate(4L, "7Up Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 5, sevenUp, null);
+        Crate cocaColaCrate = new Crate(1L, "Coca-Cola Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, cocaCola, null);
+        Crate spriteCrate = new Crate(2L, "Sprite Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, sprite, null);
+        Crate pepsiCrate = new Crate(3L, "Pepsi Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, pepsi, null);
+        Crate sevenUpCrate = new Crate(4L, "7Up Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, sevenUp, null);
 
         crateRepository.saveAll(Arrays.asList(cocaColaCrate, spriteCrate, pepsiCrate, sevenUpCrate));
 

@@ -73,8 +73,16 @@ public class OrderService {
         return orderOptional.get();
     }
 
+    public Page<BeverageOrder> getPagedOrders(int page) {
+        return orderRepository.findAllByOrderByOrderNumber(PageRequest.of(page - 1, orderProperties.getPageSize()));
+    }
+
     public Page<BeverageOrder> getPagedOrdersByUsername(String username, int page) {
         return orderRepository.findAllByUserUsernameOrderByOrderNumber(username, PageRequest.of(page - 1, orderProperties.getPageSize()));
+    }
+
+    public List<BeverageOrder> getOrdersByUsername(String username) {
+        return orderRepository.findAllByUserUsernameOrderByOrderNumber(username);
     }
 
     public List<BeverageOrderItem> getOrderItemsByOrderNumber(String orderNumber) {
