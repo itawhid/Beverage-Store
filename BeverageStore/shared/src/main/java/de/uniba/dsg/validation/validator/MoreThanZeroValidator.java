@@ -1,6 +1,6 @@
-package de.uniba.dsg.beverage_store.spring_boot.validation.validator;
+package de.uniba.dsg.validation.validator;
 
-import de.uniba.dsg.beverage_store.spring_boot.validation.annotation.MoreThanZero;
+import de.uniba.dsg.validation.annotation.MoreThanZero;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

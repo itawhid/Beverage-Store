@@ -1,6 +1,6 @@
 package de.uniba.dsg.cloudfunction.models;
 
-import de.uniba.dsg.cloudfunction.validation.annotation.MoreThanZero;
+import de.uniba.dsg.validation.annotation.MoreThanZero;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;

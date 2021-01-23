@@ -22,7 +22,7 @@ public class InvoiceGenerator {
         OUTPUT_STREAM = new ByteArrayOutputStream();
     }
 
-    public byte[] generate() throws DocumentException, IOException {
+    public byte[] generate() throws DocumentException {
         String html = parseThymeleafTemplate();
 
         ITextRenderer renderer = new ITextRenderer();

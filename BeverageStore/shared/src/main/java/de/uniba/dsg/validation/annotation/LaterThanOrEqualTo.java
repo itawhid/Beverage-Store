@@ -1,6 +1,6 @@
-package de.uniba.dsg.beverage_store.spring_boot.validation.annotation;
+package de.uniba.dsg.validation.annotation;
 
-import de.uniba.dsg.beverage_store.spring_boot.validation.validator.LaterThanOrEqualToValidator;
+import de.uniba.dsg.validation.validator.LaterThanOrEqualToValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

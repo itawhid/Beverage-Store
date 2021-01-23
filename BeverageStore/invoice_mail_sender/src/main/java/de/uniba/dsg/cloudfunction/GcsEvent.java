@@ -1,6 +1,7 @@
 package de.uniba.dsg.cloudfunction;
 
 import java.util.Date;
+import java.util.Map;
 
 public class GcsEvent {
     private String bucket;
@@ -8,6 +9,7 @@ public class GcsEvent {
     private String metageneration;
     private Date timeCreated;
     private Date updated;
+    private Map<String, String> metadata;
 
     public String getBucket() {
         return bucket;
@@ -47,5 +49,13 @@ public class GcsEvent {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
     }
 }

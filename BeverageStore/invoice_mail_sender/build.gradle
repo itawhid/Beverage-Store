@@ -32,10 +32,9 @@ configurations {
 }
 
 dependencies {
-    implementation 'com.google.cloud.functions:functions-framework-api:1.0.1'
+    compile project(':shared')
 
-    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
-    compile group: 'com.google.cloud', name: 'google-cloud-storage', version: '1.113.9'
+    implementation 'com.google.cloud.functions:functions-framework-api:1.0.1'
 
     invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.0-alpha-2-rc5'
 }

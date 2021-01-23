@@ -1,7 +1,7 @@
 package de.uniba.dsg.beverage_store.spring_boot.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.uniba.dsg.beverage_store.spring_boot.validation.annotation.LaterThanOrEqualTo;
+import de.uniba.dsg.validation.annotation.LaterThanOrEqualTo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

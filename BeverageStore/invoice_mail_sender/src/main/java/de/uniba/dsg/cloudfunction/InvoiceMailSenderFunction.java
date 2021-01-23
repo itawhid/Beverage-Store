@@ -2,14 +2,12 @@ package de.uniba.dsg.cloudfunction;
 
 import com.google.cloud.functions.BackgroundFunction;
 import com.google.cloud.functions.Context;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.Bucket;
-import com.google.cloud.storage.StorageOptions;
+import de.uniba.dsg.helper.GoogleCloudStorageHelper;
+import de.uniba.dsg.helper.MailHelper;
 
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,13 +24,13 @@ public class InvoiceMailSenderFunction implements BackgroundFunction<GcsEvent> {
 
     @Override
     public void accept(GcsEvent event, Context context) throws IOException, MessagingException {
-        Blob blob = getBlob(event.getBucket(), event.getName());
+        File invoiceFile = GoogleCloudStorageHelper.downloadFile(event.getBucket(), event.getName());
 
-        String mailTo = blob.getMetadata().get("email");
-        String orderNumber = blob.getMetadata().get("order_number");
-        String customerName = blob.getMetadata().get("customer_name");
+        String mailTo = event.getMetadata().get("email");
+        String orderNumber = event.getMetadata().get("order_number");
+        String customerName = event.getMetadata().get("customer_name");
 
-        List<File> attachments = Collections.singletonList(downloadFile(blob, event.getName()));
+        List<File> attachments = Collections.singletonList(invoiceFile);
 
         try {
             sendMail(mailTo, orderNumber, customerName, attachments);
@@ -58,30 +56,14 @@ public class InvoiceMailSenderFunction implements BackgroundFunction<GcsEvent> {
                 + "Beverage Store Team";
 
 
-        MailSender mailSender = new MailSender(mailFrom, smtpServerHost, smtpServerPort, username, password);
+        MailHelper mailHelper = new MailHelper(mailFrom, smtpServerHost, smtpServerPort, username, password);
 
         try {
-            mailSender.send(mailTo, mailSubject, mailBodyText, mailContentType, attachments);
+            mailHelper.send(mailTo, mailSubject, mailBodyText, mailContentType, attachments);
         } catch (IOException | MessagingException ex) {
             logger.info("Exception: " + ex.getMessage());
 
             throw ex;
         }
-    }
-
-    private Blob getBlob(String bucketName, String fileName) {
-        Bucket bucket = StorageOptions.getDefaultInstance()
-                .getService()
-                .get(bucketName);
-
-        return bucket.get(fileName);
-    }
-
-    private File downloadFile(Blob blob, String fileName) {
-        String filePath = "/tmp/" + fileName;
-
-        blob.downloadTo(Paths.get(filePath));
-
-        return new File(filePath);
     }
 }

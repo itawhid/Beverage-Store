@@ -3,13 +3,10 @@ package de.uniba.dsg.cloudfunction;
 import com.google.cloud.functions.HttpFunction;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 import com.google.gson.*;
 import de.uniba.dsg.cloudfunction.models.Order;
 import de.uniba.dsg.cloudfunction.models.OrderItem;
+import de.uniba.dsg.helper.GoogleCloudStorageHelper;
 
 import javax.naming.directory.InvalidAttributesException;
 import javax.validation.ConstraintViolation;
@@ -54,7 +51,7 @@ public class InvoiceGeneratorFunction implements HttpFunction {
 
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator(order, "invoice_template");
 
-            createFileInCloudStorage(order.getOrderNumber() +  ".pdf", invoiceGenerator.generate(), metadata);
+            GoogleCloudStorageHelper.createFile(BUCKET_NAME, order.getOrderNumber() +  ".pdf", invoiceGenerator.generate(), metadata);
 
             invoiceGenerator.dispose();
 
@@ -99,16 +96,6 @@ public class InvoiceGeneratorFunction implements HttpFunction {
                 .stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
-    }
-
-    private void createFileInCloudStorage(String fileName, byte[] fileBytes, Map<String, String> metadata) {
-        Storage storage = StorageOptions.getDefaultInstance().getService();
-        BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
-                .setMetadata(metadata)
-                .build();
-
-        storage.create(blobInfo, fileBytes);
     }
 
     private Gson getGsonObject() {

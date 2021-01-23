@@ -1,4 +1,4 @@
-package de.uniba.dsg.cloudfunction;
+package de.uniba.dsg.helper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-public class MailSender {
-    private final String username, password, mailFrom;
+public class MailHelper {
 
     private final Session session;
+    private final String username, password, mailFrom;
 
-    public MailSender(String mailFrom, String host, String port, String username, String password) {
+    public MailHelper(String mailFrom, String host, String port, String username, String password) {
         this.username = username;
         this.password = password;
         this.mailFrom = mailFrom;

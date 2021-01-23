@@ -1,6 +1,6 @@
-package de.uniba.dsg.cloudfunction.validation.annotation;
+package de.uniba.dsg.validation.annotation;
 
-import de.uniba.dsg.cloudfunction.validation.validator.MoreThanZeroValidator;
+import de.uniba.dsg.validation.validator.MoreThanZeroValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,5 +1,6 @@
 rootProject.name = 'BeverageStore'
 
+include 'shared'
 include 'spring_boot'
 include 'invoice_generator'
 include 'invoice_mail_sender'

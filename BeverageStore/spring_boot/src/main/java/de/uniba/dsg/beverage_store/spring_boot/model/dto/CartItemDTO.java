@@ -1,7 +1,7 @@
 package de.uniba.dsg.beverage_store.spring_boot.model.dto;
 
 import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
-import de.uniba.dsg.beverage_store.spring_boot.validation.annotation.MoreThanZero;
+import de.uniba.dsg.validation.annotation.MoreThanZero;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
