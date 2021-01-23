@@ -17,22 +17,25 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import java.net.HttpURLConnection;
 import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class InvoiceGeneratorFunction implements HttpFunction {
 
-    private final String PROJECT_ID = System.getenv("PROJECT_ID");
     private final String BUCKET_NAME = System.getenv("BUCKET_NAME");
+
+    private static final Logger logger = Logger.getLogger(InvoiceGeneratorFunction.class.getName());
 
     @Override
     public void service(HttpRequest request, HttpResponse response)
             throws Exception {
 
         if (!request.getMethod().equalsIgnoreCase("POST")) {
-            response.setStatusCode(HttpURLConnection.HTTP_BAD_REQUEST);
+            response.setStatusCode(HttpURLConnection.HTTP_FORBIDDEN);
             response.getWriter().write("Only POST request is permitted.");
 
             return;
@@ -43,18 +46,30 @@ public class InvoiceGeneratorFunction implements HttpFunction {
 
             validateOrder(order);
 
+            Map<String, String> metadata = Map.ofEntries(
+                    new AbstractMap.SimpleEntry<>("email", order.getCustomerEmailId()),
+                    new AbstractMap.SimpleEntry<>("order_number", order.getOrderNumber()),
+                    new AbstractMap.SimpleEntry<>("customer_name", order.getCustomerName())
+            );
+
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator(order, "invoice_template");
 
-            createFileInCloudStorage(order.getOrderNumber() +  ".pdf", invoiceGenerator.generate(), Map.of("email", order.getCustomerEmailId()));
+            createFileInCloudStorage(order.getOrderNumber() +  ".pdf", invoiceGenerator.generate(), metadata);
 
             invoiceGenerator.dispose();
 
             response.setStatusCode(HttpURLConnection.HTTP_NO_CONTENT);
+
+            logger.info("Generated invoice for Order: " + order.getOrderNumber());
         } catch (JsonSyntaxException | JsonIOException | InvalidAttributesException ex) {
             response.setStatusCode(HttpURLConnection.HTTP_BAD_REQUEST);
             response.getWriter().write(ex.getMessage());
+
+            logger.info("Exception: " + ex.getMessage());
         } catch (Exception ex) {
             response.setStatusCode(HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+            logger.info("Exception: " + ex.getMessage());
         }
     }
 
@@ -87,7 +102,7 @@ public class InvoiceGeneratorFunction implements HttpFunction {
     }
 
     private void createFileInCloudStorage(String fileName, byte[] fileBytes, Map<String, String> metadata) {
-        Storage storage = StorageOptions.newBuilder().setProjectId(PROJECT_ID).build().getService();
+        Storage storage = StorageOptions.getDefaultInstance().getService();
         BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                 .setMetadata(metadata)
