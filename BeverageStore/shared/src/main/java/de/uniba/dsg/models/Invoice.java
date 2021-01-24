@@ -1,4 +1,4 @@
-package de.uniba.dsg.cloudfunction.models;
+package de.uniba.dsg.models;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Order {
+public class Invoice {
     @NotNull(message = "Order Number is required.")
     @NotEmpty(message = "Order Number cannot be empty.")
     private String orderNumber;
@@ -23,22 +23,22 @@ public class Order {
     private String customerEmailId;
 
     @NotNull(message = "Delivery Address is required.")
-    private Address deliveryAddress;
+    private InvoiceAddress deliveryAddress;
 
     @NotNull(message = "Billing Address is required.")
-    private Address billingAddress;
+    private InvoiceAddress billingAddress;
 
     @NotEmpty(message = "At least one Order Item is required.")
-    private List<OrderItem> orderItems;
+    private List<InvoiceItem> items;
 
-    public Order(String orderNumber, LocalDate orderDate, String customerName, String customerEmailId, Address deliveryAddress, Address billingAddress, List<OrderItem> orderItems) {
+    public Invoice(String orderNumber, LocalDate orderDate, String customerName, String customerEmailId, InvoiceAddress deliveryAddress, InvoiceAddress billingAddress, List<InvoiceItem> orderItems) {
         this.setOrderNumber(orderNumber);
         this.setOrderDate(orderDate);
         this.setCustomerName(customerName);
         this.setCustomerEmailId(customerEmailId);
         this.setDeliveryAddress(deliveryAddress);
         this.setBillingAddress(billingAddress);
-        this.setOrderItems(orderItems);
+        this.setItems(orderItems);
     }
 
     public String getOrderNumber() {
@@ -73,32 +73,32 @@ public class Order {
         this.customerEmailId = customerEmailId;
     }
 
-    public Address getDeliveryAddress() {
+    public InvoiceAddress getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(Address deliveryAddress) {
+    public void setDeliveryAddress(InvoiceAddress deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 
-    public Address getBillingAddress() {
+    public InvoiceAddress getBillingAddress() {
         return billingAddress;
     }
 
-    public void setBillingAddress(Address billingAddress) {
+    public void setBillingAddress(InvoiceAddress billingAddress) {
         this.billingAddress = billingAddress;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public List<InvoiceItem> getItems() {
+        return items;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    public void setItems(List<InvoiceItem> items) {
+        this.items = items;
     }
 
     public double getTotalPrice() {
-        return getOrderItems().stream()
+        return getItems().stream()
                 .map(x -> x.getPrice() * x.getQuantity())
                 .collect(Collectors.summingDouble(Double::doubleValue));
     }

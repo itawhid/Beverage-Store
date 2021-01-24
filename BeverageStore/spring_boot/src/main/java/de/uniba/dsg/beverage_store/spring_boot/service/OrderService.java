@@ -13,6 +13,9 @@ import de.uniba.dsg.beverage_store.spring_boot.repository.BottleRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.CrateRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.OrderItemRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.OrderRepository;
+import de.uniba.dsg.models.InvoiceAddress;
+import de.uniba.dsg.models.Invoice;
+import de.uniba.dsg.models.InvoiceItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -31,6 +35,7 @@ public class OrderService {
     private final UserService userService;
     private final AddressService addressService;
     private final BeverageService beverageService;
+    private final FireStoreService fireStoreService;
 
     private final CrateRepository crateRepository;
     private final BottleRepository bottleRepository;
@@ -46,6 +51,7 @@ public class OrderService {
     public OrderService(UserService userService,
                         AddressService addressService,
                         BeverageService beverageService,
+                        FireStoreService fireStoreService,
                         CrateRepository crateRepository,
                         BottleRepository bottleRepository,
                         OrderRepository orderRepository,
@@ -54,6 +60,7 @@ public class OrderService {
         this.userService = userService;
         this.addressService = addressService;
         this.beverageService = beverageService;
+        this.fireStoreService = fireStoreService;
 
         this.crateRepository = crateRepository;
         this.bottleRepository = bottleRepository;
@@ -91,11 +98,11 @@ public class OrderService {
 
     @Transactional
     public BeverageOrder createOrder(String userName, Long deliveryAddressId, Long billingAddressId) throws NotFoundException {
-        ApplicationUser user = userService.getUserByUserName(userName);
+        ApplicationUser customer = userService.getUserByUserName(userName);
         Address deliveryAddress = addressService.getAddressById(deliveryAddressId);
         Address billingAddress = addressService.getAddressById(billingAddressId);
 
-        BeverageOrder order = new BeverageOrder(null, null, LocalDate.now(), cartService.getCartTotal(), user, deliveryAddress, billingAddress, null);
+        BeverageOrder order = new BeverageOrder(null, null, LocalDate.now(), cartService.getCartTotal(), customer, deliveryAddress, billingAddress, null);
         orderRepository.save(order);
 
         int count = 0;
@@ -121,6 +128,8 @@ public class OrderService {
 
         cartService.clearCart();
 
+        fireStoreService.storeOrder(constructInvoiceOrder(order, customer, deliveryAddress, billingAddress, orderItems));
+
         return order;
     }
 
@@ -137,6 +146,39 @@ public class OrderService {
                         ? beverageService.getCrateById(beverageId)
                         : null,
                 order
+        );
+    }
+
+    private Invoice constructInvoiceOrder(BeverageOrder order, ApplicationUser customer, Address deliveryAddress, Address billingAddress, List<BeverageOrderItem> orderItems) {
+        return new Invoice(
+                order.getOrderNumber(),
+                order.getDate(),
+                customer.getFirstName() + " " + customer.getLastName(),
+                null,
+                new InvoiceAddress(
+                        deliveryAddress.getStreet(),
+                        deliveryAddress.getHouseNumber(),
+                        deliveryAddress.getPostalCode()
+                ),
+                new InvoiceAddress(
+                        billingAddress.getStreet(),
+                        billingAddress.getHouseNumber(),
+                        billingAddress.getPostalCode()
+                ),
+                orderItems.stream()
+                        .map(x -> new InvoiceItem(
+                                x.getPosition(),
+                                x.getBeverageType() == BeverageType.BOTTLE
+                                        ? x.getBottle().getName()
+                                        : x.getCrate().getName(),
+                                x.getBeverageType().name(),
+                                x.getQuantity(),
+                                x.getBeverageType() == BeverageType.BOTTLE
+                                        ? x.getBottle().getPrice()
+                                        : x.getCrate().getPrice()
+
+                        ))
+                        .collect(Collectors.toList())
         );
     }
 }

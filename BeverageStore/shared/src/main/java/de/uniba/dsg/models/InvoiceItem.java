@@ -1,4 +1,4 @@
-package de.uniba.dsg.cloudfunction.models;
+package de.uniba.dsg.models;
 
 import de.uniba.dsg.validation.annotation.MoreThanZero;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class OrderItem {
+public class InvoiceItem {
     @Min(value = 1, message = "Minimum Position is 1.")
     private int position;
 
@@ -24,7 +24,7 @@ public class OrderItem {
     @MoreThanZero(message = "Price should be more than zero.")
     private double price;
 
-    public OrderItem(int position, String name, String type, int quantity, double price) {
+    public InvoiceItem(int position, String name, String type, int quantity, double price) {
         this.position = position;
         this.name = name;
         this.type = type;

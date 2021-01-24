@@ -75,15 +75,15 @@
                     <legend>Order Details</legend>
                     <p>
                         <span class="field-title">Order Number:</span>
-                        <span th:text="${order.orderNumber}"></span>
+                        <span th:text="${invoice.orderNumber}"></span>
                     </p>
                     <p>
                         <span class="field-title">Order Date:</span>
-                        <span th:text="${order.orderDate.month.name() + ' ' + order.orderDate.dayOfMonth + ', ' + order.orderDate.year}"></span>
+                        <span th:text="${invoice.orderDate.month.name() + ' ' + invoice.orderDate.dayOfMonth + ', ' + invoice.orderDate.year}"></span>
                     </p>
                     <p>
                         <span class="field-title">Total Price:</span>
-                        <span th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                        <span th:text="${#numbers.formatDecimal(invoice.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
                     </p>
                 </fieldset>
             </div>
@@ -93,15 +93,15 @@
                     <legend>Delivery Address</legend>
                     <p>
                         <span class="field-title">Street:</span>
-                        <span th:text="${order.deliveryAddress.street}"></span>
+                        <span th:text="${invoice.deliveryAddress.street}"></span>
                     </p>
                     <p>
                         <span class="field-title">House:</span>
-                        <span th:text="${order.deliveryAddress.houseNumber}"></span>
+                        <span th:text="${invoice.deliveryAddress.houseNumber}"></span>
                     </p>
                     <p>
                         <span class="field-title">Postal Code:</span>
-                        <span th:text="${order.deliveryAddress.postalCode}"></span>
+                        <span th:text="${invoice.deliveryAddress.postalCode}"></span>
                     </p>
                 </fieldset>
             </div>
@@ -113,11 +113,11 @@
                     <legend>Sold To</legend>
                     <p>
                         <span class="field-title">Name:</span>
-                        <span th:text="${order.customerName}"></span>
+                        <span th:text="${invoice.customerName}"></span>
                     </p>
                     <p>
                         <span class="field-title">Email:</span>
-                        <span th:text="${order.customerEmailId}"></span>
+                        <span th:text="${invoice.customerEmailId}"></span>
                     </p>
                     <p>
                         <span class="field-title"></span>
@@ -130,15 +130,15 @@
                     <legend>Billing Address</legend>
                     <p>
                         <span class="field-title">Street:</span>
-                        <span th:text="${order.billingAddress.street}"></span>
+                        <span th:text="${invoice.billingAddress.street}"></span>
                     </p>
                     <p>
                         <span class="field-title">House:</span>
-                        <span th:text="${order.billingAddress.houseNumber}"></span>
+                        <span th:text="${invoice.billingAddress.houseNumber}"></span>
                     </p>
                     <p>
                         <span class="field-title">Postal Code:</span>
-                        <span th:text="${order.billingAddress.postalCode}"></span>
+                        <span th:text="${invoice.billingAddress.postalCode}"></span>
                     </p>
                 </fieldset>
             </div>
@@ -156,7 +156,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="item : ${order.orderItems}">
+                <tr th:each="item : ${invoice.items}">
                     <td><span th:text="${item.position}"></span></td>
                     <td><span th:text="${item.type}"></span></td>
                     <td><span th:text="${item.name}"></span></td>

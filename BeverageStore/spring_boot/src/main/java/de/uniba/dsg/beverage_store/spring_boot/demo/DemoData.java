@@ -41,10 +41,10 @@ public class DemoData {
     public void createDemoData(ApplicationReadyEvent event) {
         log.info("Creating demo data - start");
 
-        addUser("manager", "Manager", "manager", Role.ROLE_MANAGER);
+        addUser("manager", "Manager", "manager@beverage.store.de", "manager", Role.ROLE_MANAGER);
 
-        ApplicationUser customerUser1 = addUser("customer1", "Customer 1", "customer1", Role.ROLE_CUSTOMER);
-        ApplicationUser customerUser2 = addUser("customer2", "Customer 2", "customer2", Role.ROLE_CUSTOMER);
+        ApplicationUser customerUser1 = addUser("customer1", "Customer 1", "customer1@beverage.store.de", "customer1", Role.ROLE_CUSTOMER);
+        ApplicationUser customerUser2 = addUser("customer2", "Customer 2", "customer2@beverage.store.de", "customer2", Role.ROLE_CUSTOMER);
 
         Address customer1Address1 = addAddress("Address 1", "PestalozzistraÃe", "9f", "96052", customerUser1);
         Address customer1Address2 = addAddress("Address 2", "KapellenstraÃe", "23", "96050", customerUser1);
@@ -68,8 +68,8 @@ public class DemoData {
         log.info("Creating demo data - completed");
     }
 
-    private ApplicationUser addUser(String username, String firstName, String password, Role role) {
-        ApplicationUser user = new ApplicationUser(null, username, firstName, "User", (new BCryptPasswordEncoder()).encode(password), LocalDate.of(1990, 1, 1), role, null, null);
+    private ApplicationUser addUser(String username, String firstName, String email, String password, Role role) {
+        ApplicationUser user = new ApplicationUser(null, username, firstName, "User", email, (new BCryptPasswordEncoder()).encode(password), LocalDate.of(1990, 1, 1), role, null, null);
 
         userRepository.save(user);
 

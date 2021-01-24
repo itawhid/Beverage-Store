@@ -1,10 +1,10 @@
-package de.uniba.dsg.cloudfunction.models;
+package de.uniba.dsg.models;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class Address {
+public class InvoiceAddress {
     @NotNull(message = "Street is required.")
     @NotEmpty(message = "Street cannot be empty.")
     private String street;
@@ -17,7 +17,7 @@ public class Address {
     @Pattern(regexp = "\\b\\d{5}\\b", message = "Valid Postal Code is required.")
     private String postalCode;
 
-    public Address(String street, String houseNumber, String postalCode) {
+    public InvoiceAddress(String street, String houseNumber, String postalCode) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.postalCode = postalCode;

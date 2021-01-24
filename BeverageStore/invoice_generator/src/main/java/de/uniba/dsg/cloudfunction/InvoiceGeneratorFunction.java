@@ -4,9 +4,9 @@ import com.google.cloud.functions.HttpFunction;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
 import com.google.gson.*;
-import de.uniba.dsg.cloudfunction.models.Order;
-import de.uniba.dsg.cloudfunction.models.OrderItem;
 import de.uniba.dsg.helper.GoogleCloudStorageHelper;
+import de.uniba.dsg.models.Invoice;
+import de.uniba.dsg.models.InvoiceItem;
 
 import javax.naming.directory.InvalidAttributesException;
 import javax.validation.ConstraintViolation;
@@ -39,25 +39,25 @@ public class InvoiceGeneratorFunction implements HttpFunction {
         }
 
         try {
-            Order order = getGsonObject().fromJson(request.getReader(), Order.class);
+            Invoice invoice = getGsonObject().fromJson(request.getReader(), Invoice.class);
 
-            validateOrder(order);
+            validateOrder(invoice);
 
             Map<String, String> metadata = Map.ofEntries(
-                    new AbstractMap.SimpleEntry<>("email", order.getCustomerEmailId()),
-                    new AbstractMap.SimpleEntry<>("order_number", order.getOrderNumber()),
-                    new AbstractMap.SimpleEntry<>("customer_name", order.getCustomerName())
+                    new AbstractMap.SimpleEntry<>("email", invoice.getCustomerEmailId()),
+                    new AbstractMap.SimpleEntry<>("order_number", invoice.getOrderNumber()),
+                    new AbstractMap.SimpleEntry<>("customer_name", invoice.getCustomerName())
             );
 
-            InvoiceGenerator invoiceGenerator = new InvoiceGenerator(order, "invoice_template");
+            InvoiceGenerator invoiceGenerator = new InvoiceGenerator(invoice, "invoice_template");
 
-            GoogleCloudStorageHelper.createFile(BUCKET_NAME, order.getOrderNumber() +  ".pdf", invoiceGenerator.generate(), metadata);
+            GoogleCloudStorageHelper.createFile(BUCKET_NAME, invoice.getOrderNumber() +  ".pdf", invoiceGenerator.generate(), metadata);
 
             invoiceGenerator.dispose();
 
             response.setStatusCode(HttpURLConnection.HTTP_NO_CONTENT);
 
-            logger.info("Generated invoice for Order: " + order.getOrderNumber());
+            logger.info("Generated invoice for Order: " + invoice.getOrderNumber());
         } catch (JsonSyntaxException | JsonIOException | InvalidAttributesException ex) {
             response.setStatusCode(HttpURLConnection.HTTP_BAD_REQUEST);
             response.getWriter().write(ex.getMessage());
@@ -70,17 +70,17 @@ public class InvoiceGeneratorFunction implements HttpFunction {
         }
     }
 
-    private void validateOrder(Order order)
+    private void validateOrder(Invoice invoice)
             throws InvalidAttributesException {
 
         List<String> errors = new ArrayList<>();
 
-        errors.addAll(validate(order));
-        errors.addAll(validate(order.getDeliveryAddress()));
-        errors.addAll(validate(order.getBillingAddress()));
+        errors.addAll(validate(invoice));
+        errors.addAll(validate(invoice.getDeliveryAddress()));
+        errors.addAll(validate(invoice.getBillingAddress()));
 
-        for (OrderItem orderItem: order.getOrderItems()) {
-            errors.addAll(validate(orderItem));
+        for (InvoiceItem item: invoice.getItems()) {
+            errors.addAll(validate(item));
         }
 
         if (errors.isEmpty())
