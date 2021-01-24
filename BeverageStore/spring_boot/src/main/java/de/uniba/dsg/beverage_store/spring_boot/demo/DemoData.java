@@ -46,11 +46,11 @@ public class DemoData {
         ApplicationUser customerUser1 = addUser("customer1", "Customer 1", "customer1@beverage.store.de", "customer1", Role.ROLE_CUSTOMER);
         ApplicationUser customerUser2 = addUser("customer2", "Customer 2", "customer2@beverage.store.de", "customer2", Role.ROLE_CUSTOMER);
 
-        Address customer1Address1 = addAddress("Address 1", "PestalozzistraÃe", "9f", "96052", customerUser1);
-        Address customer1Address2 = addAddress("Address 2", "KapellenstraÃe", "23", "96050", customerUser1);
+        Address customer1Address1 = addAddress("Address 1", "Pestalozzistraße", "9f", "96052", customerUser1);
+        Address customer1Address2 = addAddress("Address 2", "Kapellenstraße", "23", "96050", customerUser1);
 
-        Address customer2Address1 = addAddress("Address 1", "PestalozzistraÃe", "9f", "96052", customerUser2);
-        Address customer2Address2 = addAddress("Address 2", "KapellenstraÃe", "23", "96050", customerUser2);
+        Address customer2Address1 = addAddress("Address 1", "Pestalozzistraße", "9f", "96052", customerUser2);
+        Address customer2Address2 = addAddress("Address 2", "Kapellenstraße", "23", "96050", customerUser2);
 
         Bottle cocaCola = addBottle("Coca-Cola");
         Bottle sprite = addBottle("Sprite");
