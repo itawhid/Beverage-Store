@@ -154,7 +154,7 @@ public class OrderService {
                 order.getOrderNumber(),
                 order.getDate(),
                 customer.getFirstName() + " " + customer.getLastName(),
-                null,
+                customer.getEmail(),
                 new InvoiceAddress(
                         deliveryAddress.getStreet(),
                         deliveryAddress.getHouseNumber(),
