@@ -1,7 +1,7 @@
 package de.uniba.dsg.beverage_store.spring_boot.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.uniba.dsg.beverage_store.spring_boot.validation.annotation.LaterThanOrEqualTo;
+import de.uniba.dsg.validation.annotation.LaterThanOrEqualTo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -42,6 +43,9 @@ public class ApplicationUser implements UserDetails {
     @NotNull(message = "Last Name is required.")
     @NotEmpty(message = "Last Name cannot be empty.")
     private String lastName;
+
+    @Email(message = "Valid Email is required.")
+    private String email;
 
     @NotNull(message = "Password is required.")
     @NotEmpty(message = "Password cannot be empty.")

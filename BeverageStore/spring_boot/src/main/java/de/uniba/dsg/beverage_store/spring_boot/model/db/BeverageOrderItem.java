@@ -2,7 +2,7 @@ package de.uniba.dsg.beverage_store.spring_boot.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
-import de.uniba.dsg.beverage_store.spring_boot.validation.annotation.MoreThanZero;
+import de.uniba.dsg.validation.annotation.MoreThanZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
-package de.uniba.dsg.beverage_store.spring_boot.validation.annotation;
+package de.uniba.dsg.validation.annotation;
 
-import de.uniba.dsg.beverage_store.spring_boot.validation.validator.LaterThanOrEqualToValidator;
+import de.uniba.dsg.validation.validator.MoreThanZeroValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -13,26 +13,20 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({ FIELD, METHOD, PARAMETER, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = LaterThanOrEqualToValidator.class)
+@Constraint(validatedBy = MoreThanZeroValidator.class)
 @Documented
-public @interface LaterThanOrEqualTo {
+public @interface MoreThanZero {
 
-    String message() default "Must be later than or equal to the value";
+    String message() default "Must be greater than zero";
 
     Class<?>[] groups() default { };
 
     Class<? extends Payload>[] payload() default { };
 
-    String year();
-
-    String month();
-
-    String dayOfMonth();
-
     @Target({ FIELD, METHOD, PARAMETER, ANNOTATION_TYPE })
     @Retention(RUNTIME)
     @Documented
     @interface List {
-        LaterThanOrEqualTo[] value();
+        MoreThanZero[] value();
     }
 }

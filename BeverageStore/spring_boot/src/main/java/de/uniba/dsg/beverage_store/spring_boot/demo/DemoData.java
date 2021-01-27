@@ -19,51 +19,101 @@ import java.util.Arrays;
 public class DemoData {
 
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
     private final CrateRepository crateRepository;
+    private final BottleRepository bottleRepository;
     private final AddressRepository addressRepository;
     private final OrderItemRepository orderItemRepository;
 
+    private final String picUrl = "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif" ;
+
     @Autowired
-    public DemoData(UserRepository userRepository, CrateRepository crateRepository, AddressRepository addressRepository, OrderItemRepository orderItemRepository) {
+    public DemoData(UserRepository userRepository, OrderRepository orderRepository, CrateRepository crateRepository, BottleRepository bottleRepository, AddressRepository addressRepository, OrderItemRepository orderItemRepository) {
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
         this.crateRepository = crateRepository;
+        this.bottleRepository = bottleRepository;
         this.addressRepository = addressRepository;
         this.orderItemRepository = orderItemRepository;
     }
 
     @EventListener
     public void createDemoData(ApplicationReadyEvent event) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         log.info("Creating demo data - start");
 
-        ApplicationUser managerUser = new ApplicationUser(1L, "manager", "Manager", "User", passwordEncoder.encode("manager"), LocalDate.of(1990, 1, 1), Role.ROLE_MANAGER, null, null);
-        ApplicationUser customerUser = new ApplicationUser(2L, "customer", "Customer", "User", passwordEncoder.encode("customer"), LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        addUser("manager", "Manager", "manager@beverage.store.de", "manager", Role.ROLE_MANAGER);
 
-        userRepository.saveAll(Arrays.asList(managerUser, customerUser));
+        ApplicationUser customerUser1 = addUser("customer1", "Customer 1", "customer1@beverage.store.de", "customer1", Role.ROLE_CUSTOMER);
+        ApplicationUser customerUser2 = addUser("customer2", "Customer 2", "customer2@beverage.store.de", "customer2", Role.ROLE_CUSTOMER);
 
-        Address address1 = new Address(1L, "Address 1", "Pestalozzistraße", "9f", "96052", customerUser, null, null);
-        Address address2 = new Address(2L, "Address 2", "Kapellenstraße", "23", "96050", customerUser, null, null);
-        addressRepository.saveAll(Arrays.asList(address1, address2));
+        Address customer1Address1 = addAddress("Address 1", "Pestalozzistraße", "9f", "96052", customerUser1);
+        Address customer1Address2 = addAddress("Address 2", "Kapellenstraße", "23", "96050", customerUser1);
 
-        Bottle cocaCola = new Bottle(1L, "Coca-Cola", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
-        Bottle sprite = new Bottle(2L, "Sprite", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
-        Bottle pepsi = new Bottle(3L, "Pepsi", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
-        Bottle sevenUp = new Bottle(4L, "7Up", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
+        Address customer2Address1 = addAddress("Address 1", "Pestalozzistraße", "9f", "96052", customerUser2);
+        Address customer2Address2 = addAddress("Address 2", "Kapellenstraße", "23", "96050", customerUser2);
 
-        Crate cocaColaCrate = new Crate(1L, "Coca-Cola Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, cocaCola, null);
-        Crate spriteCrate = new Crate(2L, "Sprite Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, sprite, null);
-        Crate pepsiCrate = new Crate(3L, "Pepsi Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, pepsi, null);
-        Crate sevenUpCrate = new Crate(4L, "7Up Crate", "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif", 10, 10.0, 10, sevenUp, null);
+        Bottle cocaCola = addBottle("Coca-Cola");
+        Bottle sprite = addBottle("Sprite");
+        Bottle pepsi = addBottle("Pepsi");
+        Bottle sevenUp = addBottle("7Up");
 
-        crateRepository.saveAll(Arrays.asList(cocaColaCrate, spriteCrate, pepsiCrate, sevenUpCrate));
+        Crate cocaColaCrate = addCrate("Coca-Cola Crate", cocaCola);
+        Crate spriteCrate = addCrate("Sprite Crate", sprite);
+        Crate pepsiCrate = addCrate("Pepsi Crate", pepsi);
+        Crate sevenUpCrate = addCrate("7Up Crate", sevenUp);
 
-        BeverageOrder order = new BeverageOrder(1L, Helper.generateOrderNumber(1L), LocalDate.now(), 12.0, customerUser, address1, address2, null);
-
-        BeverageOrderItem orderItem1 = new BeverageOrderItem(1L, BeverageType.BOTTLE, 2, 1, cocaCola, null, order);
-        BeverageOrderItem orderItem2 = new BeverageOrderItem(2L, BeverageType.CRATE, 1, 1, null, pepsiCrate, order);
-        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
+        addOrder(customerUser1, customer1Address1, customer1Address2, cocaCola, sprite, pepsiCrate, sevenUpCrate);
+        addOrder(customerUser2, customer2Address1, customer2Address2, pepsi, sevenUp, cocaColaCrate, spriteCrate);
 
         log.info("Creating demo data - completed");
+    }
+
+    private ApplicationUser addUser(String username, String firstName, String email, String password, Role role) {
+        ApplicationUser user = new ApplicationUser(null, username, firstName, "User", email, (new BCryptPasswordEncoder()).encode(password), LocalDate.of(1990, 1, 1), role, null, null);
+
+        userRepository.save(user);
+
+        return user;
+    }
+
+    private Address addAddress(String name, String street, String houseNo, String postalCode, ApplicationUser customer) {
+        Address address = new Address(null, name, street, houseNo, postalCode, customer, null, null);
+
+        addressRepository.save(address);
+
+        return address;
+    }
+
+    private Bottle addBottle(String name) {
+        Bottle bottle = new Bottle(null, name, picUrl, 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
+
+        bottleRepository.save(bottle);
+
+        return bottle;
+    }
+
+    private Crate addCrate(String name, Bottle bottle) {
+        Crate crate = new Crate(null, name, picUrl, 10, 10.0, 10, bottle, null);
+
+        crateRepository.save(crate);
+
+        return crate;
+    }
+
+    private void addOrder(ApplicationUser customer, Address deliveryAddress, Address billingAddress, Bottle bottle1, Bottle bottle2, Crate crate1, Crate crate2) {
+        int quantity = 2;
+        double total = (bottle1.getPrice() + bottle2.getPrice() + crate1.getPrice() + crate2.getPrice()) * quantity;
+
+        BeverageOrder order = new BeverageOrder(null, null, LocalDate.now(), total, customer, deliveryAddress, billingAddress, null);
+        orderRepository.save(order);
+        order.setOrderNumber(Helper.generateOrderNumber(order.getId()));
+        orderRepository.save(order);
+
+        BeverageOrderItem orderItem1 = new BeverageOrderItem(null, BeverageType.BOTTLE, quantity, 1, bottle1, null, order);
+        BeverageOrderItem orderItem2 = new BeverageOrderItem(null, BeverageType.BOTTLE, quantity, 2, bottle2, null, order);
+        BeverageOrderItem orderItem3 = new BeverageOrderItem(null, BeverageType.CRATE, quantity, 3, null, crate1, order);
+        BeverageOrderItem orderItem4 = new BeverageOrderItem(null, BeverageType.CRATE, quantity, 4, null, crate2, order);
+
+        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4));
     }
 }
