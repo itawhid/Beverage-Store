@@ -1,5 +1,6 @@
 package de.uniba.dsg.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.uniba.dsg.validation.annotation.MoreThanZero;
 
 import javax.validation.constraints.Min;
@@ -31,6 +32,8 @@ public class InvoiceItem {
         this.quantity = quantity;
         this.price = price;
     }
+
+    public InvoiceItem() {}
 
     public int getPosition() {
         return position;
@@ -72,6 +75,7 @@ public class InvoiceItem {
         this.price = price;
     }
 
+    @JsonIgnore
     public double getItemTotal() {
         return quantity * price;
     }

@@ -8,19 +8,21 @@ import de.uniba.dsg.beverage_store.spring_boot.model.db.Address;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.ApplicationUser;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrder;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrderItem;
+import de.uniba.dsg.beverage_store.spring_boot.properties.InvoiceProperties;
 import de.uniba.dsg.beverage_store.spring_boot.properties.OrderProperties;
 import de.uniba.dsg.beverage_store.spring_boot.repository.BottleRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.CrateRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.OrderItemRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.OrderRepository;
-import de.uniba.dsg.models.InvoiceAddress;
 import de.uniba.dsg.models.Invoice;
+import de.uniba.dsg.models.InvoiceAddress;
 import de.uniba.dsg.models.InvoiceItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
@@ -43,6 +45,7 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
 
     private final OrderProperties orderProperties;
+    private final InvoiceProperties invoiceProperties;
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
@@ -56,7 +59,8 @@ public class OrderService {
                         BottleRepository bottleRepository,
                         OrderRepository orderRepository,
                         OrderItemRepository orderItemRepository,
-                        OrderProperties orderProperties) {
+                        OrderProperties orderProperties,
+                        InvoiceProperties invoiceProperties) {
         this.userService = userService;
         this.addressService = addressService;
         this.beverageService = beverageService;
@@ -68,6 +72,7 @@ public class OrderService {
         this.orderItemRepository = orderItemRepository;
 
         this.orderProperties = orderProperties;
+        this.invoiceProperties = invoiceProperties;
     }
 
     public BeverageOrder getOrderByOrderNumber(String orderNumber) throws NotFoundException {
@@ -128,7 +133,10 @@ public class OrderService {
 
         cartService.clearCart();
 
-        fireStoreService.storeOrder(constructInvoiceOrder(order, customer, deliveryAddress, billingAddress, orderItems));
+        Invoice invoice = constructInvoiceOrder(order, customer, deliveryAddress, billingAddress, orderItems);
+
+        generateInvoicePDF(invoice);
+        fireStoreService.storeOrder(invoice);
 
         return order;
     }
@@ -180,5 +188,10 @@ public class OrderService {
                         ))
                         .collect(Collectors.toList())
         );
+    }
+
+    private void generateInvoicePDF(Invoice invoice) {
+        new RestTemplate()
+                .postForObject(invoiceProperties.getPdfGeneratorEndpoint(), invoice, String.class);
     }
 }

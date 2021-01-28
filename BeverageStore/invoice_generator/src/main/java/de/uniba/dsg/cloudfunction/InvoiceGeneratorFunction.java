@@ -1,9 +1,9 @@
 package de.uniba.dsg.cloudfunction;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.functions.HttpFunction;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
-import com.google.gson.*;
 import de.uniba.dsg.helper.GoogleCloudStorageHelper;
 import de.uniba.dsg.models.Invoice;
 import de.uniba.dsg.models.InvoiceItem;
@@ -13,7 +13,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.net.HttpURLConnection;
-import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,8 @@ public class InvoiceGeneratorFunction implements HttpFunction {
         }
 
         try {
-            Invoice invoice = getGsonObject().fromJson(request.getReader(), Invoice.class);
+            Invoice invoice = new ObjectMapper()
+                    .readValue(request.getReader(), Invoice.class);
 
             validateOrder(invoice);
 
@@ -55,18 +55,16 @@ public class InvoiceGeneratorFunction implements HttpFunction {
 
             invoiceGenerator.dispose();
 
-            response.setStatusCode(HttpURLConnection.HTTP_NO_CONTENT);
+
+            response.getWriter().write("Invoice successfully generated");
+            response.setStatusCode(HttpURLConnection.HTTP_OK);
 
             logger.info("Generated invoice for Order: " + invoice.getOrderNumber());
-        } catch (JsonSyntaxException | JsonIOException | InvalidAttributesException ex) {
-            response.setStatusCode(HttpURLConnection.HTTP_BAD_REQUEST);
-            response.getWriter().write(ex.getMessage());
-
-            logger.info("Exception: " + ex.getMessage());
         } catch (Exception ex) {
+            response.getWriter().write(ex.getMessage());
             response.setStatusCode(HttpURLConnection.HTTP_INTERNAL_ERROR);
 
-            logger.info("Exception: " + ex.getMessage());
+            logger.info("Exception: " + ex.toString());
         }
     }
 
@@ -96,10 +94,5 @@ public class InvoiceGeneratorFunction implements HttpFunction {
                 .stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
-    }
-
-    private Gson getGsonObject() {
-        return new GsonBuilder().registerTypeAdapter(LocalDate.class, (JsonDeserializer) (json, type, jsonDeserializationContext)
-                -> LocalDate.parse(json.getAsJsonPrimitive().getAsString())).create();
     }
 }
