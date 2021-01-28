@@ -23,6 +23,8 @@ public class InvoiceAddress {
         this.postalCode = postalCode;
     }
 
+    public InvoiceAddress() {}
+
     public String getStreet() {
         return street.replace("ß", "ss");
     }

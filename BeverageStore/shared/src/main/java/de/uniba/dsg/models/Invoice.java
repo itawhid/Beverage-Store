@@ -1,5 +1,11 @@
 package de.uniba.dsg.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.uniba.dsg.deserializers.LocalDateDeserializer;
+import de.uniba.dsg.serializers.LocalDateSerializer;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,6 +19,8 @@ public class Invoice {
     private String orderNumber;
 
     @NotNull(message = "Order Date is required.")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate orderDate;
 
     @NotNull(message = "Customer Name is required.")
@@ -31,14 +39,16 @@ public class Invoice {
     @NotEmpty(message = "At least one Order Item is required.")
     private List<InvoiceItem> items;
 
-    public Invoice(String orderNumber, LocalDate orderDate, String customerName, String customerEmailId, InvoiceAddress deliveryAddress, InvoiceAddress billingAddress, List<InvoiceItem> orderItems) {
+    public Invoice() {}
+
+    public Invoice(String orderNumber, LocalDate orderDate, String customerName, String customerEmailId, InvoiceAddress deliveryAddress, InvoiceAddress billingAddress, List<InvoiceItem> items) {
         this.setOrderNumber(orderNumber);
         this.setOrderDate(orderDate);
         this.setCustomerName(customerName);
         this.setCustomerEmailId(customerEmailId);
         this.setDeliveryAddress(deliveryAddress);
         this.setBillingAddress(billingAddress);
-        this.setItems(orderItems);
+        this.setItems(items);
     }
 
     public String getOrderNumber() {
@@ -97,6 +107,7 @@ public class Invoice {
         this.items = items;
     }
 
+    @JsonIgnore
     public double getTotalPrice() {
         return getItems().stream()
                 .map(x -> x.getPrice() * x.getQuantity())
