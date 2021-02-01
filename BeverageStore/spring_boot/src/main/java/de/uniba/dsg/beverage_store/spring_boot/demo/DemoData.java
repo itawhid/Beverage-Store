@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -69,7 +68,7 @@ public class DemoData {
     }
 
     private ApplicationUser addUser(String username, String firstName, String email, String password, Role role) {
-        ApplicationUser user = new ApplicationUser(null, username, firstName, "User", email, (new BCryptPasswordEncoder()).encode(password), LocalDate.of(1990, 1, 1), role, null, null);
+        ApplicationUser user = new ApplicationUser(null, username, firstName, "User", email, Helper.encryptPassword(password), LocalDate.of(1990, 1, 1), role, null, null);
 
         userRepository.save(user);
 

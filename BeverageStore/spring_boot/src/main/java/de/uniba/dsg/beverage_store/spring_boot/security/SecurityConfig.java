@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     private final UserService userService;
 
     private final String[] anonymousPages = {
-            "/register"
+            "/register/customer"
     };
 
     private final String[] authenticatedPages = {

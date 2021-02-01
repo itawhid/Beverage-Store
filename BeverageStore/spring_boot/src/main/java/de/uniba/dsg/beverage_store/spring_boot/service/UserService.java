@@ -1,8 +1,11 @@
 package de.uniba.dsg.beverage_store.spring_boot.service;
 
+import de.uniba.dsg.beverage_store.spring_boot.exception.CredentialConflictException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
+import de.uniba.dsg.beverage_store.spring_boot.helper.Helper;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.ApplicationUser;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Role;
+import de.uniba.dsg.beverage_store.spring_boot.model.dto.CustomerDTO;
 import de.uniba.dsg.beverage_store.spring_boot.properties.CustomerProperties;
 import de.uniba.dsg.beverage_store.spring_boot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -47,6 +51,32 @@ public class UserService implements UserDetailsService {
         }
 
         return optionalUser.get();
+    }
+
+    @Transactional
+    public ApplicationUser addCustomer(CustomerDTO customerDTO) throws CredentialConflictException {
+        if (userRepository.findByUsername(customerDTO.getUsername()).isPresent())
+            throw new CredentialConflictException("Username already taken.");
+
+        if (userRepository.findByEmailIgnoreCase(customerDTO.getEmail()).isPresent())
+            throw new CredentialConflictException("Customer already exists with this email.");
+
+        ApplicationUser user = new ApplicationUser(
+                null,
+                customerDTO.getUsername(),
+                customerDTO.getFirstName(),
+                customerDTO.getLastName(),
+                customerDTO.getEmail(),
+                Helper.encryptPassword(customerDTO.getPassword()),
+                customerDTO.getBirthday(),
+                Role.ROLE_CUSTOMER,
+                null,
+                null
+        );
+
+        userRepository.save(user);
+
+        return user;
     }
 
     public Page<ApplicationUser> getPagedCustomers(int page) {
