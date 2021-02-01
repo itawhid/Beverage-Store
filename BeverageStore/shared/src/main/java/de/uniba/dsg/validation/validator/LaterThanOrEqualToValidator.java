@@ -21,6 +21,6 @@ public class LaterThanOrEqualToValidator implements ConstraintValidator<LaterTha
 
     @Override
     public boolean isValid(LocalDate object, ConstraintValidatorContext constraintContext) {
-        return object.isAfter(value) || object.isEqual(value);
+        return object != null && (object.isAfter(value) || object.isEqual(value));
     }
 }

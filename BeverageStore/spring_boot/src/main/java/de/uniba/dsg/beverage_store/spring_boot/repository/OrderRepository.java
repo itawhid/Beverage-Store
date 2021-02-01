@@ -20,5 +20,5 @@ public interface OrderRepository extends JpaRepository<BeverageOrder, Long> {
     Page<BeverageOrder> findAllByUserUsernameOrderByOrderNumber(String userName, Pageable pageable);
 
     @EntityGraph(value = "Order.orders")
-    Optional<BeverageOrder> findOrderByOrderNumber(String orderNumber);
+    Optional<BeverageOrder> findByOrderNumber(String orderNumber);
 }

@@ -76,7 +76,7 @@ public class OrderService {
     }
 
     public BeverageOrder getOrderByOrderNumber(String orderNumber) throws NotFoundException {
-        Optional<BeverageOrder> orderOptional = orderRepository.findOrderByOrderNumber(orderNumber);
+        Optional<BeverageOrder> orderOptional = orderRepository.findByOrderNumber(orderNumber);
 
         if (orderOptional.isEmpty()) {
             throw new NotFoundException("No Order found with Order Number: " + orderNumber);
