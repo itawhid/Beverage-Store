@@ -19,7 +19,7 @@ public class FireStoreService {
 
     public FireStoreService() {
         try {
-            InputStream credentialsFile = (new ClassPathResource("firestore-key.json"))
+            InputStream credentialsFile = new ClassPathResource("firestore-key.json")
                     .getInputStream();
 
             fireStore = FirestoreOptions.getDefaultInstance()
