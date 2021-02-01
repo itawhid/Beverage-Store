@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(username);
+        Optional<ApplicationUser> userOptional = userRepository.findByUsername(username);
 
         if(userOptional.isPresent()) {
             return userOptional.get();
@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
     }
 
     public ApplicationUser getUserByUserName(String username) throws NotFoundException {
-        Optional<ApplicationUser> optionalUser = userRepository.findUserByUsername(username);
+        Optional<ApplicationUser> optionalUser = userRepository.findByUsername(username);
 
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("No User found with Username: " + username);
