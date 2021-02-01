@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.uniba.dsg.deserializers.LocalDateDeserializer;
 import de.uniba.dsg.serializers.LocalDateSerializer;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Invoice {
     @NotNull(message = "Order Number is required.")
@@ -30,12 +30,15 @@ public class Invoice {
     @Email(message="Please provide a valid Customer Email ID.")
     private String customerEmailId;
 
+    @Valid
     @NotNull(message = "Delivery Address is required.")
     private InvoiceAddress deliveryAddress;
 
+    @Valid
     @NotNull(message = "Billing Address is required.")
     private InvoiceAddress billingAddress;
 
+    @Valid
     @NotEmpty(message = "At least one Order Item is required.")
     private List<InvoiceItem> items;
 
@@ -111,6 +114,7 @@ public class Invoice {
     public double getTotalPrice() {
         return getItems().stream()
                 .map(x -> x.getPrice() * x.getQuantity())
-                .collect(Collectors.summingDouble(Double::doubleValue));
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 }

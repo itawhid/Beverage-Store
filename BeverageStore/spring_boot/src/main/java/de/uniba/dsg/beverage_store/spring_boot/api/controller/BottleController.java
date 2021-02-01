@@ -1,6 +1,7 @@
 package de.uniba.dsg.beverage_store.spring_boot.api.controller;
 
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
+import de.uniba.dsg.beverage_store.spring_boot.helper.Helper;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Bottle;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.BeverageStockAddDTO;
 import de.uniba.dsg.beverage_store.spring_boot.service.BeverageService;
@@ -10,11 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -28,7 +27,7 @@ public class BottleController {
         this.beverageService = beverageService;
     }
 
-    @PatchMapping(value = "/{id}/stock",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{id}/stock", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addToStock(@PathVariable("id") Long id, @RequestBody @Valid BeverageStockAddDTO request, Errors errors) {
         log.info("Adding stock to the Bottle with ID: " + id + " - start");
 
@@ -36,10 +35,7 @@ public class BottleController {
             log.info("Adding stock to the Bottle with ID: " + id + " - failed, found model error");
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(errors.getAllErrors()
-                            .stream()
-                            .map(ObjectError::getDefaultMessage)
-                            .collect(Collectors.joining(", ")));
+                    .body(Helper.constructErrorMessage(errors.getAllErrors()));
         }
 
         try {
