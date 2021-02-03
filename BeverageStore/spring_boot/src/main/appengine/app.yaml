@@ -1,7 +1,7 @@
 runtime: java11
 
 env_variables:
-  SPRING_PROFILES_ACTIVE: 'common, gcp'
+  SPRING_PROFILES_ACTIVE: 'common, postgres, gcp'
 
 resources:
   cpu: 2
