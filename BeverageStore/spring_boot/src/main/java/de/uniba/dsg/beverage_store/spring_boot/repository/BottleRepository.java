@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface BottleRepository extends JpaRepository<Bottle, Long> {
     Page<Bottle> findByOrderByNameAsc(Pageable pageable);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Bottle b set b.inStock = (b.inStock - :quantity) where b.id = :id")
     void decreaseQuantity(@Param("id") Long id, @Param("quantity") int quantity);
 }

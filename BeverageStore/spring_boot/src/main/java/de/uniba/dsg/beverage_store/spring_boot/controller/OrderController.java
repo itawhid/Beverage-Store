@@ -4,6 +4,7 @@ import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrder;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrderItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Role;
+import de.uniba.dsg.beverage_store.spring_boot.properties.OrderProperties;
 import de.uniba.dsg.beverage_store.spring_boot.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,15 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    private final OrderProperties orderProperties;
+
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(
+            OrderService orderService,
+            OrderProperties orderProperties) {
         this.orderService = orderService;
+
+        this.orderProperties = orderProperties;
     }
 
     @GetMapping
@@ -50,9 +57,9 @@ public class OrderController {
             log.info("Retrieving order page: " + page + " - start");
 
             orderPage = userRole.equals(Role.ROLE_MANAGER.name())
-                    ? orderService.getPagedOrders(page)
+                    ? orderService.getPagedOrders(page, orderProperties.getPageSize())
                     : userRole.equals(Role.ROLE_CUSTOMER.name())
-                        ? orderService.getPagedOrdersByUsername(principal.getName(), page)
+                        ? orderService.getPagedOrdersByUsername(principal.getName(), page, orderProperties.getPageSize())
                         : Page.empty();
 
             log.info("Retrieving order page: " + page + " - completed");

@@ -42,7 +42,7 @@ public class InvoiceController {
 
             log.info("Generating invoice - completed");
 
-            return ResponseEntity.status(HttpStatus.OK)
+            return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Invoice successfully generated and sent to the Email - " + invoice.getCustomerEmailId());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

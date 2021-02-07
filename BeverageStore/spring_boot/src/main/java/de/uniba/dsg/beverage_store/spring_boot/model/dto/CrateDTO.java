@@ -11,6 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class CrateDTO extends BeverageDTO {
+
+    public CrateDTO(String name, String picUrl, double price, int inStock, int noOfBottles, long bottleId) {
+        super(name, picUrl, price, inStock);
+
+        this.noOfBottles = noOfBottles;
+        this.bottleId = bottleId;
+    }
+
     @MoreThanZero(message = "No of Bottles must be more then zero.")
     private int noOfBottles;
 

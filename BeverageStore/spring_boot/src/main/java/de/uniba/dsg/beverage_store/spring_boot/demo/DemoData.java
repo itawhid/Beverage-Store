@@ -11,7 +11,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -25,6 +28,13 @@ public class DemoData {
     private final OrderItemRepository orderItemRepository;
 
     private final String picUrl = "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif" ;
+
+    public static List<Crate> crates = new ArrayList<>();
+    public static List<Bottle> bottles = new ArrayList<>();
+    public static List<Address> addresses = new ArrayList<>();
+    public static List<BeverageOrder> orders = new ArrayList<>();
+    public static List<BeverageOrderItem> orderItems = new ArrayList<>();
+    public static List<ApplicationUser> applicationUsers = new ArrayList<>();
 
     @Autowired
     public DemoData(UserRepository userRepository, OrderRepository orderRepository, CrateRepository crateRepository, BottleRepository bottleRepository, AddressRepository addressRepository, OrderItemRepository orderItemRepository) {
@@ -72,6 +82,8 @@ public class DemoData {
 
         userRepository.save(user);
 
+        applicationUsers.add(user);
+
         return user;
     }
 
@@ -79,6 +91,8 @@ public class DemoData {
         Address address = new Address(null, name, street, houseNo, postalCode, customer, null, null);
 
         addressRepository.save(address);
+
+        addresses.add(address);
 
         return address;
     }
@@ -88,6 +102,8 @@ public class DemoData {
 
         bottleRepository.save(bottle);
 
+        bottles.add(bottle);
+
         return bottle;
     }
 
@@ -95,6 +111,8 @@ public class DemoData {
         Crate crate = new Crate(null, name, picUrl, 10, 10.0, 10, bottle, null);
 
         crateRepository.save(crate);
+
+        crates.add(crate);
 
         return crate;
     }
@@ -114,5 +132,10 @@ public class DemoData {
         BeverageOrderItem orderItem4 = new BeverageOrderItem(null, BeverageType.CRATE, quantity, 4, null, crate2, order);
 
         orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4));
+
+        order.setOrderItems(new HashSet<>(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4)));
+
+        orders.add(order);
+        orderItems.addAll(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4));
     }
 }

@@ -4,6 +4,8 @@ import de.uniba.dsg.beverage_store.spring_boot.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Bottle;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Crate;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.*;
+import de.uniba.dsg.beverage_store.spring_boot.properties.BottleProperties;
+import de.uniba.dsg.beverage_store.spring_boot.properties.CrateProperties;
 import de.uniba.dsg.beverage_store.spring_boot.service.BeverageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +26,25 @@ public class BeverageController {
 
     private final BeverageService beverageService;
 
+    private final CrateProperties crateProperties;
+    private final BottleProperties bottleProperties;
+
     @Autowired
-    public BeverageController(BeverageService beverageService) {
+    public BeverageController(
+            BeverageService beverageService,
+            CrateProperties crateProperties,
+            BottleProperties bottleProperties) {
         this.beverageService = beverageService;
+
+        this.crateProperties = crateProperties;
+        this.bottleProperties = bottleProperties;
     }
 
     @GetMapping(value = "/bottle")
     public String getBottles(@RequestParam(defaultValue = "1") int page, Model model) {
         log.info("Retrieving bottle page: " + page + " - start");
 
-        Page<Bottle> bottlePage = beverageService.getPagedBottlesWithAllowedStock(page);
+        Page<Bottle> bottlePage = beverageService.getPagedBottlesWithAllowedStock(page, bottleProperties.getPageSize());
 
         model.addAttribute("bottles", bottlePage.getContent());
         model.addAttribute("currentPage", page);
@@ -144,7 +155,7 @@ public class BeverageController {
     public String getCrates(@RequestParam(defaultValue = "1") int page, Model model) {
         log.info("Retrieving crate page: " + page + " - start");
 
-        Page<Crate> cratePage = beverageService.getPagedCratesAllowedStock(page);
+        Page<Crate> cratePage = beverageService.getPagedCratesWithAllowedStock(page, crateProperties.getPageSize());
 
         model.addAttribute("crates", cratePage.getContent());
         model.addAttribute("currentPage", page);
