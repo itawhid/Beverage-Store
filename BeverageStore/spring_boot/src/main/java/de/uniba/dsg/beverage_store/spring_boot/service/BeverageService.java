@@ -9,8 +9,6 @@ import de.uniba.dsg.beverage_store.spring_boot.model.dto.BottleDTO;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.BottleUpdateDTO;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.CrateDTO;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.CrateUpdateDTO;
-import de.uniba.dsg.beverage_store.spring_boot.properties.BottleProperties;
-import de.uniba.dsg.beverage_store.spring_boot.properties.CrateProperties;
 import de.uniba.dsg.beverage_store.spring_boot.repository.BottleRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.CrateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,22 +26,14 @@ public class BeverageService {
     private final CrateRepository crateRepository;
     private final BottleRepository bottleRepository;
 
-    private final CrateProperties crateProperties;
-    private final BottleProperties bottleProperties;
-
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
 
     @Autowired
     public BeverageService(CrateRepository crateRepository,
-                           BottleRepository bottleRepository,
-                           CrateProperties crateProperties,
-                           BottleProperties bottleProperties) {
+                           BottleRepository bottleRepository) {
         this.crateRepository = crateRepository;
         this.bottleRepository = bottleRepository;
-
-        this.crateProperties = crateProperties;
-        this.bottleProperties = bottleProperties;
     }
 
     public Bottle getBottleById(Long id) throws NotFoundException {
@@ -60,8 +50,8 @@ public class BeverageService {
         return bottleRepository.findAll();
     }
 
-    public Page<Bottle> getPagedBottlesWithAllowedStock(int page) {
-        Page<Bottle> bottlePage = bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, bottleProperties.getPageSize()));
+    public Page<Bottle> getPagedBottlesWithAllowedStock(int page, int size) {
+        Page<Bottle> bottlePage = bottleRepository.findByOrderByNameAsc(PageRequest.of(page - 1, size));
 
         for (Bottle bottle : bottlePage.getContent()) {
             bottle.setAllowedInStockToInStock();
@@ -126,8 +116,8 @@ public class BeverageService {
         return crateOptional.get();
     }
 
-    public Page<Crate> getPagedCratesAllowedStock(int page) {
-        Page<Crate> cratePage = crateRepository.findByOrderByNameAsc(PageRequest.of(page - 1, crateProperties.getPageSize()));
+    public Page<Crate> getPagedCratesWithAllowedStock(int page, int size) {
+        Page<Crate> cratePage = crateRepository.findByOrderByNameAsc(PageRequest.of(page - 1, size));
 
         for (Crate crate : cratePage.getContent()) {
             crate.setAllowedInStockToInStock();

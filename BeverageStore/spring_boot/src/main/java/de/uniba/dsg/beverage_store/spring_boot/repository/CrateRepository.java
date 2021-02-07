@@ -19,7 +19,7 @@ public interface CrateRepository extends JpaRepository<Crate, Long> {
     @EntityGraph(value = "Crate.crates")
     Page<Crate> findByOrderByNameAsc(Pageable pageable);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Crate c SET c.inStock = (c.inStock - :quantity) WHERE c.id = :id")
     void decreaseQuantity(@Param("id") Long id, @Param("quantity") int quantity);
 }

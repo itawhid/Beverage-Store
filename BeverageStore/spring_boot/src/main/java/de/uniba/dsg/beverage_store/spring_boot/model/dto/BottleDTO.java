@@ -15,6 +15,15 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class BottleDTO extends BeverageDTO {
+
+    public BottleDTO(String name, String picUrl, double price, int inStock, double volume, double volumePercent, String supplier) {
+        super(name, picUrl, price, inStock);
+
+        this.volume = volume;
+        this.volumePercent = volumePercent;
+        this.supplier = supplier;
+    }
+
     @MoreThanZero(message = "Volume must be more than zero.")
     private double volume;
 

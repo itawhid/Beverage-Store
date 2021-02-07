@@ -58,7 +58,7 @@ public class CartService {
         return cartItem;
     }
 
-    public void removeCartItem(Long cartItemId) throws NotFoundException {
+    public void removeCartItem(Integer cartItemId) throws NotFoundException {
         Optional<CartItem> optionalCartItem = cartItems.stream()
                 .filter(x -> x.getCartItemId() == cartItemId)
                 .findAny();
@@ -82,7 +82,7 @@ public class CartService {
 
     public double getCartTotal() {
         return cartItems.stream()
-                .mapToDouble(x -> (x.getQuantity() * x.getPrice()))
+                .mapToDouble(CartItem::getItemTotal)
                 .sum();
     }
 

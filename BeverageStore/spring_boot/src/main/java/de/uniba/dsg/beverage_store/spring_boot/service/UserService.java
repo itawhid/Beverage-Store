@@ -53,7 +53,6 @@ public class UserService implements UserDetailsService {
         return optionalUser.get();
     }
 
-    @Transactional
     public ApplicationUser addCustomer(CustomerDTO customerDTO) throws CredentialConflictException {
         if (userRepository.findByUsername(customerDTO.getUsername()).isPresent())
             throw new CredentialConflictException("Username already taken.");

@@ -1,14 +1,11 @@
 package de.uniba.dsg.beverage_store.spring_boot.service;
 
+import de.uniba.dsg.beverage_store.spring_boot.exception.InvalidOperationException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.spring_boot.helper.Helper;
 import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
 import de.uniba.dsg.beverage_store.spring_boot.model.CartItem;
-import de.uniba.dsg.beverage_store.spring_boot.model.db.Address;
-import de.uniba.dsg.beverage_store.spring_boot.model.db.ApplicationUser;
-import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrder;
-import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrderItem;
-import de.uniba.dsg.beverage_store.spring_boot.properties.OrderProperties;
+import de.uniba.dsg.beverage_store.spring_boot.model.db.*;
 import de.uniba.dsg.beverage_store.spring_boot.repository.BottleRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.CrateRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.OrderItemRepository;
@@ -43,8 +40,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
-    private final OrderProperties orderProperties;
-
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
 
@@ -57,8 +52,7 @@ public class OrderService {
                         CrateRepository crateRepository,
                         BottleRepository bottleRepository,
                         OrderRepository orderRepository,
-                        OrderItemRepository orderItemRepository,
-                        OrderProperties orderProperties) {
+                        OrderItemRepository orderItemRepository) {
         this.userService = userService;
         this.addressService = addressService;
         this.invoiceService = invoiceService;
@@ -69,8 +63,6 @@ public class OrderService {
         this.bottleRepository = bottleRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
-
-        this.orderProperties = orderProperties;
     }
 
     public BeverageOrder getOrderByOrderNumber(String orderNumber) throws NotFoundException {
@@ -83,12 +75,12 @@ public class OrderService {
         return orderOptional.get();
     }
 
-    public Page<BeverageOrder> getPagedOrders(int page) {
-        return orderRepository.findAllByOrderByOrderNumber(PageRequest.of(page - 1, orderProperties.getPageSize()));
+    public Page<BeverageOrder> getPagedOrders(int page, int pageSize) {
+        return orderRepository.findAllByOrderByOrderNumber(PageRequest.of(page - 1, pageSize));
     }
 
-    public Page<BeverageOrder> getPagedOrdersByUsername(String username, int page) {
-        return orderRepository.findAllByUserUsernameOrderByOrderNumber(username, PageRequest.of(page - 1, orderProperties.getPageSize()));
+    public Page<BeverageOrder> getPagedOrdersByUsername(String username, int page, int pageSize) {
+        return orderRepository.findAllByUserUsernameOrderByOrderNumber(username, PageRequest.of(page - 1, pageSize));
     }
 
     public List<BeverageOrder> getOrdersByUsername(String username) {
@@ -100,7 +92,10 @@ public class OrderService {
     }
 
     @Transactional
-    public BeverageOrder createOrder(String userName, Long deliveryAddressId, Long billingAddressId) throws NotFoundException {
+    public BeverageOrder createOrder(String userName, Long deliveryAddressId, Long billingAddressId) throws NotFoundException, InvalidOperationException {
+        if (cartService.getCartItemCount() == 0)
+            throw new InvalidOperationException("At least one Cart Item is required for checkout.");
+
         ApplicationUser customer = userService.getUserByUserName(userName);
         Address deliveryAddress = addressService.getAddressById(deliveryAddressId);
         Address billingAddress = addressService.getAddressById(billingAddressId);

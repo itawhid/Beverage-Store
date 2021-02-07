@@ -26,7 +26,7 @@ public class InvoiceAddress {
     public InvoiceAddress() {}
 
     public String getStreet() {
-        return street.replace("ß", "ss");
+        return street;
     }
 
     public void setStreet(String street) {
