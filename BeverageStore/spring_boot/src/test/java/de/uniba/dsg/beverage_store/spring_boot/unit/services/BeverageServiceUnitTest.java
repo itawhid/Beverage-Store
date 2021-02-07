@@ -33,9 +33,7 @@ public class BeverageServiceUnitTest {
 
     @Test
     public void getBottleById_Test() throws NotFoundException {
-        Bottle expectedBottle = DemoData.bottles.stream()
-                .findFirst()
-                .orElse(null);
+        Bottle expectedBottle = getBottle();
 
         assertNotNull(expectedBottle);
 
@@ -90,11 +88,9 @@ public class BeverageServiceUnitTest {
     @Test
     @Transactional
     public void updateBottle_test() throws NotFoundException {
-        long countBeforeAdd = bottleRepository.count();
+        long countBeforeUpdate = bottleRepository.count();
 
-        Bottle bottle = DemoData.bottles.stream()
-                .findFirst()
-                .orElse(null);
+        Bottle bottle = getBottle();
 
         assertNotNull(bottle);
 
@@ -108,7 +104,7 @@ public class BeverageServiceUnitTest {
 
         Bottle updatedBottle = beverageService.getBottleById(bottle.getId());
 
-        assertEquals(countBeforeAdd, bottleRepository.count());
+        assertEquals(countBeforeUpdate, bottleRepository.count());
 
         assertEquals("Test Bottle", updatedBottle.getName());
         assertEquals(2.0, updatedBottle.getPrice());
@@ -127,9 +123,7 @@ public class BeverageServiceUnitTest {
 
     @Test
     public void getCrateById_Test() throws NotFoundException {
-        Crate expectedCrate = DemoData.crates.stream()
-                .findFirst()
-                .orElse(null);
+        Crate expectedCrate = getCrate();
 
         assertNotNull(expectedCrate);
 
@@ -187,11 +181,9 @@ public class BeverageServiceUnitTest {
     @Test
     @Transactional
     public void updateCrate_test() throws NotFoundException {
-        long countBeforeAdd = crateRepository.count();
+        long countBeforeUpdate = crateRepository.count();
 
-        Crate crate = DemoData.crates.stream()
-                .findFirst()
-                .orElse(null);
+        Crate crate = getCrate();
 
         assertNotNull(crate);
 
@@ -204,7 +196,7 @@ public class BeverageServiceUnitTest {
 
         Crate updatedCrate = beverageService.getCrateById(crate.getId());
 
-        assertEquals(countBeforeAdd, crateRepository.count());
+        assertEquals(countBeforeUpdate, crateRepository.count());
 
         assertEquals("Test Crate", updatedCrate.getName());
         assertEquals(20.0, updatedCrate.getPrice());
@@ -258,5 +250,17 @@ public class BeverageServiceUnitTest {
 
         assertEquals(oldStock + addingStock, updatedCrate.getInStock());
         assertThrows(NotFoundException.class, () -> beverageService.addStockToCrate(0L, addingStock));
+    }
+
+    private Crate getCrate() {
+        return DemoData.crates.stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Bottle getBottle() {
+        return DemoData.bottles.stream()
+                .findFirst()
+                .orElse(null);
     }
 }

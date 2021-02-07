@@ -24,4 +24,8 @@ public class CartItem {
     public void addQuantity(int quantity) {
         this.quantity += quantity;
     }
+
+    public double getItemTotal() {
+        return price * quantity;
+    }
 }

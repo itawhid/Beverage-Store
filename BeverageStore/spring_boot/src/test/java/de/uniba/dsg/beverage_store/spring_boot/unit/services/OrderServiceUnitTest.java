@@ -23,7 +23,6 @@ import org.springframework.data.domain.Page;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -104,9 +103,7 @@ public class OrderServiceUnitTest {
 
         assertNotNull(user);
 
-        List<BeverageOrder> expectedData = DemoData.orders.stream()
-                .filter(x -> x.getUser().getUsername().equals(user.getUsername()))
-                .collect(Collectors.toList());
+        List<BeverageOrder> expectedData = orderRepository.findAllByUserUsernameOrderByOrderNumber(user.getUsername());
 
         assertNotNull(user);
 
@@ -123,9 +120,7 @@ public class OrderServiceUnitTest {
 
         assertNotNull(order);
 
-        List<BeverageOrderItem> expectedData = DemoData.orderItems.stream()
-                .filter(x -> x.getOrder().getOrderNumber().equals(order.getOrderNumber()))
-                .collect(Collectors.toList());
+        List<BeverageOrderItem> expectedData = orderItemRepository.findAllByOrderOrderNumber(order.getOrderNumber());
 
         List<BeverageOrderItem> actualData = orderService.getOrderItemsByOrderNumber(order.getOrderNumber());
 
@@ -164,6 +159,9 @@ public class OrderServiceUnitTest {
 
         double expectedCartTotal = cartService.getCartTotal();
 
+        long orderCountBeforeAdd = orderRepository.count();
+        long orderItemCountBeforeAdd = orderItemRepository.count();
+
         BeverageOrder addedOrder = orderService.createOrder(user.getUsername(), address.getId(), address.getId());
 
         assertEquals(0, cartService.getCartItemCount());
@@ -171,8 +169,8 @@ public class OrderServiceUnitTest {
 
         assertEquals(2, orderItemRepository.findAllByOrderOrderNumber(addedOrder.getOrderNumber()).size());
 
-        assertEquals(DemoData.orders.size() + 1, orderRepository.count());
-        assertEquals(DemoData.orderItems.size() + 2, orderItemRepository.count());
+        assertEquals(orderCountBeforeAdd + 1, orderRepository.count());
+        assertEquals(orderItemCountBeforeAdd + 2, orderItemRepository.count());
 
         assertEquals((crate.getInStock() - crateQuantity), crateRepository.findById(crate.getId()).get().getInStock());
         assertEquals((bottle.getInStock() - bottleQuantity), bottleRepository.findById(bottle.getId()).get().getInStock());

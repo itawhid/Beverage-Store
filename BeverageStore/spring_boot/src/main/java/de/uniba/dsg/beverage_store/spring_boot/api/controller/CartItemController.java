@@ -78,7 +78,7 @@ public class CartItemController {
     }
 
     @DeleteMapping(value = "/{cart-item-id}")
-    public ResponseEntity<?> deleteCartItem(@PathVariable(name = "cart-item-id") Long cartItemId) {
+    public ResponseEntity<?> deleteCartItem(@PathVariable(name = "cart-item-id") Integer cartItemId) {
         log.info("Removing cart item with ID: " + cartItemId + " - start");
 
         try {
