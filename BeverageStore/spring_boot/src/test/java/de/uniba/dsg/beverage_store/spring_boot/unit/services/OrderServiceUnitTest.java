@@ -11,10 +11,13 @@ import de.uniba.dsg.beverage_store.spring_boot.repository.CrateRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.OrderItemRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.OrderRepository;
 import de.uniba.dsg.beverage_store.spring_boot.service.CartService;
+import de.uniba.dsg.beverage_store.spring_boot.service.FireStoreService;
+import de.uniba.dsg.beverage_store.spring_boot.service.InvoiceService;
 import de.uniba.dsg.beverage_store.spring_boot.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 
 import javax.annotation.Resource;
@@ -44,6 +47,12 @@ public class OrderServiceUnitTest {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @MockBean
+    private InvoiceService invoiceService;
+
+    @MockBean
+    private FireStoreService fireStoreService;
 
     @Test
     public void getOrderByOrderNumber_test() throws NotFoundException {

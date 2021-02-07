@@ -128,10 +128,8 @@ public class OrderService {
 
         Invoice invoice = constructInvoiceOrder(order, customer, deliveryAddress, billingAddress, orderItems);
 
-        /*
         fireStoreService.storeOrder(invoice);
         invoiceService.generateInvoice(invoice);
-        */
 
         return order;
     }
