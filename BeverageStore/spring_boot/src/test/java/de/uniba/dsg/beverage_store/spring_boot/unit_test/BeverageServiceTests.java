@@ -1,4 +1,4 @@
-package de.uniba.dsg.beverage_store.spring_boot.unit.services;
+package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class BeverageServiceUnitTest {
+public class BeverageServiceTests {
 
     @Autowired
     private BeverageService beverageService;

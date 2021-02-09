@@ -1,4 +1,4 @@
-package de.uniba.dsg.beverage_store.spring_boot.unit.services;
+package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.InsufficientStockException;
@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class CartServiceUnitTest {
+public class CartServiceTests {
 
     @Resource(name = "sessionScopedCartService")
     private CartService cartService;
