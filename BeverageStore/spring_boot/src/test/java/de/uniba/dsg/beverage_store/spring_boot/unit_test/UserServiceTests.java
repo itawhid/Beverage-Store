@@ -11,6 +11,7 @@ import de.uniba.dsg.beverage_store.spring_boot.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -129,6 +130,20 @@ public class UserServiceTests {
                 "test-user",
                 "test-user",
                 LocalDate.of(1993, 1, 1))));
+    }
+
+    @Test
+    public void getPagedCustomers_success() {
+        int customerCount = userRepository.findAllByRole(Role.ROLE_CUSTOMER).size();
+
+        Page<ApplicationUser> firstPage = userService.getPagedCustomers(1, customerCount + 1);
+        Page<ApplicationUser> secondPage = userService.getPagedCustomers(2, customerCount + 1);
+
+        assertEquals(1, firstPage.getTotalPages());
+        assertEquals(customerCount, firstPage.stream().count());
+        assertEquals(customerCount, firstPage.getTotalElements());
+
+        assertEquals(0, secondPage.stream().count());
     }
 
     private ApplicationUser getUser() {

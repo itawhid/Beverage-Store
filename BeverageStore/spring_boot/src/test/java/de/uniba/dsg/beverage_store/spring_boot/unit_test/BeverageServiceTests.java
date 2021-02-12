@@ -1,7 +1,9 @@
 package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
+import de.uniba.dsg.beverage_store.spring_boot.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
+import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Bottle;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Crate;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.BottleDTO;
@@ -11,16 +13,22 @@ import de.uniba.dsg.beverage_store.spring_boot.model.dto.CrateUpdateDTO;
 import de.uniba.dsg.beverage_store.spring_boot.repository.BottleRepository;
 import de.uniba.dsg.beverage_store.spring_boot.repository.CrateRepository;
 import de.uniba.dsg.beverage_store.spring_boot.service.BeverageService;
+import de.uniba.dsg.beverage_store.spring_boot.service.CartService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class BeverageServiceTests {
+
+    @Resource(name = "sessionScopedCartService")
+    private CartService cartService;
 
     @Autowired
     private BeverageService beverageService;
@@ -54,7 +62,7 @@ public class BeverageServiceTests {
     }
 
     @Test
-    public void getPagedBottlesWithAllowedStock_success() {
+    public void getPagedBottlesWithAllowedStock_success() throws NotFoundException, InsufficientStockException {
         for (int i = 1; i <= 3; i++) {
             Page<Bottle> bottles = beverageService.getPagedBottlesWithAllowedStock(i, 2);
 
@@ -64,6 +72,22 @@ public class BeverageServiceTests {
                 assertEquals(bottle.getAllowedInStock(), bottle.getInStock());
             }
         }
+
+        int addedQuantity = 2;
+        Bottle bottle = getBottle();
+        assertNotNull(bottle);
+
+        cartService.addCartItem(BeverageType.BOTTLE, bottle.getId(), addedQuantity);
+
+        Page<Bottle> bottles = beverageService.getPagedBottlesWithAllowedStock(1, DemoData.bottles.size());
+
+        Bottle testBottle = bottles.stream()
+                .filter(x -> x.getId().equals(bottle.getId()))
+                .findFirst()
+                .orElse(null);
+        assertNotNull(testBottle);
+
+        assertEquals(bottle.getInStock() - addedQuantity, testBottle.getAllowedInStock());
     }
 
     @Test
@@ -145,7 +169,7 @@ public class BeverageServiceTests {
     }
 
     @Test
-    public void getPagedCratesWithAllowedStock_success() {
+    public void getPagedCratesWithAllowedStock_success() throws NotFoundException, InsufficientStockException {
         for (int i = 1; i <= 3; i++) {
             Page<Crate> crates = beverageService.getPagedCratesWithAllowedStock(i, 2);
 
@@ -155,6 +179,22 @@ public class BeverageServiceTests {
                 assertEquals(crate.getAllowedInStock(), crate.getInStock());
             }
         }
+
+        int addedQuantity = 2;
+        Crate crate = getCrate();
+        assertNotNull(crate);
+
+        cartService.addCartItem(BeverageType.CRATE, crate.getId(), addedQuantity);
+
+        Page<Crate> crates = beverageService.getPagedCratesWithAllowedStock(1, DemoData.crates.size());
+
+        Crate testCrate = crates.stream()
+                .filter(x -> x.getId().equals(crate.getId()))
+                .findFirst()
+                .orElse(null);
+        assertNotNull(testCrate);
+
+        assertEquals(crate.getInStock() - addedQuantity, testCrate.getAllowedInStock());
     }
 
     @Test
@@ -278,7 +318,7 @@ public class BeverageServiceTests {
     }
 
     @Test
-    public void addStockToCrate_crateNotFound() throws NotFoundException {
+    public void addStockToCrate_crateNotFound() {
         assertThrows(NotFoundException.class, () -> beverageService.addStockToCrate(0L, 50));
     }
 

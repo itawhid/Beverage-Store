@@ -6,7 +6,6 @@ import de.uniba.dsg.beverage_store.spring_boot.helper.Helper;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.ApplicationUser;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Role;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.CustomerDTO;
-import de.uniba.dsg.beverage_store.spring_boot.properties.CustomerProperties;
 import de.uniba.dsg.beverage_store.spring_boot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -24,12 +22,9 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final CustomerProperties customerProperties;
-
     @Autowired
-    public UserService(UserRepository userRepository, CustomerProperties customerProperties) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.customerProperties = customerProperties;
     }
 
     @Override
@@ -78,7 +73,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public Page<ApplicationUser> getPagedCustomers(int page) {
-        return userRepository.findAllByRole(PageRequest.of(page - 1, customerProperties.getPageSize()), Role.ROLE_CUSTOMER);
+    public Page<ApplicationUser> getPagedCustomers(int page, int pageSize) {
+        return userRepository.findAllByRole(PageRequest.of(page - 1, pageSize), Role.ROLE_CUSTOMER);
     }
 }
