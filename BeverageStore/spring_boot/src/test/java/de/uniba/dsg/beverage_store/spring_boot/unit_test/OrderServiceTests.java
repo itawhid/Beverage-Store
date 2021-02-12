@@ -14,6 +14,7 @@ import de.uniba.dsg.beverage_store.spring_boot.service.CartService;
 import de.uniba.dsg.beverage_store.spring_boot.service.FireStoreService;
 import de.uniba.dsg.beverage_store.spring_boot.service.InvoiceService;
 import de.uniba.dsg.beverage_store.spring_boot.service.OrderService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,8 +54,13 @@ public class OrderServiceTests {
     @MockBean
     private FireStoreService fireStoreService;
 
+    @BeforeEach
+    public void init() {
+        cartService.clearCart();
+    }
+
     @Test
-    public void getOrderByOrderNumber_test() throws NotFoundException {
+    public void getOrderByOrderNumber_success() throws NotFoundException {
         BeverageOrder expectedOrder = DemoData.orders.stream()
                 .findFirst()
                 .orElse(null);
@@ -65,12 +71,15 @@ public class OrderServiceTests {
 
         assertEquals(expectedOrder.getId(), actualOrder.getId());
         assertEquals(expectedOrder.getOrderNumber(), actualOrder.getOrderNumber());
+    }
 
+    @Test
+    public void getOrderByOrderNumber_orderNotFound() {
         assertThrows(NotFoundException.class, () -> orderService.getOrderByOrderNumber("Test Order Number"));
     }
 
     @Test
-    public void getPagedOrders_test() {
+    public void getPagedOrders_success() {
         Page<BeverageOrder> firstPage = orderService.getPagedOrders(1, 2);
         Page<BeverageOrder> secondPage = orderService.getPagedOrders(2, 2);
 
@@ -82,7 +91,7 @@ public class OrderServiceTests {
     }
 
     @Test
-    public void getPagedOrdersByUsername_test() {
+    public void getPagedOrdersByUsername_success() {
         ApplicationUser user = getCustomer();
 
         assertNotNull(user);
@@ -98,7 +107,7 @@ public class OrderServiceTests {
     }
 
     @Test
-    public void getOrdersByUsername_test() {
+    public void getOrdersByUsername_success() {
         ApplicationUser user = getCustomer();
 
         assertNotNull(user);
@@ -113,7 +122,7 @@ public class OrderServiceTests {
     }
 
     @Test
-    public void getOrderItemsByOrderNumber_test() {
+    public void getOrderItemsByOrderNumber_success() {
         BeverageOrder order = DemoData.orders.stream()
                 .findFirst()
                 .orElse(null);
@@ -129,30 +138,22 @@ public class OrderServiceTests {
 
     @Test
     @Transactional
-    public void createOrder_test() throws NotFoundException, InsufficientStockException, InvalidOperationException {
+    public void createOrder_success() throws NotFoundException, InsufficientStockException, InvalidOperationException {
         int crateQuantity = 2;
         int bottleQuantity = 3;
 
         ApplicationUser user = getCustomer();
-
         assertNotNull(user);
 
-        Address address = DemoData.addresses.stream()
-                .filter(x -> x.getUser().getUsername().equals(user.getUsername()))
-                .findFirst()
-                .orElse(null);
-
-        Crate crate = DemoData.crates.stream()
-                .findFirst()
-                .orElse(null);
-
-        Bottle bottle = DemoData.bottles.stream()
-                .findFirst()
-                .orElse(null);
-
-        assertNotNull(crate);
-        assertNotNull(bottle);
+        Address address = getUserAddress(user.getUsername());
         assertNotNull(address);
+
+        Crate crate = getCrate();
+        assertNotNull(crate);
+
+        Bottle bottle = getBottle();
+        assertNotNull(bottle);
+
 
         cartService.addCartItem(BeverageType.CRATE, crate.getId(), crateQuantity);
         cartService.addCartItem(BeverageType.BOTTLE, bottle.getId(), bottleQuantity);
@@ -174,13 +175,53 @@ public class OrderServiceTests {
 
         assertEquals((crate.getInStock() - crateQuantity), crateRepository.findById(crate.getId()).get().getInStock());
         assertEquals((bottle.getInStock() - bottleQuantity), bottleRepository.findById(bottle.getId()).get().getInStock());
+    }
 
-        cartService.addCartItem(BeverageType.CRATE, crate.getId(), crateQuantity);
-        cartService.addCartItem(BeverageType.BOTTLE, bottle.getId(), bottleQuantity);
+    @Test
+    public void createOrder_userNotFound() throws NotFoundException, InsufficientStockException {
+        ApplicationUser user = getCustomer();
+        assertNotNull(user);
+
+        Crate crate = getCrate();
+        assertNotNull(crate);
+
+        Bottle bottle = getBottle();
+        assertNotNull(bottle);
+
+        Address address = getUserAddress(user.getUsername());
+        assertNotNull(address);
+
+
+        cartService.addCartItem(BeverageType.CRATE, crate.getId(), 2);
+        cartService.addCartItem(BeverageType.BOTTLE, bottle.getId(), 2);
+
+        assertThrows(NotFoundException.class, () -> orderService.createOrder("Test User", address.getId(), address.getId()));
+    }
+
+    @Test
+    public void createOrder_addressNotFound() throws NotFoundException, InsufficientStockException {
+        ApplicationUser user = getCustomer();
+        assertNotNull(user);
+
+        Crate crate = getCrate();
+        assertNotNull(crate);
+
+        Bottle bottle = getBottle();
+        assertNotNull(bottle);
+
+        cartService.addCartItem(BeverageType.CRATE, crate.getId(), 2);
+        cartService.addCartItem(BeverageType.BOTTLE, bottle.getId(), 2);
 
         assertThrows(NotFoundException.class, () -> orderService.createOrder(user.getUsername(), 0L, 0L));
+    }
 
-        cartService.clearCart();
+    @Test
+    public void createOrder_createOrderWithEmptyCart() {
+        ApplicationUser user = getCustomer();
+        assertNotNull(user);
+
+        Address address = getUserAddress(user.getUsername());
+        assertNotNull(address);
 
         assertThrows(InvalidOperationException.class, () -> orderService.createOrder(user.getUsername(), address.getId(), address.getId()));
     }
@@ -188,6 +229,25 @@ public class OrderServiceTests {
     private ApplicationUser getCustomer() {
         return DemoData.applicationUsers.stream()
                 .filter(x -> x.getRole() == Role.ROLE_CUSTOMER)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Crate getCrate() {
+        return DemoData.crates.stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Bottle getBottle() {
+        return DemoData.bottles.stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Address getUserAddress(String username) {
+        return DemoData.addresses.stream()
+                .filter(x -> x.getUser().getUsername().equals(username))
                 .findFirst()
                 .orElse(null);
     }

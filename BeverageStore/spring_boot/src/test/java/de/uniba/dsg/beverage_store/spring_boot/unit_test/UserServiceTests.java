@@ -29,7 +29,7 @@ public class UserServiceTests {
     private UserRepository userRepository;
 
     @Test
-    public void loadUserByUsername_test() {
+    public void loadUserByUsername_success() {
         ApplicationUser expectedUser = getUser();
 
         assertNotNull(expectedUser);
@@ -38,12 +38,15 @@ public class UserServiceTests {
 
         assertEquals(expectedUser.getUsername(), actualUser.getUsername());
         assertEquals(expectedUser.getAuthorities(), actualUser.getAuthorities());
+    }
 
+    @Test
+    public void loadUserByUsername_userNotFound() {
         assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("Test User"));
     }
 
     @Test
-    public void getUserByUserName_test() throws NotFoundException {
+    public void getUserByUserName_success() throws NotFoundException {
         ApplicationUser expectedUser = getUser();
 
         assertNotNull(expectedUser);
@@ -57,13 +60,16 @@ public class UserServiceTests {
         assertEquals(expectedUser.getBirthday(), actualUser.getBirthday());
         assertEquals(expectedUser.getRole(), actualUser.getRole());
         assertEquals(expectedUser.getAuthorities(), actualUser.getAuthorities());
+    }
 
+    @Test
+    public void getUserByUserName_userNotFound() {
         assertThrows(NotFoundException.class, () -> userService.getUserByUserName("Test User"));
     }
 
     @Test
     @Transactional
-    public void addCustomer_test() throws CredentialConflictException {
+    public void addCustomer_success() throws CredentialConflictException {
         long countBeforeAdd = userRepository.findAllByRole(Role.ROLE_CUSTOMER)
                 .size();
 
@@ -74,7 +80,7 @@ public class UserServiceTests {
                 "testuser@beveragestore.com",
                 "test-user",
                 "test-user",
-                LocalDate.of(1993, 01, 01));
+                LocalDate.of(1993, 1, 1));
 
         ApplicationUser addedCustomer = userService.addCustomer(customerDTO);
 
@@ -85,34 +91,44 @@ public class UserServiceTests {
         assertEquals(customerDTO.getUsername(), customerDTO.getUsername());
         assertEquals(customerDTO.getEmail(), customerDTO.getEmail());
         assertEquals(customerDTO.getBirthday(), customerDTO.getBirthday());
-        assertEquals(countBeforeAdd + 1, userRepository.findAllByRole(Role.ROLE_CUSTOMER).stream().count());
+        assertEquals(countBeforeAdd + 1, userRepository.findAllByRole(Role.ROLE_CUSTOMER).size());
+    }
+
+    @Test
+    public void addCustomer_credentialConflict() {
+        ApplicationUser customer = DemoData.applicationUsers.stream()
+                .filter(x -> x.getRole() == Role.ROLE_CUSTOMER)
+                .findFirst()
+                .orElse(null);
+
+        assertNotNull(customer);
 
         assertThrows(CredentialConflictException.class, () -> userService.addCustomer(new CustomerDTO(
                 "Test",
                 "User 2",
-                addedCustomer.getUsername(),
+                customer.getUsername(),
                 "testuser2@beveragestore.com",
                 "test-user",
                 "test-user",
-                LocalDate.of(1993, 01, 01))));
+                LocalDate.of(1993, 1, 1))));
 
         assertThrows(CredentialConflictException.class, () -> userService.addCustomer(new CustomerDTO(
                 "Test",
                 "User",
                 "test-user2",
-                addedCustomer.getEmail(),
+                customer.getEmail(),
                 "test-user",
                 "test-user",
-                LocalDate.of(1993, 01, 01))));
+                LocalDate.of(1993, 1, 1))));
 
         assertThrows(CredentialConflictException.class, () -> userService.addCustomer(new CustomerDTO(
                 "Test",
                 "User 2",
-                addedCustomer.getUsername(),
-                addedCustomer.getEmail(),
+                customer.getUsername(),
+                customer.getEmail(),
                 "test-user",
                 "test-user",
-                LocalDate.of(1993, 01, 01))));
+                LocalDate.of(1993, 1, 1))));
     }
 
     private ApplicationUser getUser() {

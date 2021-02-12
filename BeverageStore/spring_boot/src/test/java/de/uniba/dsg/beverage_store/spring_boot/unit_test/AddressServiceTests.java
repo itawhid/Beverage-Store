@@ -28,7 +28,7 @@ public class AddressServiceTests {
     private AddressRepository addressRepository;
 
     @Test
-    public void getAddressById_test() throws NotFoundException {
+    public void getAddressById_success() throws NotFoundException {
         Address expectedAddress = getAddress();
 
         assertNotNull(expectedAddress);
@@ -37,12 +37,15 @@ public class AddressServiceTests {
 
         assertEquals(expectedAddress.getId(), actualAddress.getId());
         assertEquals(expectedAddress.getName(), actualAddress.getName());
+    }
 
+    @Test
+    public void getAddressById_addressNotFound() {
         assertThrows(NotFoundException.class, () -> addressService.getAddressById(0L));
     }
 
     @Test
-    public void getAllByUsername_test() {
+    public void getAllByUsername_success() {
         ApplicationUser customer = DemoData.applicationUsers.stream()
                 .filter(x -> x.getRole() == Role.ROLE_CUSTOMER)
                 .findFirst()
@@ -61,7 +64,7 @@ public class AddressServiceTests {
 
     @Test
     @Transactional
-    public void addAddress_test() throws NotFoundException {
+    public void addAddress_success() throws NotFoundException {
         ApplicationUser customer = DemoData.applicationUsers.stream()
                 .filter(x -> x.getRole() == Role.ROLE_CUSTOMER)
                 .findFirst()
@@ -87,7 +90,10 @@ public class AddressServiceTests {
         assertEquals(addressDTO.getName(), addedAddress.getName());
         assertEquals(countBeforeAdd + 1, addressRepository.count());
         assertEquals(userAddressCountBeforeAdd + 1, addressRepository.findAllByUserUsername(customer.getUsername()).size());
+    }
 
+    @Test
+    public void addAddress_useNotFound() {
         assertThrows(NotFoundException.class, () -> addressService.addAddress(new AddressDTO(
                 "Address 1",
                 "Pestalozzistraße",
@@ -97,7 +103,7 @@ public class AddressServiceTests {
 
     @Test
     @Transactional
-    public void updateAddress_test() throws NotFoundException {
+    public void updateAddress_success() throws NotFoundException {
         long countBeforeUpdate = addressRepository.count();
 
         Address address = getAddress();
@@ -118,7 +124,10 @@ public class AddressServiceTests {
         assertEquals("Kapellenstraße", updatedAddress.getStreet());
         assertEquals("23", updatedAddress.getHouseNumber());
         assertEquals("96050", updatedAddress.getPostalCode());
+    }
 
+    @Test
+    public void updateAddress_addressNotFound() {
         assertThrows(NotFoundException.class, () -> addressService.updateAddress(0L, new AddressDTO(
                 "Address 2",
                 "Kapellenstraße",

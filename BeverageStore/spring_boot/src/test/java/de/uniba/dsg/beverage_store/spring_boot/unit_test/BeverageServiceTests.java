@@ -32,7 +32,7 @@ public class BeverageServiceTests {
     private BottleRepository bottleRepository;
 
     @Test
-    public void getBottleById_Test() throws NotFoundException {
+    public void getBottleById_success() throws NotFoundException {
         Bottle expectedBottle = getBottle();
 
         assertNotNull(expectedBottle);
@@ -41,17 +41,20 @@ public class BeverageServiceTests {
 
         assertEquals(expectedBottle.getId(), actualBottle.getId());
         assertEquals(expectedBottle.getName(), actualBottle.getName());
+    }
 
+    @Test
+    public void getBottleById_bottleNotFound() {
         assertThrows(NotFoundException.class, () -> beverageService.getBottleById(0L));
     }
 
     @Test
-    public void getBottles_test() {
+    public void getBottles_success() {
         assertEquals(DemoData.bottles.size(), beverageService.getBottles().size());
     }
 
     @Test
-    public void getPagedBottlesWithAllowedStock_test() {
+    public void getPagedBottlesWithAllowedStock_success() {
         for (int i = 1; i <= 3; i++) {
             Page<Bottle> bottles = beverageService.getPagedBottlesWithAllowedStock(i, 2);
 
@@ -65,7 +68,7 @@ public class BeverageServiceTests {
 
     @Test
     @Transactional
-    public void addBottle_test() {
+    public void addBottle_success() {
         long countBeforeAdd = bottleRepository.count();
 
         BottleDTO bottleDTO = new BottleDTO(
@@ -87,7 +90,7 @@ public class BeverageServiceTests {
 
     @Test
     @Transactional
-    public void updateBottle_test() throws NotFoundException {
+    public void updateBottle_success() throws NotFoundException {
         long countBeforeUpdate = bottleRepository.count();
 
         Bottle bottle = getBottle();
@@ -111,7 +114,10 @@ public class BeverageServiceTests {
         assertEquals(2.0, updatedBottle.getVolume());
         assertEquals(40.0, updatedBottle.getVolumePercent());
         assertEquals("Test Supplier", updatedBottle.getSupplier());
+    }
 
+    @Test
+    public void updateBottle_bottleNotFound() {
         assertThrows(NotFoundException.class, () -> beverageService.updateBottle(0L, new BottleUpdateDTO(
                 "Test Bottle 2",
                 "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif",
@@ -122,7 +128,7 @@ public class BeverageServiceTests {
     }
 
     @Test
-    public void getCrateById_Test() throws NotFoundException {
+    public void getCrateById_success() throws NotFoundException {
         Crate expectedCrate = getCrate();
 
         assertNotNull(expectedCrate);
@@ -131,12 +137,15 @@ public class BeverageServiceTests {
 
         assertEquals(expectedCrate.getId(), actualCrate.getId());
         assertEquals(expectedCrate.getName(), actualCrate.getName());
+    }
 
+    @Test
+    public void getCrateById_crateNotFound() {
         assertThrows(NotFoundException.class, () -> beverageService.getCrateById(0L));
     }
 
     @Test
-    public void getPagedCratesWithAllowedStock_test() {
+    public void getPagedCratesWithAllowedStock_success() {
         for (int i = 1; i <= 3; i++) {
             Page<Crate> crates = beverageService.getPagedCratesWithAllowedStock(i, 2);
 
@@ -150,7 +159,7 @@ public class BeverageServiceTests {
 
     @Test
     @Transactional
-    public void addCrate_test() throws NotFoundException {
+    public void addCrate_success() throws NotFoundException {
         long countBeforeAdd = crateRepository.count();
 
         CrateDTO crateDTO = new CrateDTO(
@@ -168,7 +177,10 @@ public class BeverageServiceTests {
         assertEquals(crateDTO.getName(), addedCrate.getName());
         assertEquals(1L, addedCrate.getBottle().getId());
         assertEquals(countBeforeAdd + 1, crateRepository.count());
+    }
 
+    @Test
+    public void addCrate_bottleNotFound() {
         assertThrows(NotFoundException.class, () -> beverageService.addCrate(new CrateDTO(
                 "Test Crate",
                 "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif",
@@ -180,7 +192,7 @@ public class BeverageServiceTests {
 
     @Test
     @Transactional
-    public void updateCrate_test() throws NotFoundException {
+    public void updateCrate_success() throws NotFoundException {
         long countBeforeUpdate = crateRepository.count();
 
         Crate crate = getCrate();
@@ -202,6 +214,13 @@ public class BeverageServiceTests {
         assertEquals(20.0, updatedCrate.getPrice());
         assertEquals(20, updatedCrate.getNoOfBottles());
         assertEquals(2, updatedCrate.getBottle().getId());
+    }
+
+    @Test
+    public void updateCrate_bottleNotFound() {
+        Crate crate = getCrate();
+
+        assertNotNull(crate);
 
         assertThrows(NotFoundException.class, () -> beverageService.updateCrate(crate.getId(), new CrateUpdateDTO(
                 "Test Crate 2",
@@ -209,7 +228,10 @@ public class BeverageServiceTests {
                 20.0,
                 20,
                 0L)));
+    }
 
+    @Test
+    public void updateCrate_crateNotFound() {
         assertThrows(NotFoundException.class, () -> beverageService.updateCrate(0L, new CrateUpdateDTO(
                 "Test Crate 2",
                 "https://www.google.com/logos/doodles/2020/december-holidays-day-1-6753651837108829.4-law.gif",
@@ -220,7 +242,7 @@ public class BeverageServiceTests {
 
     @Test
     @Transactional
-    public void addStockToBottle_test() throws NotFoundException {
+    public void addStockToBottle_success() throws NotFoundException {
         int addingStock = 50;
         long updateBottleId = 1L;
 
@@ -232,12 +254,16 @@ public class BeverageServiceTests {
         Bottle updatedBottle = beverageService.getBottleById(updateBottleId);
 
         assertEquals(oldStock + addingStock, updatedBottle.getInStock());
-        assertThrows(NotFoundException.class, () -> beverageService.addStockToBottle(0L, addingStock));
+    }
+
+    @Test
+    public void addStockToBottle_bottleNotFound() {
+        assertThrows(NotFoundException.class, () -> beverageService.addStockToBottle(0L, 50));
     }
 
     @Test
     @Transactional
-    public void addStockToCrate_test() throws NotFoundException {
+    public void addStockToCrate_success() throws NotFoundException {
         int addingStock = 50;
         long updateCrateId = 1L;
 
@@ -249,7 +275,11 @@ public class BeverageServiceTests {
         Crate updatedCrate = beverageService.getCrateById(updateCrateId);
 
         assertEquals(oldStock + addingStock, updatedCrate.getInStock());
-        assertThrows(NotFoundException.class, () -> beverageService.addStockToCrate(0L, addingStock));
+    }
+
+    @Test
+    public void addStockToCrate_crateNotFound() throws NotFoundException {
+        assertThrows(NotFoundException.class, () -> beverageService.addStockToCrate(0L, 50));
     }
 
     private Crate getCrate() {

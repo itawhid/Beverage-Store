@@ -33,7 +33,7 @@ public class CartServiceTests {
     }
 
     @Test
-    public void addCartItem_test() throws NotFoundException, InsufficientStockException {
+    public void addCartItem_success() throws NotFoundException, InsufficientStockException {
         cartService.addCartItem(BeverageType.CRATE, getCrate().getId(), 2);
         cartService.addCartItem(BeverageType.BOTTLE, getBottle().getId(), 2);
 
@@ -42,7 +42,7 @@ public class CartServiceTests {
     }
 
     @Test
-    public void removeCartItem_test() throws NotFoundException {
+    public void removeCartItem_success() throws NotFoundException {
         CartItem cartItem = cartService.getCartItems()
                 .stream()
                 .findFirst()
@@ -61,29 +61,32 @@ public class CartServiceTests {
         assertEquals(1, cartService.getCartItems().size());
         assertEquals(totalPriceBeforeRemove - cartItemPrice, cartService.getCartTotal());
         assertEquals(totalCartItemCountBeforeRemove - cartItemQuantity, cartService.getCartItemCount());
+    }
 
+    @Test
+    public void removeCartItem_cartItemNotFound() throws NotFoundException {
         assertThrows(NotFoundException.class, () -> cartService.removeCartItem(0));
     }
 
     @Test
-    public void getCartItems_test() {
+    public void getCartItems_success() {
         assertEquals(2, cartService.getCartItems().size());
     }
 
     @Test
-    public void getCartItemCount_test() {
+    public void getCartItemCount_success() {
         assertEquals(4, cartService.getCartItemCount());
     }
 
     @Test
-    public void getCartTotal_test() {
+    public void getCartTotal_success() {
         List<CartItem> cartItems = cartService.getCartItems();
 
         assertEquals(cartItems.stream().mapToDouble(CartItem::getItemTotal).sum(), cartService.getCartTotal());
     }
 
     @Test
-    public void clearCart_test() {
+    public void clearCart_success() {
         cartService.clearCart();
 
         assertEquals(0.0, cartService.getCartTotal());
