@@ -15,8 +15,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -29,6 +31,11 @@ public class RegisterControllerTests {
 
     @Autowired
     UserRepository userRepository;
+
+    private final String FIRST_NAME = "Test";
+    private final String LAST_NAME = "Customer";
+    private final String USERNAME = "testcustomer";
+    private final String EMAIL = "testcustomer@email.com";
 
     private final String BASE_PATH = "/register";
 
@@ -63,6 +70,16 @@ public class RegisterControllerTests {
                 .size();
 
         assertEquals(countBeforeAdd + 1, countAfterAdd);
+
+        Optional<ApplicationUser> optionalCustomer = userRepository.findByUsername(USERNAME);
+
+        assertTrue(optionalCustomer.isPresent());
+
+        assertEquals(optionalCustomer.get().getEmail(), EMAIL);
+        assertEquals(optionalCustomer.get().getUsername(), USERNAME);
+        assertEquals(optionalCustomer.get().getLastName(), LAST_NAME);
+        assertEquals(optionalCustomer.get().getFirstName(), FIRST_NAME);
+        assertEquals(optionalCustomer.get().getRole(), Role.ROLE_CUSTOMER);
     }
 
     @Test
@@ -99,13 +116,13 @@ public class RegisterControllerTests {
     private MultiValueMap<String, String> getCreateCustomerValidParams() {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("firstName", "Test");
-        params.add("lastName", "Customer");
-        params.add("username", "testcustomer");
-        params.add("email", "testcustomer@email.com");
+        params.add("email", EMAIL);
+        params.add("username", USERNAME);
+        params.add("lastName", LAST_NAME);
+        params.add("firstName", FIRST_NAME);
+        params.add("birthday", "1990-01-01");
         params.add("password", "testcustomer");
         params.add("repeatPassword", "testcustomer");
-        params.add("birthday", "1990-01-01");
 
         return params;
     }
