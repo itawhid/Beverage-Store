@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.spring_boot.controller;
 
+import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Address;
 import de.uniba.dsg.beverage_store.spring_boot.model.dto.AddressDTO;
 import de.uniba.dsg.beverage_store.spring_boot.service.AddressService;
@@ -85,11 +86,10 @@ public class AddressController {
             model.addAttribute("addressDTO", new AddressDTO(address.getName(), address.getStreet(), address.getHouseNumber(), address.getPostalCode()));
 
             log.info("Retrieving address with ID: " + id + " - completed");
-        } catch (Exception e) {
-            model.addAttribute("addressDTO", new Address());
-            model.addAttribute("hasServerError", true);
+        } catch (NotFoundException e) {
+            model.addAttribute("addressNotFound", true);
 
-            log.info("Retrieving address with ID: " + id + " - failed, server error found");
+            log.info("Retrieving address with ID: " + id + " - failed, found not found exception");
         }
 
         model.addAttribute("addressId", id);
