@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
+import de.uniba.dsg.beverage_store.spring_boot.TestHelper;
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
@@ -41,7 +42,7 @@ public class BeverageServiceTests {
 
     @Test
     public void getBottleById_success() throws NotFoundException {
-        Bottle expectedBottle = getBottle();
+        Bottle expectedBottle = TestHelper.getBottle();
 
         assertNotNull(expectedBottle);
 
@@ -58,7 +59,7 @@ public class BeverageServiceTests {
 
     @Test
     public void getBottles_success() {
-        assertEquals(DemoData.bottles.size(), beverageService.getBottles().size());
+        assertEquals(bottleRepository.findAll().size(), beverageService.getBottles().size());
     }
 
     @Test
@@ -74,7 +75,7 @@ public class BeverageServiceTests {
         }
 
         int addedQuantity = 2;
-        Bottle bottle = getBottle();
+        Bottle bottle = TestHelper.getBottle();
         assertNotNull(bottle);
 
         cartService.addCartItem(BeverageType.BOTTLE, bottle.getId(), addedQuantity);
@@ -117,7 +118,7 @@ public class BeverageServiceTests {
     public void updateBottle_success() throws NotFoundException {
         long countBeforeUpdate = bottleRepository.count();
 
-        Bottle bottle = getBottle();
+        Bottle bottle = TestHelper.getBottle();
 
         assertNotNull(bottle);
 
@@ -153,7 +154,7 @@ public class BeverageServiceTests {
 
     @Test
     public void getCrateById_success() throws NotFoundException {
-        Crate expectedCrate = getCrate();
+        Crate expectedCrate = TestHelper.getCrate();
 
         assertNotNull(expectedCrate);
 
@@ -181,7 +182,7 @@ public class BeverageServiceTests {
         }
 
         int addedQuantity = 2;
-        Crate crate = getCrate();
+        Crate crate = TestHelper.getCrate();
         assertNotNull(crate);
 
         cartService.addCartItem(BeverageType.CRATE, crate.getId(), addedQuantity);
@@ -235,7 +236,7 @@ public class BeverageServiceTests {
     public void updateCrate_success() throws NotFoundException {
         long countBeforeUpdate = crateRepository.count();
 
-        Crate crate = getCrate();
+        Crate crate = TestHelper.getCrate();
 
         assertNotNull(crate);
 
@@ -258,7 +259,7 @@ public class BeverageServiceTests {
 
     @Test
     public void updateCrate_bottleNotFound() {
-        Crate crate = getCrate();
+        Crate crate = TestHelper.getCrate();
 
         assertNotNull(crate);
 
@@ -320,17 +321,5 @@ public class BeverageServiceTests {
     @Test
     public void addStockToCrate_crateNotFound() {
         assertThrows(NotFoundException.class, () -> beverageService.addStockToCrate(0L, 50));
-    }
-
-    private Crate getCrate() {
-        return DemoData.crates.stream()
-                .findFirst()
-                .orElse(null);
-    }
-
-    private Bottle getBottle() {
-        return DemoData.bottles.stream()
-                .findFirst()
-                .orElse(null);
     }
 }

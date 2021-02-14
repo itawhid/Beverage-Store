@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 @Slf4j
 @Controller
@@ -35,7 +34,7 @@ public class RegisterController {
     }
 
     @PostMapping(value = "/customer")
-    public String createAddress(@Valid CustomerDTO customerDTO, Errors errors, Model model, Principal principal) {
+    public String createCustomer(@Valid CustomerDTO customerDTO, Errors errors, Model model) {
         log.info("Creating customer - start");
 
         boolean hasModelError = false, hasServerError = false, hasConflictError = false;
@@ -64,7 +63,7 @@ public class RegisterController {
             }
         }
 
-        if (hasModelError || hasServerError ||hasConflictError) {
+        if (hasModelError || hasServerError || hasConflictError) {
             model.addAttribute("hasServerError", hasServerError);
             model.addAttribute("hasConflictError", hasConflictError);
 

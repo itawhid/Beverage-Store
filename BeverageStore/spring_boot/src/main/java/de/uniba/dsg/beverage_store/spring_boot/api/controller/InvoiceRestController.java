@@ -18,11 +18,11 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/invoice")
-public class InvoiceController {
+public class InvoiceRestController {
 
     private final InvoiceService invoiceService;
 
-    public InvoiceController(InvoiceService invoiceService) {
+    public InvoiceRestController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
     }
 

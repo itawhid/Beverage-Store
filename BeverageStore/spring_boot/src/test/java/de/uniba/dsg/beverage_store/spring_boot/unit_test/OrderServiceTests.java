@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
+import de.uniba.dsg.beverage_store.spring_boot.TestHelper;
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.InvalidOperationException;
@@ -92,7 +93,7 @@ public class OrderServiceTests {
 
     @Test
     public void getPagedOrdersByUsername_success() {
-        ApplicationUser user = getCustomer();
+        ApplicationUser user = TestHelper.getCustomer();
 
         assertNotNull(user);
 
@@ -108,7 +109,7 @@ public class OrderServiceTests {
 
     @Test
     public void getOrdersByUsername_success() {
-        ApplicationUser user = getCustomer();
+        ApplicationUser user = TestHelper.getCustomer();
 
         assertNotNull(user);
 
@@ -142,16 +143,16 @@ public class OrderServiceTests {
         int crateQuantity = 2;
         int bottleQuantity = 3;
 
-        ApplicationUser user = getCustomer();
+        ApplicationUser user = TestHelper.getCustomer();
         assertNotNull(user);
 
-        Address address = getUserAddress(user.getUsername());
+        Address address = TestHelper.getUserAddress(user.getUsername());
         assertNotNull(address);
 
-        Crate crate = getCrate();
+        Crate crate = TestHelper.getCrate();
         assertNotNull(crate);
 
-        Bottle bottle = getBottle();
+        Bottle bottle = TestHelper.getBottle();
         assertNotNull(bottle);
 
 
@@ -179,16 +180,16 @@ public class OrderServiceTests {
 
     @Test
     public void createOrder_userNotFound() throws NotFoundException, InsufficientStockException {
-        ApplicationUser user = getCustomer();
+        ApplicationUser user = TestHelper.getCustomer();
         assertNotNull(user);
 
-        Crate crate = getCrate();
+        Crate crate = TestHelper.getCrate();
         assertNotNull(crate);
 
-        Bottle bottle = getBottle();
+        Bottle bottle = TestHelper.getBottle();
         assertNotNull(bottle);
 
-        Address address = getUserAddress(user.getUsername());
+        Address address = TestHelper.getUserAddress(user.getUsername());
         assertNotNull(address);
 
 
@@ -200,13 +201,13 @@ public class OrderServiceTests {
 
     @Test
     public void createOrder_addressNotFound() throws NotFoundException, InsufficientStockException {
-        ApplicationUser user = getCustomer();
+        ApplicationUser user = TestHelper.getCustomer();
         assertNotNull(user);
 
-        Crate crate = getCrate();
+        Crate crate = TestHelper.getCrate();
         assertNotNull(crate);
 
-        Bottle bottle = getBottle();
+        Bottle bottle = TestHelper.getBottle();
         assertNotNull(bottle);
 
         cartService.addCartItem(BeverageType.CRATE, crate.getId(), 2);
@@ -217,38 +218,12 @@ public class OrderServiceTests {
 
     @Test
     public void createOrder_createOrderWithEmptyCart() {
-        ApplicationUser user = getCustomer();
+        ApplicationUser user = TestHelper.getCustomer();
         assertNotNull(user);
 
-        Address address = getUserAddress(user.getUsername());
+        Address address = TestHelper.getUserAddress(user.getUsername());
         assertNotNull(address);
 
         assertThrows(InvalidOperationException.class, () -> orderService.createOrder(user.getUsername(), address.getId(), address.getId()));
-    }
-
-    private ApplicationUser getCustomer() {
-        return DemoData.applicationUsers.stream()
-                .filter(x -> x.getRole() == Role.ROLE_CUSTOMER)
-                .findFirst()
-                .orElse(null);
-    }
-
-    private Crate getCrate() {
-        return DemoData.crates.stream()
-                .findFirst()
-                .orElse(null);
-    }
-
-    private Bottle getBottle() {
-        return DemoData.bottles.stream()
-                .findFirst()
-                .orElse(null);
-    }
-
-    private Address getUserAddress(String username) {
-        return DemoData.addresses.stream()
-                .filter(x -> x.getUser().getUsername().equals(username))
-                .findFirst()
-                .orElse(null);
     }
 }

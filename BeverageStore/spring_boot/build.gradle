@@ -92,4 +92,18 @@ jacocoTestReport {
         csv.enabled false
         html.destination file("${buildDir}/jacocoHtml")
     }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/de/uniba/dsg/beverage_store/spring_boot/bean',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/demo',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/model',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/helper',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/security',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/exception',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/properties'
+            ])
+        }))
+    }
 }

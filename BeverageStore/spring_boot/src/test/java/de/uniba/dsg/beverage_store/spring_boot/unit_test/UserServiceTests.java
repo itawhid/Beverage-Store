@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
+import de.uniba.dsg.beverage_store.spring_boot.TestHelper;
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.CredentialConflictException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
@@ -31,7 +32,7 @@ public class UserServiceTests {
 
     @Test
     public void loadUserByUsername_success() {
-        ApplicationUser expectedUser = getUser();
+        ApplicationUser expectedUser = TestHelper.getUser();
 
         assertNotNull(expectedUser);
 
@@ -48,7 +49,7 @@ public class UserServiceTests {
 
     @Test
     public void getUserByUserName_success() throws NotFoundException {
-        ApplicationUser expectedUser = getUser();
+        ApplicationUser expectedUser = TestHelper.getUser();
 
         assertNotNull(expectedUser);
 
@@ -144,11 +145,5 @@ public class UserServiceTests {
         assertEquals(customerCount, firstPage.getTotalElements());
 
         assertEquals(0, secondPage.stream().count());
-    }
-
-    private ApplicationUser getUser() {
-        return DemoData.applicationUsers.stream()
-                .findFirst()
-                .orElse(null);
     }
 }

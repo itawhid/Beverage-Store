@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
+import de.uniba.dsg.beverage_store.spring_boot.TestHelper;
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.InsufficientStockException;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
@@ -28,19 +29,19 @@ public class CartServiceTests {
     public void init() throws NotFoundException, InsufficientStockException {
         cartService.clearCart();
 
-        cartService.addCartItem(BeverageType.CRATE, getCrate().getId(), 2);
-        cartService.addCartItem(BeverageType.BOTTLE, getBottle().getId(), 2);
+        cartService.addCartItem(BeverageType.CRATE, TestHelper.getCrate().getId(), 2);
+        cartService.addCartItem(BeverageType.BOTTLE, TestHelper.getBottle().getId(), 2);
     }
 
     @Test
     public void addCartItem_success() throws NotFoundException, InsufficientStockException {
-        cartService.addCartItem(BeverageType.CRATE, getCrate().getId(), 2);
-        cartService.addCartItem(BeverageType.BOTTLE, getBottle().getId(), 2);
+        cartService.addCartItem(BeverageType.CRATE, TestHelper.getCrate().getId(), 2);
+        cartService.addCartItem(BeverageType.BOTTLE, TestHelper.getBottle().getId(), 2);
 
         assertEquals(8, cartService.getCartItemCount());
         assertEquals(2, cartService.getCartItems().size());
 
-        cartService.addCartItem(BeverageType.BOTTLE, getBottle().getId(), 2);
+        cartService.addCartItem(BeverageType.BOTTLE, TestHelper.getBottle().getId(), 2);
 
         assertEquals(10, cartService.getCartItemCount());
         assertEquals(2, cartService.getCartItems().size());
@@ -48,8 +49,8 @@ public class CartServiceTests {
 
     @Test
     public void addCartItem_insufficientStock() {
-        assertThrows(InsufficientStockException.class, () -> cartService.addCartItem(BeverageType.CRATE, getCrate().getId(), getCrate().getAllowedInStock() + 1));
-        assertThrows(InsufficientStockException.class, () -> cartService.addCartItem(BeverageType.BOTTLE, getBottle().getId(), getCrate().getAllowedInStock() + 1));
+        assertThrows(InsufficientStockException.class, () -> cartService.addCartItem(BeverageType.CRATE, TestHelper.getCrate().getId(), TestHelper.getCrate().getAllowedInStock() + 1));
+        assertThrows(InsufficientStockException.class, () -> cartService.addCartItem(BeverageType.BOTTLE, TestHelper.getBottle().getId(), TestHelper.getCrate().getAllowedInStock() + 1));
 
         Bottle bottle = DemoData.bottles.stream()
                 .filter(x -> x.getId() == 4L)
@@ -69,7 +70,7 @@ public class CartServiceTests {
 
     @Test
     public void addCartItem_invalidBeverageType() {
-        assertThrows(NotFoundException.class, () -> cartService.addCartItem(null, getCrate().getId(), 2));
+        assertThrows(NotFoundException.class, () -> cartService.addCartItem(null, TestHelper.getCrate().getId(), 2));
     }
 
     @Test
@@ -123,17 +124,5 @@ public class CartServiceTests {
         assertEquals(0.0, cartService.getCartTotal());
         assertEquals(0, cartService.getCartItemCount());
         assertEquals(0, cartService.getCartItems().size());
-    }
-
-    private Crate getCrate() {
-        return DemoData.crates.stream()
-                .findFirst()
-                .orElse(null);
-    }
-
-    private Bottle getBottle() {
-        return DemoData.bottles.stream()
-                .findFirst()
-                .orElse(null);
     }
 }

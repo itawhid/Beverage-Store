@@ -1,5 +1,6 @@
 package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
+import de.uniba.dsg.beverage_store.spring_boot.TestHelper;
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Address;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +29,7 @@ public class AddressServiceTests {
 
     @Test
     public void getAddressById_success() throws NotFoundException {
-        Address expectedAddress = getAddress();
+        Address expectedAddress = TestHelper.getAddress();
 
         assertNotNull(expectedAddress);
 
@@ -53,9 +53,7 @@ public class AddressServiceTests {
 
         assertNotNull(customer);
 
-        List<Address> expectedData = DemoData.addresses.stream()
-                .filter(x -> x.getUser().getUsername().equals(customer.getUsername()))
-                .collect(Collectors.toList());
+        List<Address> expectedData = addressRepository.findAllByUserUsername(customer.getUsername());
 
         List<Address> actualData = addressService.getAllByUsername(customer.getUsername());
 
@@ -106,7 +104,7 @@ public class AddressServiceTests {
     public void updateAddress_success() throws NotFoundException {
         long countBeforeUpdate = addressRepository.count();
 
-        Address address = getAddress();
+        Address address = TestHelper.getAddress();
 
         assertNotNull(address);
 
@@ -133,11 +131,5 @@ public class AddressServiceTests {
                 "Kapellenstraße",
                 "23",
                 "96050")));
-    }
-
-    private Address getAddress() {
-        return DemoData.addresses.stream()
-                .findFirst()
-                .orElse(null);
     }
 }
