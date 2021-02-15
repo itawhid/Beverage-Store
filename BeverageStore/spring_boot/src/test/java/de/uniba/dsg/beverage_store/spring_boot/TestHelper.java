@@ -2,6 +2,7 @@ package de.uniba.dsg.beverage_store.spring_boot;
 
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
+import de.uniba.dsg.beverage_store.spring_boot.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -12,6 +13,7 @@ import org.springframework.util.MultiValueMap;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
@@ -62,59 +64,93 @@ public class TestHelper {
     }
 
     public static BeverageOrder getMockOrder() {
-        Address address = new Address(null, "Address 1", "Pestalozzistraße", "9F", "96052", null, null, null);
+        Address address = new Address(1L, "Address 1", "Pestalozzistraße", "9F", "96052", null, null, null);
 
-        ApplicationUser customer = new ApplicationUser(null, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        ApplicationUser customer = new ApplicationUser(1L, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
 
-        return new BeverageOrder(null, "Order01", LocalDate.now(), 20.0, customer, address, address, null);
+        return new BeverageOrder(1L, "Order01", LocalDate.now(), 20.0, customer, address, address, null);
+    }
+
+    public static Crate getMockCrate() {
+        Bottle bottle = new Bottle(1L, "Pepsi", "Pepsi pic", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
+
+        return new Crate(1L, "Pepsi Crate", "Pepsi pic", 10, 10.0, 10, bottle, null);
+    }
+
+    public static List<Crate> getMockCrates() {
+        Bottle bottle1 = new Bottle(1L, "Pepsi", "Pepsi pic", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
+        Bottle bottle2 = new Bottle(2L, "Coca-cola", "Coca-cola pic", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
+
+        Crate crate1 = new Crate(1L, "Pepsi Crate", "Pepsi pic", 10, 10.0, 10, bottle1, null);
+        Crate crate2 = new Crate(1L, "Coca-cola", "Coca-cola pic", 10, 10.0, 10, bottle2, null);
+
+        return Arrays.asList(crate1, crate2);
+    }
+
+    public static Bottle getMockBottle() {
+        return new Bottle(1L, "Pepsi", "Pepsi pic", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
+    }
+
+    public static List<Bottle> getMockBottles() {
+        Bottle bottle1 = new Bottle(1L, "Pepsi", "Pepsi pic", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
+        Bottle bottle2 = new Bottle(2L, "Coca-cola", "Coca-cola pic", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
+
+        return Arrays.asList(bottle1, bottle2);
     }
 
     public static List<Address> getMockAddresses() {
-        Address address1 = new Address(null, "Address 1", "Pestalozzistraße", "9F", "96052", null, null, null);
-        Address address2 = new Address(null, "Address 2", "Kapellenstraße", "23", "96050", null, null, null);
+        Address address1 = new Address(1L, "Address 1", "Pestalozzistraße", "9F", "96052", null, null, null);
+        Address address2 = new Address(2L, "Address 2", "Kapellenstraße", "23", "96050", null, null, null);
 
         return Arrays.asList(address1, address2);
     }
 
     public static ApplicationUser getMockCustomer() {
-        return new ApplicationUser(null, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        return new ApplicationUser(1L, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
     }
 
     public static List<ApplicationUser> getMockCustomers() {
-        ApplicationUser customer1 = new ApplicationUser(null, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
-        ApplicationUser customer2 = new ApplicationUser(null, "testuser2", "Test", "User2", "testuser2@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        ApplicationUser customer1 = new ApplicationUser(1L, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        ApplicationUser customer2 = new ApplicationUser(2L, "testuser2", "Test", "User2", "testuser2@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
 
         return Arrays.asList(customer1, customer2);
     }
 
     public static List<BeverageOrderItem> getMockOrderItems() {
-        Bottle bottle1 = new Bottle(null, "Pepsi", "Pepsi pic", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
-        Bottle bottle2 = new Bottle(null, "Coca-cola", "Coca-cola pic", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
+        Bottle bottle1 = new Bottle(1L, "Pepsi", "Pepsi pic", 1.0, 0.0, 1.0, "Pepsi Limited", 10, null, null);
+        Bottle bottle2 = new Bottle(2L, "Coca-cola", "Coca-cola pic", 1.0, 0.0, 1.0, "Coca-cola Limited", 10, null, null);
 
-        BeverageOrderItem orderItem1 = new BeverageOrderItem(null, BeverageType.BOTTLE, 10, 1, bottle1, null, null);
-        BeverageOrderItem orderItem2 = new BeverageOrderItem(null, BeverageType.BOTTLE, 10, 2, bottle2, null, null);
+        BeverageOrderItem orderItem1 = new BeverageOrderItem(1L, BeverageType.BOTTLE, 10, 1, bottle1, null, null);
+        BeverageOrderItem orderItem2 = new BeverageOrderItem(2L, BeverageType.BOTTLE, 10, 2, bottle2, null, null);
 
         return Arrays.asList(orderItem1, orderItem2);
     }
 
     public static List<BeverageOrder> getMockOrdersForManager() {
-        ApplicationUser customer1 = new ApplicationUser(null, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
-        ApplicationUser customer2 = new ApplicationUser(null, "testuser2", "Test", "User2", "testuser2@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        ApplicationUser customer1 = new ApplicationUser(1L, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        ApplicationUser customer2 = new ApplicationUser(2L, "testuser2", "Test", "User2", "testuser2@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
 
-        BeverageOrder order1 = new BeverageOrder(null, "Order01", LocalDate.now(), 10.0, customer1, null, null, null);
-        BeverageOrder order2 = new BeverageOrder(null, "Order02", LocalDate.now(), 20.0, customer1, null, null, null);
-        BeverageOrder order3 = new BeverageOrder(null, "Order03", LocalDate.now(), 30.0, customer2, null, null, null);
+        BeverageOrder order1 = new BeverageOrder(1L, "Order01", LocalDate.now(), 10.0, customer1, null, null, null);
+        BeverageOrder order2 = new BeverageOrder(2L, "Order02", LocalDate.now(), 20.0, customer1, null, null, null);
+        BeverageOrder order3 = new BeverageOrder(3L, "Order03", LocalDate.now(), 30.0, customer2, null, null, null);
 
         return Arrays.asList(order1, order2, order3);
     }
 
     public static List<BeverageOrder> getMockOrdersForCustomer() {
-        ApplicationUser customer = new ApplicationUser(null, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
+        ApplicationUser customer = new ApplicationUser(1L, "testuser1", "Test", "User1", "testuser1@email.com", null, LocalDate.of(1990, 1, 1), Role.ROLE_CUSTOMER, null, null);
 
-        BeverageOrder order1 = new BeverageOrder(null, "Order01", LocalDate.now(), 10.0, customer, null, null, null);
-        BeverageOrder order2 = new BeverageOrder(null, "Order02", LocalDate.now(), 20.0, customer, null, null, null);
+        BeverageOrder order1 = new BeverageOrder(1L, "Order01", LocalDate.now(), 10.0, customer, null, null, null);
+        BeverageOrder order2 = new BeverageOrder(2L, "Order02", LocalDate.now(), 20.0, customer, null, null, null);
 
         return Arrays.asList(order1, order2);
+    }
+
+    public static List<DropdownListItem<Long>> getMockBottleDropdownList() {
+        return getMockBottles()
+                .stream()
+                .map(Bottle::getDropdownListItem)
+                .collect(Collectors.toList());
     }
 
     public static MultiValueMap<String, String> getPageParams() {

@@ -80,7 +80,7 @@ public class AddressControllerTests {
         long countBeforeAdd = addressRepository.findAllByUserUsername(customer.getUsername())
                 .size();
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", customer, getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", customer, getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("/**/address"));
 
@@ -108,7 +108,7 @@ public class AddressControllerTests {
 
         when(addressService.getAllByUsername(anyString())).thenReturn(mockAddresses);
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", TestHelper.getCustomer(), getCreateAddressInvalidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", TestHelper.getCustomer(), getAddressDTOInvalidParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().hasErrors())
                 .andExpect(MockMvcResultMatchers.model().attribute("addresses", mockAddresses))
@@ -117,11 +117,11 @@ public class AddressControllerTests {
 
     @Test
     public void createAddress_security() throws Exception {
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", null, getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", null, getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", TestHelper.getManager(), getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "", TestHelper.getManager(), getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -153,11 +153,11 @@ public class AddressControllerTests {
     public void getEditAddress_security() throws Exception {
         Address mockAddress = TestHelper.getAddress();
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + mockAddress.getId(), null, getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + mockAddress.getId(), null, getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + mockAddress.getId(), TestHelper.getManager(), getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + mockAddress.getId(), TestHelper.getManager(), getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -167,7 +167,7 @@ public class AddressControllerTests {
         ApplicationUser customer = TestHelper.getCustomer();
         Address address = TestHelper.getUserAddress(customer.getUsername());
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), customer, getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), customer, getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("/**/address"));
 
@@ -186,7 +186,7 @@ public class AddressControllerTests {
         ApplicationUser customer = TestHelper.getCustomer();
         Address address = TestHelper.getUserAddress(customer.getUsername());
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), customer, getCreateAddressInvalidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), customer, getAddressDTOInvalidParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().hasErrors())
                 .andExpect(view().name("address/edit"));
@@ -196,7 +196,7 @@ public class AddressControllerTests {
     public void updateAddress_addressNotFound() throws Exception {
         long nonExistingId = 0;
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + nonExistingId, TestHelper.getCustomer(), getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + nonExistingId, TestHelper.getCustomer(), getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("addressId", nonExistingId))
                 .andExpect(MockMvcResultMatchers.model().attribute("hasServerError", true))
@@ -208,15 +208,15 @@ public class AddressControllerTests {
         ApplicationUser customer = TestHelper.getCustomer();
         Address address = TestHelper.getUserAddress(customer.getUsername());
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), null, getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), null, getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
 
-        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), TestHelper.getManager(), getCreateAddressValidParams()))
+        mockMvc.perform(TestHelper.createPostRequest(BASE_PATH + "/edit/" + address.getId(), TestHelper.getManager(), getAddressDTOValidParams()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
-    private MultiValueMap<String, String> getCreateAddressValidParams() {
+    private MultiValueMap<String, String> getAddressDTOValidParams() {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("name", NAME);
@@ -227,7 +227,7 @@ public class AddressControllerTests {
         return params;
     }
 
-    private MultiValueMap<String, String> getCreateAddressInvalidParams() {
+    private MultiValueMap<String, String> getAddressDTOInvalidParams() {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("name", null);

@@ -56,13 +56,6 @@ public class OrderControllerTests {
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
                 .andExpect(MockMvcResultMatchers.model().attribute("numberOfPages", 1))
                 .andExpect(view().name("order/list"));
-
-        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attribute("orders", mockOrdersForCustomer))
-                .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
-                .andExpect(MockMvcResultMatchers.model().attribute("numberOfPages", 1))
-                .andExpect(view().name("order/list"));
     }
 
     @Test
