@@ -50,7 +50,7 @@ public class CustomerControllerTests {
 
         when(userService.getPagedCustomers(anyInt(), anyInt())).thenReturn(new PageImpl<>(mockCustomers));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("customers", mockCustomers))
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
@@ -64,7 +64,7 @@ public class CustomerControllerTests {
 
         when(userService.getPagedCustomers(anyInt(), anyInt())).thenReturn(new PageImpl<>(mockCustomers));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("customers", mockCustomers))
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
@@ -74,11 +74,11 @@ public class CustomerControllerTests {
 
     @Test
     public void getCustomer_security() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", null, TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", null, TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -92,7 +92,7 @@ public class CustomerControllerTests {
         when(orderService.getOrdersByUsername(anyString())).thenReturn(mockOrders);
         when(addressService.getAllByUsername(anyString())).thenReturn(mockAddresses);
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/" + mockCustomer.getUsername(), TestHelper.getManager(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/" + mockCustomer.getUsername(), TestHelper.getManager(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("customer", mockCustomer))
                 .andExpect(MockMvcResultMatchers.model().attribute("orders", mockOrders))
@@ -105,7 +105,7 @@ public class CustomerControllerTests {
     public void getCustomerDetails_customerNotFound() throws Exception {
         when(userService.getUserByUserName(anyString())).thenThrow(NotFoundException.class);
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer1", TestHelper.getManager(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer1", TestHelper.getManager(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("customerNotFound", true))
                 .andExpect(view().name("customer/details"));
@@ -113,11 +113,11 @@ public class CustomerControllerTests {
 
     @Test
     public void getCustomerDetails_security() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer1", null, TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer1", null, TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer1", TestHelper.getCustomer(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer1", TestHelper.getCustomer(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 }

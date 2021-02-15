@@ -21,30 +21,30 @@ public class HomeControllerTests {
 
     @Test
     public void getHome_success() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest("/", TestHelper.getManager(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest("/", TestHelper.getManager(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(view().name("home"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest("/", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest("/", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(view().name("home"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest("/home", TestHelper.getManager(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest("/home", TestHelper.getManager(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(view().name("home"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest("/home", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest("/home", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(view().name("home"));
     }
 
     @Test
     public void getHome_security() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest("/", null, new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest("/", null, new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest("/home", null, new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest("/home", null, new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
     }

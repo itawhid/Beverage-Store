@@ -43,21 +43,21 @@ public class OrderControllerTests {
         when(orderService.getPagedOrders(anyInt(), anyInt())).thenReturn(new PageImpl<>(mockOrdersForManager));
         when(orderService.getPagedOrdersByUsername(anyString(), anyInt(), anyInt())).thenReturn(new PageImpl<>(mockOrdersForCustomer));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("orders", mockOrdersForManager))
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
                 .andExpect(MockMvcResultMatchers.model().attribute("numberOfPages", 1))
                 .andExpect(view().name("order/list"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("orders", mockOrdersForCustomer))
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
                 .andExpect(MockMvcResultMatchers.model().attribute("numberOfPages", 1))
                 .andExpect(view().name("order/list"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("orders", mockOrdersForCustomer))
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
@@ -73,14 +73,14 @@ public class OrderControllerTests {
         when(orderService.getPagedOrders(anyInt(), anyInt())).thenReturn(new PageImpl<>(mockOrdersForManager));
         when(orderService.getPagedOrdersByUsername(anyString(), anyInt(), anyInt())).thenReturn(new PageImpl<>(mockOrdersForCustomer));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getManager(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("orders", mockOrdersForManager))
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
                 .andExpect(MockMvcResultMatchers.model().attribute("numberOfPages", 1))
                 .andExpect(view().name("order/list"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("orders", mockOrdersForCustomer))
                 .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 1))
@@ -90,7 +90,7 @@ public class OrderControllerTests {
 
     @Test
     public void getCustomerOrders_security() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", null, TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "", null, TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
     }
@@ -103,14 +103,14 @@ public class OrderControllerTests {
         when(orderService.getOrderByOrderNumber(anyString())).thenReturn(mockOrder);
         when(orderService.getOrderItemsByOrderNumber(anyString())).thenReturn(mockOrderItems);
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/" + mockOrder.getOrderNumber(), TestHelper.getManager(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/" + mockOrder.getOrderNumber(), TestHelper.getManager(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("order", mockOrder))
                 .andExpect(MockMvcResultMatchers.model().attribute("orderItems", mockOrderItems))
                 .andExpect(MockMvcResultMatchers.model().attribute("orderNotFound", false))
                 .andExpect(view().name("order/details"));
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/" + mockOrder.getOrderNumber(), TestHelper.getCustomer(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/" + mockOrder.getOrderNumber(), TestHelper.getCustomer(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("order", mockOrder))
                 .andExpect(MockMvcResultMatchers.model().attribute("orderItems", mockOrderItems))
@@ -122,7 +122,7 @@ public class OrderControllerTests {
     public void getOrder_orderNotFound() throws Exception {
         when(orderService.getOrderByOrderNumber(anyString())).thenThrow(NotFoundException.class);
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/Order01", TestHelper.getManager(), TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/Order01", TestHelper.getManager(), TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("orderNotFound", true))
                 .andExpect(view().name("order/details"));
@@ -130,7 +130,7 @@ public class OrderControllerTests {
 
     @Test
     public void getOrder_security() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/Order01", null, TestHelper.getPageParams()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/Order01", null, TestHelper.getPageParams()))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
     }

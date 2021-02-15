@@ -41,7 +41,7 @@ public class RegisterControllerTests {
 
     @Test
     public void getRegisterCustomer_success() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest( BASE_PATH + "/customer", null, new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest( BASE_PATH + "/customer", null, new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("customerDTO"))
                 .andExpect(view().name("register-customer"));
@@ -49,10 +49,10 @@ public class RegisterControllerTests {
 
     @Test
     public void getRegisterCustomer_security() throws Exception {
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer", TestHelper.getManager(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer", TestHelper.getManager(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
 
-        this.mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer",TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
+        mockMvc.perform(TestHelper.createGetRequest(BASE_PATH + "/customer",TestHelper.getCustomer(), new LinkedMultiValueMap<>()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
