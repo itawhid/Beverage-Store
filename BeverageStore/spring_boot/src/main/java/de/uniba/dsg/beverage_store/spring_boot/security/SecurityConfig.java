@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
             "/cart",
             "/cart/checkout",
             "/address/**",
-            "/api/cart-items"
+            "/api/cart-items/**"
     };
 
     private final String[] managerPages = {

@@ -1,10 +1,13 @@
 package de.uniba.dsg.beverage_store.spring_boot;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
 import de.uniba.dsg.beverage_store.spring_boot.model.CartItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.*;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 public class TestHelper {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     public static Crate getCrate() {
         return DemoData.crates.stream()
                 .findFirst()
@@ -189,5 +194,29 @@ public class TestHelper {
                 .with(csrf())
                 .with(user == null ? anonymous() : user(user))
                 .params(params);
+    }
+
+    public static MockHttpServletRequestBuilder createRestGetRequest(String url, UserDetails user) {
+        return MockMvcRequestBuilders.get(url)
+                .with(user == null ? anonymous() : user(user));
+    }
+
+    public static <T> MockHttpServletRequestBuilder createRestPostRequest(String url, UserDetails user, T requestBody) throws JsonProcessingException {
+        return MockMvcRequestBuilders.post(url)
+                .with(user == null ? anonymous() : user(user))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody));
+    }
+
+    public static <T> MockHttpServletRequestBuilder createRestPatchRequest(String url, UserDetails user, T requestBody) throws JsonProcessingException {
+        return MockMvcRequestBuilders.patch(url)
+                .with(user == null ? anonymous() : user(user))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody));
+    }
+
+    public static MockHttpServletRequestBuilder createRestDeleteRequest(String url, UserDetails user) {
+        return MockMvcRequestBuilders.delete(url)
+                .with(user == null ? anonymous() : user(user));
     }
 }
