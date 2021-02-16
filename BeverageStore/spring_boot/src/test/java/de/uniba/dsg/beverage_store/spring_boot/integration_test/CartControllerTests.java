@@ -38,8 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @WebAppConfiguration
+@AutoConfigureMockMvc
 public class CartControllerTests {
 
     @Autowired
