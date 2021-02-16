@@ -42,11 +42,8 @@ public class CartController {
     public String getCart(Model model) {
         log.info("Retrieving cart items - start");
 
-        List<CartItem> cartItems = cartService.getCartItems();
-        double cartTotal = cartService.getCartTotal();
-
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("cartTotal", cartTotal);
+        model.addAttribute("cartItems", cartService.getCartItems());
+        model.addAttribute("cartTotal", cartService.getCartTotal());
         model.addAttribute("cartItemCount", cartService.getCartItemCount());
 
         log.info("Retrieving cart items - completed");

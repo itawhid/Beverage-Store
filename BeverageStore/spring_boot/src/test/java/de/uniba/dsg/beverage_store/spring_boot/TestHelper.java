@@ -2,6 +2,7 @@ package de.uniba.dsg.beverage_store.spring_boot;
 
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
+import de.uniba.dsg.beverage_store.spring_boot.model.CartItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.DropdownListItem;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.*;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -146,10 +147,27 @@ public class TestHelper {
         return Arrays.asList(order1, order2);
     }
 
+    public static List<CartItem> getMockCartItems() {
+        Crate mockCrate = getMockCrate();
+        Bottle mockBottle = getMockBottle();
+
+        CartItem cartItem1 = new CartItem(1, BeverageType.CRATE, mockCrate.getId(), 1, mockCrate.getName(), mockCrate.getPicUrl(), mockCrate.getPrice(), mockCrate.getInStock(), 0.0, 0.0, null, mockCrate.getNoOfBottles());
+        CartItem cartItem2 = new CartItem(1, BeverageType.BOTTLE, mockBottle.getId(), 1, mockBottle.getName(), mockBottle.getPicUrl(), mockBottle.getPrice(), mockBottle.getInStock(), mockBottle.getVolume(), mockBottle.getVolumePercent(), mockBottle.getSupplier(), 0);
+
+        return Arrays.asList(cartItem1, cartItem2);
+    }
+
     public static List<DropdownListItem<Long>> getMockBottleDropdownList() {
         return getMockBottles()
                 .stream()
                 .map(Bottle::getDropdownListItem)
+                .collect(Collectors.toList());
+    }
+
+    public static List<DropdownListItem<Long>> getMockAddressDropdownList() {
+        return getMockAddresses()
+                .stream()
+                .map(Address::getDropdownListItem)
                 .collect(Collectors.toList());
     }
 
