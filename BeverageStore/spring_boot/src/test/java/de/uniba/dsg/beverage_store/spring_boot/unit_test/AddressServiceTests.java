@@ -1,5 +1,6 @@
-package de.uniba.dsg.beverage_store.spring_boot.unit.services;
+package de.uniba.dsg.beverage_store.spring_boot.unit_test;
 
+import de.uniba.dsg.beverage_store.spring_boot.TestHelper;
 import de.uniba.dsg.beverage_store.spring_boot.demo.DemoData;
 import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Address;
@@ -14,12 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class AddressServiceUnitTest {
+public class AddressServiceTests {
 
     @Autowired
     private AddressService addressService;
@@ -28,8 +28,8 @@ public class AddressServiceUnitTest {
     private AddressRepository addressRepository;
 
     @Test
-    public void getAddressById_test() throws NotFoundException {
-        Address expectedAddress = getAddress();
+    public void getAddressById_success() throws NotFoundException {
+        Address expectedAddress = TestHelper.getAddress();
 
         assertNotNull(expectedAddress);
 
@@ -37,12 +37,15 @@ public class AddressServiceUnitTest {
 
         assertEquals(expectedAddress.getId(), actualAddress.getId());
         assertEquals(expectedAddress.getName(), actualAddress.getName());
+    }
 
+    @Test
+    public void getAddressById_addressNotFound() {
         assertThrows(NotFoundException.class, () -> addressService.getAddressById(0L));
     }
 
     @Test
-    public void getAllByUsername_test() {
+    public void getAllByUsername_success() {
         ApplicationUser customer = DemoData.applicationUsers.stream()
                 .filter(x -> x.getRole() == Role.ROLE_CUSTOMER)
                 .findFirst()
@@ -50,9 +53,7 @@ public class AddressServiceUnitTest {
 
         assertNotNull(customer);
 
-        List<Address> expectedData = DemoData.addresses.stream()
-                .filter(x -> x.getUser().getUsername().equals(customer.getUsername()))
-                .collect(Collectors.toList());
+        List<Address> expectedData = addressRepository.findAllByUserUsername(customer.getUsername());
 
         List<Address> actualData = addressService.getAllByUsername(customer.getUsername());
 
@@ -61,7 +62,7 @@ public class AddressServiceUnitTest {
 
     @Test
     @Transactional
-    public void addAddress_test() throws NotFoundException {
+    public void addAddress_success() throws NotFoundException {
         ApplicationUser customer = DemoData.applicationUsers.stream()
                 .filter(x -> x.getRole() == Role.ROLE_CUSTOMER)
                 .findFirst()
@@ -87,7 +88,10 @@ public class AddressServiceUnitTest {
         assertEquals(addressDTO.getName(), addedAddress.getName());
         assertEquals(countBeforeAdd + 1, addressRepository.count());
         assertEquals(userAddressCountBeforeAdd + 1, addressRepository.findAllByUserUsername(customer.getUsername()).size());
+    }
 
+    @Test
+    public void addAddress_useNotFound() {
         assertThrows(NotFoundException.class, () -> addressService.addAddress(new AddressDTO(
                 "Address 1",
                 "Pestalozzistraße",
@@ -97,10 +101,10 @@ public class AddressServiceUnitTest {
 
     @Test
     @Transactional
-    public void updateAddress_test() throws NotFoundException {
+    public void updateAddress_success() throws NotFoundException {
         long countBeforeUpdate = addressRepository.count();
 
-        Address address = getAddress();
+        Address address = TestHelper.getAddress();
 
         assertNotNull(address);
 
@@ -118,17 +122,14 @@ public class AddressServiceUnitTest {
         assertEquals("Kapellenstraße", updatedAddress.getStreet());
         assertEquals("23", updatedAddress.getHouseNumber());
         assertEquals("96050", updatedAddress.getPostalCode());
+    }
 
+    @Test
+    public void updateAddress_addressNotFound() {
         assertThrows(NotFoundException.class, () -> addressService.updateAddress(0L, new AddressDTO(
                 "Address 2",
                 "Kapellenstraße",
                 "23",
                 "96050")));
-    }
-
-    private Address getAddress() {
-        return DemoData.addresses.stream()
-                .findFirst()
-                .orElse(null);
     }
 }

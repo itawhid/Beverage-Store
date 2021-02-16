@@ -4,6 +4,7 @@ import de.uniba.dsg.beverage_store.spring_boot.exception.NotFoundException;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.Address;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.ApplicationUser;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.BeverageOrder;
+import de.uniba.dsg.beverage_store.spring_boot.properties.CustomerProperties;
 import de.uniba.dsg.beverage_store.spring_boot.service.AddressService;
 import de.uniba.dsg.beverage_store.spring_boot.service.OrderService;
 import de.uniba.dsg.beverage_store.spring_boot.service.UserService;
@@ -28,20 +29,25 @@ public class CustomerController {
     private final OrderService orderService;
     private final AddressService addressService;
 
+    private final CustomerProperties customerProperties;
+
     @Autowired
     public CustomerController(UserService userService,
                               OrderService orderService,
-                              AddressService addressService) {
+                              AddressService addressService,
+                              CustomerProperties customerProperties) {
         this.userService = userService;
         this.orderService = orderService;
         this.addressService = addressService;
+
+        this.customerProperties = customerProperties;
     }
 
     @GetMapping
     public String getCustomer(@RequestParam(defaultValue = "1") int page, Model model) {
         log.info("Retrieving customer page: " + page + " - start");
 
-        Page<ApplicationUser> customerPage = userService.getPagedCustomers(page);
+        Page<ApplicationUser> customerPage = userService.getPagedCustomers(page, customerProperties.getPageSize());
 
         model.addAttribute("customers", customerPage.getContent());
         model.addAttribute("currentPage", page);

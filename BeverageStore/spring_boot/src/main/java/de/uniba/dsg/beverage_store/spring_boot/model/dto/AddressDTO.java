@@ -20,8 +20,8 @@ public class AddressDTO {
     @NotEmpty(message = "Street can not be empty.")
     private String street;
 
-    @NotNull(message = "Street is required.")
-    @NotEmpty(message = "Street can not be empty.")
+    @NotNull(message = "House Number is required.")
+    @NotEmpty(message = "House Number can not be empty.")
     private String houseNumber;
 
     @NotNull(message = "Postal Code is required.")

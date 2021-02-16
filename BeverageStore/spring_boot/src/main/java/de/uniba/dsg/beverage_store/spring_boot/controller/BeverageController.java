@@ -216,14 +216,15 @@ public class BeverageController {
             Crate crate = beverageService.getCrateById(id);
 
             model.addAttribute("crateId", crate.getId());
-            model.addAttribute("crateDTO", new CrateUpdateDTO(crate.getName(), crate.getPicUrl(), crate.getPrice(), crate.getNoOfBottles(), crate.getBottle().getId()));
+            model.addAttribute("crateUpdateDTO", new CrateUpdateDTO(crate.getName(), crate.getPicUrl(), crate.getPrice(), crate.getNoOfBottles(), crate.getBottle().getId()));
             model.addAttribute("bottleDropdownListItems", getBottleDropdownList());
 
             log.info("Retrieving crate with ID: " + id + " - completed");
         } catch (Exception e) {
-            model.addAttribute("crateDTO", new CrateUpdateDTO());
+            model.addAttribute("crateId", id);
+            model.addAttribute("crateUpdateDTO", new CrateUpdateDTO());
             model.addAttribute("hasServerError", true);
-            model.addAttribute("crateDropdownListItems", getBottleDropdownList());
+            model.addAttribute("bottleDropdownListItems", getBottleDropdownList());
 
             log.info("Retrieving crate with ID: " + id + " - failed, server error found");
         }
@@ -258,6 +259,7 @@ public class BeverageController {
         if (hasModelError || hasServerError) {
             model.addAttribute("crateId", id);
             model.addAttribute("hasServerError", hasServerError);
+            model.addAttribute("bottleDropdownListItems", getBottleDropdownList());
 
             return "beverage/crate/edit";
         }

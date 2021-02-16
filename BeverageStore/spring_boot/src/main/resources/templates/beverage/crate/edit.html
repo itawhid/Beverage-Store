@@ -23,7 +23,7 @@
                         <h3>Edit Address</h3>
                         <br>
 
-                        <form method="POST" th:action="@{/beverage/crate/edit/{id}(id=${crateId})}" th:object="${crateDTO}">
+                        <form method="POST" th:action="@{/beverage/crate/edit/{id}(id=${crateId})}" th:object="${crateUpdateDTO}">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">

@@ -5,8 +5,8 @@
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
-        <div th:if="${hasServerError == true}" class="alert alert-danger" role="alert">
-            Unexpected server error.
+        <div th:if="${addressNotFound == true}" class="alert alert-danger" role="alert">
+            No address found with this ID.
         </div>
 
         <div class="container">
@@ -17,7 +17,7 @@
                 </div>
             </div>
             <br>
-            <div class="row">
+            <div th:unless="${addressNotFound == true}" class="row">
                 <div class="col-md-4 offset-md-4">
                     <div class="card">
                         <h3>Edit Address</h3>

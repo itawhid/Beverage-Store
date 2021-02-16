@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/cart-items")
-public class CartItemController {
+public class CartItemRestController {
 
     @Resource(name = "sessionScopedCartService")
     CartService cartService;
