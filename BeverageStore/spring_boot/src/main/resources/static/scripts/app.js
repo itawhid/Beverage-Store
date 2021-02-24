@@ -155,4 +155,19 @@ function addStockToBeverage(id, quantity, isBottle, successCallback) {
     });
 }
 
+function regenerateInvoice(orderNumber) {
+    blockScreen();
 
+    $.ajax({
+        url: '/api/invoice/order/' + orderNumber,
+        type: 'POST',
+        success: (data) => {
+            unblockScreen();
+            alertify.success("Invoice successfully regenerated.");
+        },
+        error: () => {
+            unblockScreen();
+            alertify.error("Error in regenerating invoice.");
+        }
+    });
+}
