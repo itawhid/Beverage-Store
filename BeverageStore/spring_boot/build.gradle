@@ -50,9 +50,11 @@ dependencies {
     compile group: 'com.google.cloud', name: 'libraries-bom', version: '16.3.0', ext: 'pom'
 
     // Dependencies for Google Cloud App Engine deployment
-    //runtime group: 'org.springframework.cloud', name: 'spring-cloud-dependencies', version: '2020.0.0', ext: 'pom'
-    //compile group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.1.1.RELEASE'
-    //compile group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter-sql-postgresql', version: '1.2.6.RELEASE'
+    // Comment out these dependencies for local deployment
+    runtime group: 'org.springframework.cloud', name: 'spring-cloud-dependencies', version: '2020.0.0', ext: 'pom'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.1.1.RELEASE'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter-sql-postgresql', version: '1.2.6.RELEASE'
+    //
 
     // Test dependencies
     testImplementation 'com.h2database:h2'
@@ -91,6 +93,30 @@ jacocoTestReport {
         xml.enabled false
         csv.enabled false
         html.destination file("${buildDir}/jacocoHtml")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/de/uniba/dsg/beverage_store/spring_boot/bean',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/demo',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/model',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/helper',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/security',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/exception',
+                    '**/de/uniba/dsg/beverage_store/spring_boot/properties'
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
     }
 
     afterEvaluate {
