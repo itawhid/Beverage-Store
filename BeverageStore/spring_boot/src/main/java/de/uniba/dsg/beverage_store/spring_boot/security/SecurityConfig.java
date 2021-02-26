@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     private final String[] managerCustomerPages = {
             "/beverage/bottle",
             "/beverage/crate",
-            "/order/**"
+            "/order/**",
+            "/api/invoice/order/**"
     };
 
     private final String[] customerPages = {

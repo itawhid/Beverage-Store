@@ -6,6 +6,8 @@
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
+        <div th:replace="fragments/screen-blocker :: screen-blocker"></div>
+
         <div class="container">
             <br>
             <h2>Order List</h2>
@@ -22,6 +24,7 @@
                             <th scope="col">Date</th>
                             <th scope="col"
                                 sec:authorize="hasRole(T(de.uniba.dsg.beverage_store.spring_boot.model.db.Role).ROLE_MANAGER.name())">Customer Name</th>
+                            <th scope="col">Action(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +38,9 @@
                                 <a th:text="${order.user.firstName + ' ' +  order.user.lastName}"
                                    th:href="@{'/customer/' + ${order.user.username}}"></a>
                             </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-regenerate-invoice" th:attr="data-order-number=${order.orderNumber}">Regenerate Invoice</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -43,4 +49,10 @@
 
         <div th:replace="fragments/footer :: footer"></div>
     </body>
+
+    <script>
+        $('.btn-regenerate-invoice').click(function () {
+            regenerateInvoice($(this).data('order-number'));
+        });
+    </script>
 </html>

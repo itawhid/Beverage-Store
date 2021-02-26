@@ -4,6 +4,7 @@ import de.uniba.dsg.beverage_store.spring_boot.helper.Helper;
 import de.uniba.dsg.beverage_store.spring_boot.model.BeverageType;
 import de.uniba.dsg.beverage_store.spring_boot.model.db.*;
 import de.uniba.dsg.beverage_store.spring_boot.repository.*;
+import de.uniba.dsg.beverage_store.spring_boot.service.FireStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -19,6 +20,8 @@ import java.util.List;
 @Slf4j
 @Component
 public class DemoData {
+
+    private final FireStoreService fireStoreService;
 
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
@@ -37,7 +40,15 @@ public class DemoData {
     public static List<ApplicationUser> applicationUsers = new ArrayList<>();
 
     @Autowired
-    public DemoData(UserRepository userRepository, OrderRepository orderRepository, CrateRepository crateRepository, BottleRepository bottleRepository, AddressRepository addressRepository, OrderItemRepository orderItemRepository) {
+    public DemoData(FireStoreService fireStoreService,
+                    UserRepository userRepository,
+                    OrderRepository orderRepository,
+                    CrateRepository crateRepository,
+                    BottleRepository bottleRepository,
+                    AddressRepository addressRepository,
+                    OrderItemRepository orderItemRepository) {
+        this.fireStoreService = fireStoreService;
+
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.crateRepository = crateRepository;
@@ -137,5 +148,7 @@ public class DemoData {
 
         orders.add(order);
         orderItems.addAll(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4));
+
+        fireStoreService.storeOrder(Helper.constructOrderInvoice(order, customer, deliveryAddress, billingAddress, Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4)));
     }
 }

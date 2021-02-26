@@ -126,7 +126,7 @@ public class OrderService {
 
         cartService.clearCart();
 
-        Invoice invoice = constructInvoiceOrder(order, customer, deliveryAddress, billingAddress, orderItems);
+        Invoice invoice = Helper.constructOrderInvoice(order, customer, deliveryAddress, billingAddress, orderItems);
 
         fireStoreService.storeOrder(invoice);
         invoiceService.generateInvoice(invoice);
@@ -147,39 +147,6 @@ public class OrderService {
                         ? beverageService.getCrateById(beverageId)
                         : null,
                 order
-        );
-    }
-
-    private Invoice constructInvoiceOrder(BeverageOrder order, ApplicationUser customer, Address deliveryAddress, Address billingAddress, List<BeverageOrderItem> orderItems) {
-        return new Invoice(
-                order.getOrderNumber(),
-                order.getDate(),
-                customer.getFirstName() + " " + customer.getLastName(),
-                customer.getEmail(),
-                new InvoiceAddress(
-                        deliveryAddress.getStreet(),
-                        deliveryAddress.getHouseNumber(),
-                        deliveryAddress.getPostalCode()
-                ),
-                new InvoiceAddress(
-                        billingAddress.getStreet(),
-                        billingAddress.getHouseNumber(),
-                        billingAddress.getPostalCode()
-                ),
-                orderItems.stream()
-                        .map(x -> new InvoiceItem(
-                                x.getPosition(),
-                                x.getBeverageType() == BeverageType.BOTTLE
-                                        ? x.getBottle().getName()
-                                        : x.getCrate().getName(),
-                                x.getBeverageType().name(),
-                                x.getQuantity(),
-                                x.getBeverageType() == BeverageType.BOTTLE
-                                        ? x.getBottle().getPrice()
-                                        : x.getCrate().getPrice()
-
-                        ))
-                        .collect(Collectors.toList())
         );
     }
 }
