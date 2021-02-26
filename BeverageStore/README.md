@@ -1,41 +1,93 @@
 # Beverage Store
-A simple Spring Boot application where user can create new beverages (bottle & crate), add the beverages into cart and eventually checkout the cart to place the order. 
+A simple web application where managers can create new beverages (bottle & crate), edit them and customers can add the beverages into the cart then eventually checkout to place the order. 
 
-## Running The Application
-Open the project as a Spring Boot application with the preferred IDE. Run the project, and the application will be available on the following URL.
+## Features
+  - Manager
+    - Login with username and password
+    - Add new beverages to the store
+    - Edit existing beverages
+    - View all the customers
+    - View all the orders
+    - View all the customer addresses
+    - Regenerate the invoice for existing orders and auto-send via email
+  - Customer
+    - Register as new customer
+    - Login with username and password
+    - Add addresses
+    - Add beverages to the cart
+    - Checkout cart to create order and receive the invoice via email
+    - Regenerate the invoice for existing orders and receive via email
 
+## Architecture
+Application is developed with microservices architecture. The Springboot application enables the customers to submit the order. The invoicing feature is implemented with two microservices. One of them (Google Cloud HTTP Function) generates the invoice PDF and stores that into Google Cloud Storage. The other one (Google Cloud Pub/Sub Trigger) sends that invoice PDF to the customer's email.
+
+Orders are also stored in Google Cloud Firestore for further analysis.
+
+## Springboot Application Deployment
+  - Local Deployment<br/><br/>
+    The local deployment currently does not support any machine. It requires the machine's IP address to be registered in the Google Cloud PostgreSql manged instance. Then it can be deployed as regular Springboot application with the following parameter.
+    ```
+    spring.profiles.active=common, local
+    ```
+    After the deployment, the application can accessed on the following URL.
+    ```
+    http://localhost:8080
+    ```
+  - Google Cloud App Engine Deployment<br/><br/>
+    This deployment requires some changes in the <strong>build.gradle</strong> file of <strong>spring_boot</strong> project. The deployment is possible with the following gradle task.
+    ```
+    spring_boot -> app engine app.yaml based projects -> appengineDeploy
+    ```
+
+## Accessing the Application
+Currently, the application is deployed on Google Cloud App Engine. The latest version can be access with the following URL.
 ```
-http://localhost:8080/
+http://dsam-group02-beverage-store.ey.r.appspot.com
 ```
 
 ## Demo Data
-The project holds some demo data (User, Address, Beverage (Bottle & Crate), Order, Order Item) to start with. More demo data can be added in the DemoData.java file.
+Currently, the application is pre-configured with some demo data including demo users of both Manager and Customer roles.
 
-## Authentication & Authorization
-A simple session based authentication is implemented. Users are required to log in to access the application functionalities.
+  - Manager
+    ```
+    Username: manager
+    Password: manager
+    ```
+  - Customer 1
+    ```
+    Username: customer1
+    Password: customer1
+    ```
+  - Customer 2
+    ```
+    Username: customer2
+    Password: customer2
+    ```
 
-Currently, the application has no authorization implemented.
+## Automated Testing
+Automated testing features the Unit Tests and the Integration Tests. These tests are configured with in-memory (H2) database. 
+  - Unit Testing - Unit Tests cover the business logic.<br/><br/>
+  - Integration Testing - Integration Tests cover the following aspects of the application.
+    - Security of the controller actions
+    - Integration between services and controller actions
+    - Integration between views and view controller actions
+    - Integration between a client and REST controller actions
 
-Credentials for the demo User. 
+## Code Coverage
+Code coverage reports can be generated with the following Gradle Task.
 
 ```
-Username: admin
-Password: admin
+spring_boot -> verification -> jacocoTestReport
 ```
 
-## Application Domain
-The application has following domains.
+The generated reports can be found in the following directory.
+```
+/spring_boot/build/jacocoHtml
+```
 
-- User - Users are able to use the application.
-- Address - An user can have one or multiple addresses. User can add it's address(s) in the application. A user is required to assign billing address & delivery address to order from the collection of it's address(s).
-- Beverage - Beverages are the items user can add to cart and order. At this stage, users are able to add new beverages to the system without any authorization. There are two types of beverages.
-  - Bottle - Bottle is the basic type of beverage. A bottle has attributes like name, price, volume etc.
-  - Crate - A crate is consist of multiple bottle of same type. It has attributes like name, price, the bottle it is consist of, number of bottles in the crate, price etc.
-- Cart - The cart is like the basket for shopping. Every user has it's own cart. It can add beverage(s) to the cart and remove them from the cart as well. The cart is user specific and session scoped. Meaning the cart of any user is automatically cleared everytime it's session is dismissed.
-    - Cart Item - Cart item is a single item of the cart. A cart item can be a bottle or a crate. It is also allowed to have multiple quantities.
-- Order - Order is the finalized form of the cart. An order is created after any user successfully checks out it's cart. An order is required to have both billing address and delivery address. Users can assign these addresses from their pre-existing address collections.
-    - Order Item - Order Item is simple the cart item after the checkout.
-  
-## Design Principals
-1. As real world prices are usually float, all the prices are designed as float.
-2. In order details page, order items are not retrieved with the order using entity graph, because a second level relationship (order item bottle and crate) retrieving is required.
+The tests are configured to cover minimum 50% of the codebase. This rule can be verified with the following Gradle Task.
+```
+spring_boot -> verification -> jacocoTestCoverageVerification
+```
+
+Currently, the existing tests cover around 98% of overall codebase excluding POJO, Bean, Demo Data, Exception and Property classes.
