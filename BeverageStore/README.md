@@ -91,3 +91,47 @@ spring_boot -> verification -> jacocoTestCoverageVerification
 ```
 
 Currently, the existing tests cover around 98% of overall codebase excluding POJO, Bean, Demo Data, Exception and Property classes.
+
+## Testing the Invoicing Feature
+We have developed an unsecured API endpoint to test this feature with mock invoice.
+
+```
+Endpoint - http://dsam-group02-beverage-store.ey.r.appspot.com/api/invoice
+Method - POST
+Content-type - application/json
+Example Request Body -
+    
+{
+    "orderNumber": "ORD001",
+    "orderDate": "2021-02-26",
+    "customerName": "Customer Name",
+    "customerEmailId": "customer@email.com",
+    "deliveryAddress": {
+        "street": "Pestalozzistraße",
+        "houseNumber": "9F",
+        "postalCode": "96052"
+    },
+    "billingAddress": {
+        "street": "Pestalozzistraße",
+        "houseNumber": "9F",
+        "postalCode": "96052"
+    },
+    "items": [
+        {
+            "position": 1,
+            "name": "Coca-cola",
+            "type": "Bottle",
+            "quantity": 1,
+            "price": 1.00
+        },
+        {
+            "position": 2,
+            "name": "Sprite Crate",
+            "type": "Crate",
+            "quantity": 1,
+            "price": 10.00
+        }
+    ]
+}
+```
+
