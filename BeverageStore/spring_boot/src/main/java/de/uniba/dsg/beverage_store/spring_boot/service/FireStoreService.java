@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,12 +43,13 @@ public class FireStoreService {
         Map<String, Object> orderMap = new HashMap<>();
 
         orderMap.put("order_number", invoice.getOrderNumber());
-        orderMap.put("order_date", invoice.getOrderDate().toString());
+        //orderMap.put("order_date", invoice.getOrderDate().toString());
         orderMap.put("customer_name", invoice.getCustomerName());
         orderMap.put("customer_email_id", invoice.getCustomerEmailId());
         orderMap.put("delivery_address", invoice.getDeliveryAddress());
         orderMap.put("billing_address", invoice.getBillingAddress());
         orderMap.put("items", invoice.getItems());
+        orderMap.put("timestamp", LocalDateTime.now().toString());
 
         documentReference.set(orderMap);
     }
