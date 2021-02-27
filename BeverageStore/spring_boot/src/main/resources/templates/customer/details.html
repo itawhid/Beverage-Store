@@ -5,6 +5,8 @@
     <body>
         <div th:replace="fragments/navigation-bar :: navigation-bar"></div>
 
+        <div th:replace="fragments/screen-blocker :: screen-blocker"></div>
+
         <div th:if="${customerNotFound}" class="alert alert-danger" role="alert">
             No customer found with this Username.
         </div>
@@ -34,6 +36,7 @@
                                             <th scope="col">Order No.</th>
                                             <th scope="col">Total Price</th>
                                             <th scope="col">Date</th>
+                                            <th scope="col">Action(s)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -43,6 +46,9 @@
                                             </td>
                                             <td th:text="${#numbers.formatDecimal(order.price, 1, 'DEFAULT', 2, 'DEFAULT')} + '€'"></td>
                                             <td th:text="${#temporals.format(order.date, 'dd MMM yyyy')}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-regenerate-invoice" th:attr="data-order-number=${order.orderNumber}">Regenerate Invoice</button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -106,4 +112,10 @@
 
         <div th:replace="fragments/footer :: footer"></div>
     </body>
+
+    <script>
+        $('.btn-regenerate-invoice').click(function () {
+            regenerateInvoice($(this).data('order-number'));
+        });
+    </script>
 </html>
