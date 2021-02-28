@@ -1,5 +1,5 @@
 # Beverage Store
-A simple web application where managers can create new beverages (bottle & crate), edit them and customers can add the beverages into the cart then eventually checkout to place the order. 
+A simple web application where managers can create new beverages (bottle & crate), edit them and customers can add the beverages into the cart for checking out eventually to place the order. 
 
 ## Features
   - Manager
@@ -135,3 +135,7 @@ Example Request Body -
 }
 ```
 
+## Design Principals
+1. As real world prices are usually float, all the prices are designed as float.
+2. In order details page, order items are not retrieved with the order using entity graph, because a second level relationship (order item bottle and crate) retrieving is required.
+3. Self-registration feature is developed only for customers as it is not practical for a business to let any user register as manager.
