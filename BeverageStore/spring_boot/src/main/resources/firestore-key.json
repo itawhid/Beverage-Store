@@ -1,12 +1,1 @@
-{
-    "type": "service_account",
-    "project_id": "dsam-group02-beverage-store",
-    "private_key_id": "f506e87d1255dd3af19d1ec325eb4dce28a604d0",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDFNhfMgJppYKEe\nFF4LlRkIpoZO0WfUtOn7jj4mq0QEMqz0jJvSFlqCRgs+oUQkCLcixGYMn1whrMNB\nR2d6SBXK8Jp5U36bmRQpg3m+SZexeUdMSgXjxS8GuXhvGS8uKhvjAoMqUj5On4mL\n+dfGK5fBYtSaQu+YX2wwGqkIVhi1UjAvlmp0quqiiJLzOZTDIA0ypfujIQHfrMlK\njldUSPOXoOT0W8r4IXNJsjTBVtpoRgPnSV+W5mzM2AbTHU6tAMFsEq4q7HXqKUhY\ng6jTCEssehtTIUaH/Yl7Io94kElO1Waz588y9qRGLZJniY4GmnasMAtZQoozUbEJ\nKpGQUt1bAgMBAAECggEAKw+ipq62CKhmxdCgsFq/+pmR3gfvagyOwrTOcVcYJOqD\nxWomY/spjCSLNAO2gz+77UWBGuR5E4lLoSdcOuEekQ90S2Wl0YfdVSs2HAypqMDY\nhpnrK07U89zvpSKUoLnlGO5lgYovvK8tM3k8WjMOkdVoor5W3qiHUQGhQwa5om2L\nV8jIKaK4vV4Do5Pws1jAjLz4mQ5x0k6LTPqUUhLMRtBaqiaKw8cWFhMLKtcAwUZM\n6TncKIr5ikMX8GZgrxNX0gk6TWzMwTyeoNbNmrf0OkQnYk3HQq/W35WVB/rGQF2m\nZ6aaSvaBt9G53Ti7pdt/McC8j1jkgPQaucxsI1oe4QKBgQDy6j8F+i4y8IJlvmH8\nKHCgtps9/Xxj/WldU8ao37RL9OWnm2nyNybwPsswOLAtHskV2gYGgHClyVQC0QnP\nq8NOnWCMo7MNMhBtTDHgKt98/QHYwb2aEecoQEmoL0AHDwSaTtfbMfqMM5ecLRhm\n9bsDiHG/huK2SS6eX9YkuR9DowKBgQDP1ZnMshukVlgqGdYfymypY8rQt4OTrF+W\nQ3T4+MPFDZevOTkH57G9TlyaBXIf4f7pjVa3LgStjXgGqjJj0ow32rwST3XojrY3\nAqIr8+BDm9aLXtAFVBPY6+kHY10+FBhg9mEZ8ALYF/Ztmz/w0GoA8ieWtMJLdKCX\njAq4n/1a6QKBgQCFcFpYjTsNroLjIzcuToS4NDeJURMg1lcn9lpd8C1ZwFjbvorv\njI5uUQBLKAjXcF7kCxVeQvYejD8DIROzqdYq/FbKSy6TpBnUAJQxYTvNrCp0iND/\nrq/9s3sC0Znphr1viroW5hiNJdY166vI+1nVMgHSRWWK3x6lz12SZMMg4wKBgF77\ncHmDIGzfZRWAj0IiIbzcNXFjnQddLKYgmBG8psOkraDP1weM1Mb+TAW73WdCwlv8\nUxgOOOcUEzmAiNzj+V8BYRhBJlKs/gtv8auCnghn7Qnuv8Tfot5tGiddOtzHFEkj\n8EaJUNNvSBjZbcRhi0B5aqxOWclgOJBp2PB9da0ZAoGAeEZp0NymDVfSdYqI9Mho\nsnUGy64SWcSeO2SENaGQ5qTgtpljtDadtaihZHzV9LZw9xFwQC+mPpBIF1dh8yBx\nmqMB51CpmycSb09QMXSNpU6TR1f3oiBV7m+r2OxGt1N/rZ4mCiDV5Armf3D6dyBk\nr34k05X8LMCwEVd7+oGIejE=\n-----END PRIVATE KEY-----\n",
-    "client_email": "dsam-group02-beverage-store@appspot.gserviceaccount.com",
-    "client_id": "102746978106746285933",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dsam-group02-beverage-store%40appspot.gserviceaccount.com"
-}
+
